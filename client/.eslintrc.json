@@ -19,6 +19,7 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
+  "plugins": ["prettier"],
   "rules": {
     "react/prop-types": "off",
     "react/react-in-jsx-scope": 0,
