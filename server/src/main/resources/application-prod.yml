@@ -1,0 +1,3 @@
+jpa:
+  hibernate:
+    ddl-auto: none # create / update / validate / none
