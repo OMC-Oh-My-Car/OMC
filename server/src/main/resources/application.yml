@@ -13,18 +13,18 @@ spring:
     password: ${MYSQL_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-    jpa:
+  jpa:
+    hibernate:
+      ddl-auto: create # create / update / validate / none
+    show-sql: true # 콘솔창에 sql 출력
+    properties:
       hibernate:
-        ddl-auto: create # create / update / validate / none
-      show-sql: true # 콘솔창에 sql 출력
-      properties:
-        hibernate:
-        format_sql: true # pretty print SQL
-        default_batch_fetch_size: 500 # 일대다 컬렉션 조회 시 성능 최적화
-      open-in-view: false # 영속성 컨텍스트의 생존 범위를 트랜잭션 범위로 한정
+      format_sql: true # pretty print SQL
+      default_batch_fetch_size: 500 # 일대다 컬렉션 조회 시 성능 최적화
+    open-in-view: false # 영속성 컨텍스트의 생존 범위를 트랜잭션 범위로 한정
 
-    servlet:
-      multipart:
+  servlet:
+    multipart:
       max-file-size: 10MB # 파일 업로드 요청 시 하나의 파일 크기를 10MB 제한
       max-request-size: 100MB # 파일 업로드 요청 시 모든 파일 크기합을 100MB 제한
 
