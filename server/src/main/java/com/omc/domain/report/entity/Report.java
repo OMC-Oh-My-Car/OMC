@@ -9,8 +9,4 @@ import com.omc.global.common.BaseEntity;
 
 @Entity
 public class Report extends BaseEntity {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
 }

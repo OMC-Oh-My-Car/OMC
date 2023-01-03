@@ -10,7 +10,3 @@ import com.omc.global.common.BaseEntity;
 @Entity
 public class Review extends BaseEntity {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-}

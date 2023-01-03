@@ -10,7 +10,4 @@ import com.omc.global.common.BaseEntity;
 @Entity
 public class Reservation extends BaseEntity {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
 }
