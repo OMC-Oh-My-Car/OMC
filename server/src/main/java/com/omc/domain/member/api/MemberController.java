@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
     private final MemberService memberService;
 
-    @PostMapping
+    @PostMapping()
     public ResponseEntity<MemberResponseDto> join(@RequestBody MemberPostDto memberPostDto) {
         MemberResponseDto newMember = memberService.join(memberPostDto);
 
