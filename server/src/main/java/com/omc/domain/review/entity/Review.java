@@ -9,4 +9,5 @@ import com.omc.global.common.BaseEntity;
 
 @Entity
 public class Review extends BaseEntity {
+}
 
