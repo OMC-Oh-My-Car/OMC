@@ -1,9 +1,9 @@
 import { createGlobalStyle } from 'styled-components';
-import reset from 'styled-reset';
+import resetStyle from 'styled-reset';
 
 const GlobalStyles = createGlobalStyle`
 
-  ${reset}
+  ${resetStyle}
 	// 아래에 전역 스타일을 추가
 	a {
     text-decoration : none;
