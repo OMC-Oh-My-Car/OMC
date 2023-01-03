@@ -19,6 +19,7 @@ public class MemberController {
 
     @PostMapping()
     public ResponseEntity<MemberResponseDto> join(@RequestBody MemberPostDto memberPostDto) {
+        // RequestBody 를 객체화하여 MemberPostDto로 변경 후 회원가입 로직 진행
         MemberResponseDto newMember = memberService.join(memberPostDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(newMember);
