@@ -21,7 +21,9 @@ public class Member extends BaseEntity {
     @Column(nullable = false, updatable = false, unique = true)
     private String email;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, unique = true)
+    private String nickname;
+
     @Enumerated(EnumType.STRING)
     private Social isSocial;
 
@@ -31,6 +33,5 @@ public class Member extends BaseEntity {
     private String profileImg;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, updatable = false)
     private UserRole userRole;
 }
