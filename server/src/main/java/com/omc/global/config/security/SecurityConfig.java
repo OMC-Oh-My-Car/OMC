@@ -10,6 +10,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -21,18 +23,15 @@ public class SecurityConfig {
                 .csrf(
                         csrf -> csrf.disable()
                 )
-                .authorizeRequests(
-                        authorizeRequests -> authorizeRequests
-                                .antMatchers("/**")
-                                .permitAll()
-                                .anyRequest()
-                                .permitAll()
+                .cors(
+                        cors -> cors.disable() // 타 도메인 호출 가능
                 )
-                .formLogin(
-                        formLogin -> formLogin
-                                .loginPage("/member/login") // GET
-                                .loginProcessingUrl("/member/login") // POST
-                )
+                .httpBasic().disable() // httpBaic 로그인 방식 끄기
+                .formLogin().disable() // 폼 로그인 방식 끄기
+                .sessionManagement(
+                        sessionManagement ->
+                        sessionManagement.sessionCreationPolicy(STATELESS)
+                ); // 세션 사용안함
                 // 없어도 된다.
 //                .logout(logout -> logout
 //                        .logoutUrl("/logout"))
