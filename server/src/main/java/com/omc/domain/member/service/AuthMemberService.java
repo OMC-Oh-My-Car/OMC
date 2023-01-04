@@ -12,16 +12,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class AuthService {
+public class AuthMemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-    private final TokenProvider tokenProvider;
 
     public MemberResponseDto join(SignUpRequestDto signUpRequestDto) {
+        System.out.println(signUpRequestDto.getEmail());
         if (memberRepository.existsByEmail(signUpRequestDto.getEmail())) {
             throw new DuplicateEmail();
         }

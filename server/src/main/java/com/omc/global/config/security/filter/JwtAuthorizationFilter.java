@@ -1,8 +1,8 @@
 package com.omc.global.config.security.filter;
 
+import com.omc.domain.member.entity.AuthMember;
 import com.omc.domain.member.entity.Member;
 import com.omc.domain.member.service.MemberService;
-import com.omc.global.config.security.entity.MemberContext;
 import com.omc.global.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,13 +47,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     }
 
     private void forceAuthentication(Member member) {
-        MemberContext memberContext = new MemberContext(member);
+        AuthMember authMember = AuthMember.of(member);
 
         UsernamePasswordAuthenticationToken authentication =
                 UsernamePasswordAuthenticationToken.authenticated(
-                        memberContext,
+                        authMember,
                         null,
-                        member.getUserRole()
+                        authMember.getAuthorities()
                 );
 
         SecurityContext context = SecurityContextHolder.createEmptyContext();

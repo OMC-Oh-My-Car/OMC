@@ -41,13 +41,6 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
-    public Collection<? extends GrantedAuthority> getUserRole() {
-        List<GrantedAuthority> userRole = new ArrayList<>();
-        userRole.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-
-        return userRole;
-    }
-
     public void setPassword(String password) {
         this.password = password;
     }

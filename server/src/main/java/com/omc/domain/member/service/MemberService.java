@@ -18,7 +18,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
 
     public Optional<Member> findByEmail(String email) {

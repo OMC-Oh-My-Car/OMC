@@ -22,12 +22,4 @@ public class MemberResponseDto {
     public static <T> ResponseEntity<T> responseEntityOf(HttpHeaders headers) {
         return new ResponseEntity<>(null, headers, HttpStatus.OK);
     }
-
-    public MemberResponseDto MemberResponseLoginDto(String username, String email, String nickname) {
-        return MemberResponseDto.builder()
-                .username(username)
-                .email(email)
-                .nickname(nickname)
-                .build();
-    }
 }
