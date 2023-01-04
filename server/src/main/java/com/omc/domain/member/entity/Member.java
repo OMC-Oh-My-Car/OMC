@@ -4,7 +4,11 @@ import javax.persistence.*;
 
 import com.omc.domain.member.dto.MemberResponseDto;
 import com.omc.global.common.BaseEntity;
+import com.omc.global.util.Util;
 import lombok.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Entity
 @Getter
@@ -47,5 +51,14 @@ public class Member extends BaseEntity {
                 .nickname(nickname)
                 .phone(phone)
                 .build();
+    }
+
+    public Map<String, Object> getAccessTokenClaims() {
+        return Util.mapOf(
+                "username", getUsername(),
+                "nickname", getNickname(),
+                "email", getEmail(),
+                "userRole", getUserRole()
+        );
     }
 }

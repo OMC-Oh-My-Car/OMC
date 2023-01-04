@@ -2,6 +2,7 @@ package com.omc.domain.member.dto;
 
 import com.omc.domain.member.entity.Member;
 import com.omc.domain.member.entity.Social;
+import com.omc.domain.member.entity.UserRole;
 import lombok.*;
 
 import javax.validation.constraints.Email;
@@ -11,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MemberPostDto {
+public class SignUpRequestDto {
     @NotBlank(message = "이름을 입력해주세요.")
     private String username;
 
@@ -38,6 +39,8 @@ public class MemberPostDto {
                 .nickname(nickname)
                 .phone(phone)
                 .profileImg("https://picsum.photos/200/300")
+                .isSocial(Social.ORIGIN)
+                .userRole(UserRole.ROLE_ADMIN)
                 .build();
     }
 }

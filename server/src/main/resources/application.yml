@@ -28,3 +28,8 @@ logging:
   level:
     org.hibernate.type: trace # 콘솔창에 조건에 바인딩되는 값 및 조회 결과 출력
     org.springframework.orm.jpa: debug # 콘솔창에 JPA 쿼리 결과 출력
+
+jwt:
+  secretKey: secretKey-test-authorization-jwt-manage-token,secretKey-test-authorization-jwt-manage-token
+  access-token-expiration-time: 30
+  refresh-token-expiration-time: 30
