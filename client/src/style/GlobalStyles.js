@@ -7,6 +7,9 @@ const GlobalStyles = createGlobalStyle`
 
   ${resetStyle}
 	// 아래에 전역 스타일을 추가
+	* {
+		box-sizing: border-box;
+	}
 	a {
     text-decoration : none;
     color : inherit;
