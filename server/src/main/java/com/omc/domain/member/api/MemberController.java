@@ -4,6 +4,7 @@ import com.omc.domain.member.dto.LoginDto;
 import com.omc.domain.member.dto.SignUpRequestDto;
 import com.omc.domain.member.dto.MemberResponseDto;
 import com.omc.domain.member.entity.Member;
+import com.omc.domain.member.service.AuthService;
 import com.omc.domain.member.service.MemberService;
 import com.omc.global.common.annotation.AuthMember;
 import com.omc.global.config.security.entity.MemberContext;
@@ -21,12 +22,13 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class MemberController {
     private final MemberService memberService;
+    private final AuthService authService;
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping()
     public ResponseEntity<MemberResponseDto> join(@RequestBody SignUpRequestDto memberPostDto) {
         // RequestBody 를 객체화하여 MemberPostDto로 변경 후 회원가입 로직 진행
-        MemberResponseDto newMember = memberService.join(memberPostDto);
+        MemberResponseDto newMember = authService.join(memberPostDto);
 
         return new ResponseEntity<>(newMember, null, HttpStatus.CREATED);
 

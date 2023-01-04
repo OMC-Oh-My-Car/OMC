@@ -44,7 +44,6 @@ public class SignUpRequestDto {
                 .userRole(UserRole.ROLE_ADMIN)
                 .build();
     }
-    }
 
     public Member encodePasswordSignUp(PasswordEncoder passwordEncoder) {
         return Member.builder()

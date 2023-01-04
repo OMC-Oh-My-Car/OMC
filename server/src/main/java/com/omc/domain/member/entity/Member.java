@@ -6,9 +6,10 @@ import com.omc.domain.member.dto.MemberResponseDto;
 import com.omc.global.common.BaseEntity;
 import com.omc.global.util.Util;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Entity
 @Getter
@@ -39,6 +40,13 @@ public class Member extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
+
+    public Collection<? extends GrantedAuthority> getUserRole() {
+        List<GrantedAuthority> userRole = new ArrayList<>();
+        userRole.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+
+        return userRole;
+    }
 
     public void setPassword(String password) {
         this.password = password;
