@@ -9,6 +9,7 @@ import javax.persistence.ManyToOne;
 import com.omc.domain.product.entity.Product;
 import com.omc.global.common.BaseEntity;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,15 +21,18 @@ public class Img extends BaseEntity {
 	@Column(nullable = false)
 	private String imgUrl;
 
+	@Column(nullable = false)
+	private String imgName;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn
 	private Product product;
 
-
-
-	public Img(String imgUrl, Product product) {
+	@Builder
+	public Img(String imgUrl, Product product, String imgName) {
 		this.imgUrl = imgUrl;
 		this.product = product;
+		this.imgName = imgName;
 	}
 
 	public void setProduct(Product product) {
