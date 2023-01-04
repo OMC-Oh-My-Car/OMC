@@ -1,9 +1,7 @@
-package com.omc.domain.img.service;
+package com.omc.global.util;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -18,12 +16,15 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.omc.domain.img.dto.ImgDto;
 import com.omc.global.error.ErrorCode;
 import com.omc.global.error.exception.BusinessException;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 
 @RequiredArgsConstructor
 @Service
@@ -53,60 +54,73 @@ public class S3Service {
 
 	/**
 	 * S3에 파일 업로드
-	 * @param multipartFile: 업로드할 파일 리스트
-	 * @return List<String>: 업로드된 파일의 URL
+	 * @param inputStream 파일 스트림
+	 * @param objectMetadata 파일 메타데이터
+	 * @param fileName 파일 이름
 	 */
-	public List<String> upload(List<MultipartFile> multipartFile) {
-		List<String> imgUrlList = new ArrayList<>();
-
-		// forEach 구문을 통해 multipartFile로 넘어온 파일들 하나씩 fileNameList에 추가
-		for (MultipartFile file : multipartFile) {
-			String fileName = createFileName(file.getOriginalFilename());
-			ObjectMetadata objectMetadata = new ObjectMetadata();
-			objectMetadata.setContentLength(file.getSize());
-			objectMetadata.setContentType(file.getContentType());
-
-			try (InputStream inputStream = file.getInputStream()) {
-				amazonS3.putObject(
-					new PutObjectRequest(bucket + "/product/image", fileName, inputStream, objectMetadata)
-						.withCannedAcl(CannedAccessControlList.PublicRead));
-				imgUrlList.add(amazonS3.getUrl(bucket + "/product/image", fileName).toString());
-			} catch (IOException e) {
-				throw new BusinessException(ErrorCode.IMAGE_UPLOAD_ERROR);
-			}
-		}
-		return imgUrlList;
+	public void uploadFile(InputStream inputStream, ObjectMetadata objectMetadata, String fileName) {
+		amazonS3.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata).withCannedAcl(
+			CannedAccessControlList.PublicRead));
 	}
-
-	/*
-	todo 추후 삭제 기능과 같이 구현
-	public void deleteFile(String fileName){
-		DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucket + "/product/image", fileName);
-		amazonS3.deleteObject(deleteObjectRequest);
-	}
-	 */
 
 	/**
-	 * 파일 이름 중복 방지를 위해 UUID를 이용해 파일 이름 생성
-	 * @param fileName: 파일 이름
-	 * @return String: UUID를 이용해 생성된 파일 이름
+	 * File URL 가져오기
+	 * @param fileName 파일 이름
+	 * @return 파일 URL
+	 */
+	public String getFileUrl(String fileName) {
+		return amazonS3.getUrl(bucket, fileName).toString();
+	}
+
+	/**
+	 * S3에 파일 삭제
+	 * @param fileName 파일 이름
+	 */
+	public void deleteFile(String fileName) {
+		DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucket, fileName);
+		amazonS3.deleteObject(deleteObjectRequest);
+	}
+
+	/**
+	 * 이미지 업로드
+	 * @param file 이미지 파일
+	 * @param dirName 디렉토리 이름
+	 * @return 이미지 URL
+	 */
+	@SneakyThrows
+	public ImgDto.Request uploadImage(MultipartFile file, String dirName) {
+
+		String filename = dirName + "/" + createFileName(file.getOriginalFilename());
+
+		ObjectMetadata objectMetadata = new ObjectMetadata();
+		objectMetadata.setContentLength(file.getSize());
+		objectMetadata.setContentType(file.getContentType());
+		InputStream inputStream = file.getInputStream();
+
+		uploadFile(inputStream, objectMetadata, filename);
+
+		return ImgDto.Request.builder()
+			.imgName(filename)
+			.imgUrl(getFileUrl(filename))
+			.build();
+	}
+
+	/**
+	 * 중복 파일명 방지를 위한 UUID 파일명 생성
+	 * @param fileName 파일 이름
+	 * @return UUID 파일 이름
 	 */
 	private String createFileName(String fileName) {
 		return UUID.randomUUID().toString().concat(getFileExtension(fileName));
 	}
 
 	/**
-	 * 파일 유효성 검사
-	 * @param fileName: 파일 이름
-	 * @return String: 파일 확장자
+	 * 이미지 확장자 검증
+	 * @param fileName 파일 이름
+	 * @return 이미지 확장자
 	 */
 	private String getFileExtension(String fileName) {
 
-		if (fileName.length() == 0) {
-			throw new BusinessException(ErrorCode.WRONG_INPUT_IMAGE);
-		}
-
-		// todo: 상수로 빼서 관리
 		ArrayList<String> fileValidate = new ArrayList<>();
 		fileValidate.add(".jpg");
 		fileValidate.add(".jpeg");
@@ -116,10 +130,12 @@ public class S3Service {
 		fileValidate.add(".PNG");
 
 		String idxFileName = fileName.substring(fileName.lastIndexOf("."));
+
 		if (!fileValidate.contains(idxFileName)) {
 			throw new BusinessException(ErrorCode.WRONG_IMAGE_FORMAT);
 		}
 
 		return fileName.substring(fileName.lastIndexOf("."));
 	}
+
 }
