@@ -7,7 +7,7 @@ plugins {
 
 group = 'com.omc'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = "15"
 
 configurations {
     compileOnly {
@@ -55,3 +55,4 @@ tasks.named('asciidoctor') {
     inputs.dir snippetsDir
     dependsOn test
 }
+targetCompatibility = JavaVersion.VERSION_15
