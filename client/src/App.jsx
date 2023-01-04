@@ -1,18 +1,26 @@
 // import React from 'react';
 // import RouterComponent from "./Router";
 import GlobalStyles from './style/GlobalStyles';
-import { ThemeProvider } from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
+import Router from './router/Router';
 import theme from './style/Theme';
-
 function App() {
   return (
     <>
-      <GlobalStyles />
-      <ThemeProvider theme={theme}>
-        <div>dummy</div>
-      </ThemeProvider>
+      <Container>
+        <GlobalStyles />
+        <ThemeProvider theme={theme}>
+          <Router />
+        </ThemeProvider>
+      </Container>
     </>
   );
 }
 
 export default App;
+
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+`;
