@@ -5,16 +5,15 @@ import com.omc.domain.member.dto.SignUpRequestDto;
 import com.omc.domain.member.dto.MemberResponseDto;
 import com.omc.domain.member.entity.Member;
 import com.omc.domain.member.service.MemberService;
+import com.omc.global.common.annotation.AuthMember;
+import com.omc.global.config.security.entity.MemberContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/member")
@@ -52,5 +51,10 @@ public class MemberController {
         headers.set("Authentication", accessToken);
 
         return MemberResponseDto.responseEntityOf(headers);
+    }
+
+    @GetMapping("/test")
+    public String test(@AuthMember MemberContext memberContext) {
+        return "안녕" + memberContext;
     }
 }
