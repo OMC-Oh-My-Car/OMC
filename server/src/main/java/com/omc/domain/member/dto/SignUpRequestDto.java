@@ -4,6 +4,7 @@ import com.omc.domain.member.entity.Member;
 import com.omc.domain.member.entity.Social;
 import com.omc.domain.member.entity.UserRole;
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -31,10 +32,24 @@ public class SignUpRequestDto {
 
     private String profileImg;
 
-    public Member toEntity() {
+    public Member signUp() {
         return Member.builder()
                 .username(username)
                 .password(password)
+                .email(email)
+                .nickname(nickname)
+                .phone(phone)
+                .profileImg("https://picsum.photos/200/300")
+                .isSocial(Social.ORIGIN)
+                .userRole(UserRole.ROLE_ADMIN)
+                .build();
+    }
+    }
+
+    public Member encodePasswordSignUp(PasswordEncoder passwordEncoder) {
+        return Member.builder()
+                .username(username)
+                .password(passwordEncoder.encode(password))
                 .email(email)
                 .nickname(nickname)
                 .phone(phone)

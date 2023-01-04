@@ -3,6 +3,9 @@ package com.omc.domain.member.service;
 import com.omc.domain.member.dto.SignUpRequestDto;
 import com.omc.domain.member.dto.MemberResponseDto;
 import com.omc.domain.member.entity.Member;
+import com.omc.domain.member.exception.DuplicateEmail;
+import com.omc.domain.member.exception.DuplicateNickname;
+import com.omc.domain.member.exception.DuplicateUsername;
 import com.omc.domain.member.repository.MemberRepository;
 import com.omc.global.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +22,20 @@ public class MemberService {
     private final TokenProvider tokenProvider;
 
     public MemberResponseDto join(SignUpRequestDto signUpRequestDto) {
-        // 객체화된 Request Body의 value로 Member Entity를 Build
-        Member member = signUpRequestDto.toEntity();
+        if (memberRepository.existsByEmail(signUpRequestDto.getEmail())) {
+            throw new DuplicateEmail();
+        }
 
-        // 비밀번호 암호화
-        String encryptedPassword = passwordEncoder.encode(member.getPassword());
-        member.setPassword(encryptedPassword);
+        if (memberRepository.existsByUsername(signUpRequestDto.getUsername())) {
+            throw new DuplicateUsername();
+        }
+
+        if (memberRepository.existsByNickname(signUpRequestDto.getNickname())) {
+            throw new DuplicateNickname();
+        }
+
+        // encoding된 password를 사용한 build
+        Member member = signUpRequestDto.encodePasswordSignUp(passwordEncoder);
 
         // 객체형태의 Response Body 생성
         return memberRepository.save(member).toResponseDto();

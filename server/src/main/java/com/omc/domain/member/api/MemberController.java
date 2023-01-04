@@ -52,9 +52,4 @@ public class MemberController {
 
         return MemberResponseDto.responseEntityOf(headers);
     }
-
-    @GetMapping("/test")
-    public String test(@AuthMember MemberContext memberContext) {
-        return "안녕" + memberContext;
-    }
 }
