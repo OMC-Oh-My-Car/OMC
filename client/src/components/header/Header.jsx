@@ -2,11 +2,11 @@
 import { HeaderArea } from './Header.styled';
 import Nav from './nav/Nav';
 
-const Header = () => {
+const Header = ({ type }) => {
   return (
     <>
       <HeaderArea>
-        <Nav />
+        <Nav type={type} />
       </HeaderArea>
     </>
   );
