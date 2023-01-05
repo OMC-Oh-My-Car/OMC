@@ -23,11 +23,19 @@ public enum ErrorCode {
 	INVALID_MEMBER_TYPE(HttpStatus.BAD_REQUEST, "M-001", "잘못된 회원 타입 입니다.(memberType : KAKAO)"),
 	ALREADY_REGISTERED_MEMBER(HttpStatus.BAD_REQUEST, "M-002", "이미 가입된 회원 입니다."),
 	MEMBER_NOT_EXISTS(HttpStatus.BAD_REQUEST, "M-003", "해당 회원은 존재하지 않습니다."),
+
+	// 상품
+	IMAGE_UPLOAD_ERROR(HttpStatus.BAD_REQUEST, "P-009", "이미지 업로드에 실패했습니다."),
+
+	WRONG_INPUT_IMAGE(HttpStatus.BAD_REQUEST, "P-010", "이미지 파일이 아닙니다."),
+	WRONG_IMAGE_FORMAT(HttpStatus.BAD_REQUEST, "P-011",	"이미지 파일 형식이 잘못되었습니다."),
+	IMAGE_NOT_FOUND(HttpStatus.BAD_REQUEST, "P-012", "이미지 파일이 존재하지 않습니다."),
 	;
 
 	private HttpStatus httpStatus;
 	private String errorCode;
 	private String message;
+
 	ErrorCode(HttpStatus httpStatus, String errorCode, String message) {
 		this.httpStatus = httpStatus;
 		this.errorCode = errorCode;
