@@ -4,12 +4,12 @@ import Logo from './logo/Logo';
 import SearchInput from './searchInput/SearchInput';
 import HeaderUser from './user/HeaderUser';
 
-const Nav = () => {
+const Nav = ({ type }) => {
   return (
     <>
-      <NavArea>
+      <NavArea type={type}>
         <Logo />
-        <SearchInput />
+        <SearchInput type={type} />
         <HeaderUser />
       </NavArea>
     </>
