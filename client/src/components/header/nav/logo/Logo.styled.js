@@ -4,10 +4,15 @@ export const LogoArea = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100px;
+  gap: 5px;
   height: 100%;
-  border: 1px solid black;
+  cursor: pointer;
+  .logoIcon {
+    width: 48px;
+  }
   .logo {
-    font-size: 25px;
+    font-size: 30px;
+    font-weight: 700;
+    color: ${(props) => props.theme.red};
   }
 `;

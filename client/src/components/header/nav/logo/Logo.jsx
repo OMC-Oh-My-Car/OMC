@@ -1,10 +1,15 @@
 // import React from 'react';
 import { LogoArea } from './Logo.styled';
+import logo from '../../../../assets/images/logo.png';
 
 const Logo = () => {
   return (
     <>
-      <LogoArea></LogoArea>
+      <LogoArea>
+        <img className="logoIcon" src={logo} alt="omcLogo" />
+        {/* <FontAwesomeIcon className="logoIcon" icon={faCaravan} /> */}
+        <div className="logo">OMC</div>
+      </LogoArea>
     </>
   );
 };
