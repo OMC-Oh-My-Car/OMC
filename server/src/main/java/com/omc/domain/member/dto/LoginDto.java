@@ -1,10 +1,11 @@
 package com.omc.domain.member.dto;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 
-@Data
+@Getter
+@RequiredArgsConstructor
 public class LoginDto {
     @NotBlank(message = "이메일을 입력해주세요.")
     private String email;

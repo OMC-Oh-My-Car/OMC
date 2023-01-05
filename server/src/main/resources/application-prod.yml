@@ -1,8 +1,3 @@
-spring:
-  datasource:
-    url: jdbc:mysql://127.0.0.1:3306/omc_prod?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
-    username: root
-    password: 1111
-  jpa:
-    hibernate:
-      ddl-auto: none # create / update / validate / none
+jpa:
+  hibernate:
+    ddl-auto: none # create / update / validate / none

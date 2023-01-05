@@ -6,8 +6,6 @@ import com.omc.domain.member.dto.MemberResponseDto;
 import com.omc.global.common.BaseEntity;
 import com.omc.global.util.Util;
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.*;
 
