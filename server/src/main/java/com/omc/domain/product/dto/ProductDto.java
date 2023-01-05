@@ -20,7 +20,7 @@ public class ProductDto {
 	@Builder
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)
 	@AllArgsConstructor(access = AccessLevel.PRIVATE)
-	public static class Post {
+	public static class Request {
 
 		@NotBlank(message = "상품 이름을 입력해주세요.")
 		@Size(min = 1, max = 30, message = "상품 이름은 1자 이상 30자 이하로 입력해주세요.")

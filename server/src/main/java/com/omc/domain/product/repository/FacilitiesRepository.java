@@ -6,4 +6,5 @@ import com.omc.domain.product.entity.Facilities;
 
 public interface FacilitiesRepository extends JpaRepository<Facilities, Long> {
 
+	void deleteByProductId(Long productId);
 }

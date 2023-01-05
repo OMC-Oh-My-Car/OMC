@@ -2,6 +2,7 @@ package com.omc.domain.product.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,6 +16,7 @@ import org.hibernate.annotations.DynamicInsert;
 
 import com.omc.domain.img.entity.Img;
 import com.omc.domain.member.entity.Member;
+import com.omc.domain.product.dto.ProductDto;
 import com.omc.global.common.BaseEntity;
 
 import lombok.AllArgsConstructor;
@@ -41,9 +43,6 @@ public class Product extends BaseEntity {
 	@Column
 	private String zipcode;
 
-	// @Column
-	// private String location;
-
 	@Column
 	private Long reportCount;
 
@@ -68,7 +67,7 @@ public class Product extends BaseEntity {
 	@Column
 	private Long likes;
 
-	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
 	private List<Img> imgList = new ArrayList<>();
 
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -106,4 +105,29 @@ public class Product extends BaseEntity {
 		this.likes = likes;
 	}
 
+	public void editProduct(ProductDto.Request dto) {
+		Optional.ofNullable(dto.getSubject())
+			.ifPresent(subject -> this.subject = subject);
+		Optional.ofNullable(dto.getDescription())
+			.ifPresent(description -> this.description = description);
+		Optional.ofNullable(dto.getAddress())
+			.ifPresent(address -> this.address = address);
+		Optional.ofNullable(dto.getZipcode())
+			.ifPresent(zipcode -> this.zipcode = zipcode);
+		Optional.ofNullable(dto.getTelephone())
+			.ifPresent(telephone -> this.telephone = telephone);
+		Optional.ofNullable(dto.getPrice())
+			.ifPresent(price -> this.price = price);
+		Optional.ofNullable(dto.getCheckIn())
+			.ifPresent(checkIn -> this.checkIn = checkIn);
+		Optional.ofNullable(dto.getCheckOut())
+			.ifPresent(checkOut -> this.checkOut = checkOut);
+	}
+
+	public void setImgList(List<Img> imgs) {
+		this.imgList = imgs;
+		for (Img img : imgs) {
+			img.setProduct(this);
+		}
+	}
 }

@@ -6,4 +6,5 @@ import com.omc.domain.product.entity.Location;
 
 public interface LocationRepository extends JpaRepository<Location, Long> {
 
+	void deleteByProductId(Long productId);
 }

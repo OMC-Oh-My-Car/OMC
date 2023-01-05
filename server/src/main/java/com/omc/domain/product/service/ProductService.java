@@ -20,6 +20,8 @@ import com.omc.domain.product.entity.Product;
 import com.omc.domain.product.repository.FacilitiesRepository;
 import com.omc.domain.product.repository.LocationRepository;
 import com.omc.domain.product.repository.ProductRepository;
+import com.omc.global.error.ErrorCode;
+import com.omc.global.error.exception.BusinessException;
 import com.omc.global.util.S3Service;
 
 import lombok.RequiredArgsConstructor;
@@ -39,67 +41,103 @@ public class ProductService {
 
 	private final S3Service s3Service;
 
+	private StringTokenizer st;
+
 	/**
 	 * 상품 등록
-	 * @param post: 상품 정보
+	 * @param req: 상품 정보
 	 *                     - subject: 상품명
 	 *                     - description: 상품 설명
 	 * @param multipartFiles: 상품 이미지
 	 */
 	@SneakyThrows
 	@Transactional
-	public void uploadProduct(ProductDto.Post post, List<MultipartFile> multipartFiles) {
+	public void create(ProductDto.Request req, List<MultipartFile> multipartFiles) {
 
 		log.info("multipartFile imgs={}", multipartFiles);
-		String address = post.getAddress();
+		String address = req.getAddress();
 
-		List<Img> imgList = new ArrayList<>();
-		List<ImgDto.Request> imgDtoList = new ArrayList<>();
-
-		if (multipartFiles != null) {
-			for (MultipartFile img : multipartFiles) {
-				ImgDto.Request imgDto = s3Service.uploadImage(img, "product");
-				imgDtoList.add(imgDto);
-			}
-		}
-
-		imgDtoToImg(imgList, imgDtoList);
+		List<Img> imgList = uploadImgAndImgDtoToEntity(multipartFiles);
 
 		Product product = Product.builder()
-			.subject(post.getSubject())
-			.description(post.getDescription())
+			.subject(req.getSubject())
+			.description(req.getDescription())
 			.imgList(imgList)
 			.address(address)
-			.zipcode(post.getZipcode())
-			.price(post.getPrice())
-			.telephone(post.getTelephone())
-			.checkIn(post.getCheckIn())
-			.checkOut(post.getCheckOut())
+			.zipcode(req.getZipcode())
+			.price(req.getPrice())
+			.telephone(req.getTelephone())
+			.checkIn(req.getCheckIn())
+			.checkOut(req.getCheckOut())
 			.likes(0L)
 			.star(0.0)
 			.reportCount(0L)
 			.count(0L)
 			.build();
 
+		saveLocation(product, req);
+		saveFacilities(product, req);
+
 		productRepository.save(product);
 
-		StringTokenizer st = new StringTokenizer(post.getFacilities(), "#");
+	}
 
-		List<String> keyword = new ArrayList<>();
-		while (st.hasMoreTokens()) {
-			keyword.add(st.nextToken());
+	/**
+	 * ImgDto를 Img로 변환
+	 * @param imgList : Img 리스트
+	 * @param imgDtoList : ImgDto 리스트
+	 */
+	private static void imgDtoToImg(List<Img> imgList, List<ImgDto.Request> imgDtoList) {
+		for (ImgDto.Request imgDto : imgDtoList) {
+			Img img = Img.builder()
+				.imgName(imgDto.getImgName())
+				.imgUrl(imgDto.getImgUrl())
+				.build();
+			imgList.add(img);
+		}
+	}
+
+	@Transactional
+	public void update(ProductDto.Request req, List<MultipartFile> multipartFiles, Long productId) {
+
+		Product findProduct = ifExistReturnProduct(productId);
+		findProduct.editProduct(req);
+
+		if (req.getFacilities() != null) {
+			facilitiesRepository.deleteByProductId(productId);
+			saveFacilities(findProduct, req);
+		}
+		if (req.getAddress() != null) {
+			locationRepository.deleteByProductId(productId);
+			saveLocation(findProduct, req);
 		}
 
-		facilitiesRepository.saveAll(
-			keyword.stream()
-				.map(facility -> Facilities.builder()
-					.product(product)
-					.keyword(facility)
-					.build())
-				.collect(Collectors.toList())
-		);
+		if (multipartFiles != null) {
+			findProduct.getImgList().stream().map(Img::getImgName).forEach(s3Service::deleteFile);
+			imgRepository.deleteByProductId(productId);
+			List<Img> imgs = uploadImgAndImgDtoToEntity(multipartFiles);
+			findProduct.setImgList(imgs);
+		}
 
-		st = new StringTokenizer(address, " ");
+		productRepository.save(findProduct);
+	}
+
+	private List<Img> uploadImgAndImgDtoToEntity(List<MultipartFile> multipartFiles) {
+		List<Img> imgList = new ArrayList<>();
+		List<ImgDto.Request> imgDtoList = new ArrayList<>();
+
+		for (MultipartFile img : multipartFiles) {
+			ImgDto.Request imgDto = s3Service.uploadImage(img, "product");
+			imgDtoList.add(imgDto);
+		}
+		imgDtoToImg(imgList, imgDtoList);
+
+		return imgList;
+	}
+
+	private void saveLocation(Product product, ProductDto.Request req) {
+
+		st = new StringTokenizer(req.getAddress(), " ");
 
 		List<String> locations = new ArrayList<>();
 		while (st.hasMoreTokens()) {
@@ -122,21 +160,29 @@ public class ProductService {
 					.build())
 				.collect(Collectors.toList())
 		);
-
 	}
 
-	/**
-	 * ImgDto를 Img로 변환
-	 * @param imgList : Img 리스트
-	 * @param imgDtoList : ImgDto 리스트
-	 */
-	private static void imgDtoToImg(List<Img> imgList, List<ImgDto.Request> imgDtoList) {
-		for (ImgDto.Request imgDto : imgDtoList) {
-			Img img = Img.builder()
-				.imgName(imgDto.getImgName())
-				.imgUrl(imgDto.getImgUrl())
-				.build();
-			imgList.add(img);
+	private void saveFacilities(Product product, ProductDto.Request req) {
+
+		st = new StringTokenizer(req.getFacilities(), "#");
+
+		List<String> keyword = new ArrayList<>();
+		while (st.hasMoreTokens()) {
+			keyword.add(st.nextToken());
 		}
+
+		facilitiesRepository.saveAll(
+			keyword.stream()
+				.map(facility -> Facilities.builder()
+					.product(product)
+					.keyword(facility)
+					.build())
+				.collect(Collectors.toList())
+		);
+	}
+
+	private Product ifExistReturnProduct(Long productId) {
+		return productRepository.findById(productId)
+			.orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
 	}
 }

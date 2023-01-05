@@ -2,9 +2,13 @@ package com.omc.domain.product.api;
 
 import java.util.List;
 
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,13 +31,13 @@ public class ProductController {
 
 	/**
 	 * 상품 등록 (개발중)
-	 * @param post: 상품 정보
+	 * @param req: 상품 정보
 	 *                     - subject: 상품명
 	 *                     - description: 상품 설명
 	 * @param multipartFiles: 상품 이미지
 	 */
 	@PostMapping(value = "/product", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-	public ResponseEntity<?> create(@RequestPart("product") ProductDto.Post post,
+	public ResponseEntity<?> create(@RequestPart("product") ProductDto.Request req,
 		@RequestPart("imgUrl") List<MultipartFile> multipartFiles) {
 
 		if (multipartFiles == null) {
@@ -41,8 +45,19 @@ public class ProductController {
 			throw new BusinessException(ErrorCode.IMAGE_NOT_FOUND);
 		}
 
-		productService.uploadProduct(post, multipartFiles);
+		productService.create(req, multipartFiles);
 
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
+
+	@PatchMapping(value = "/product/{productId}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+	public ResponseEntity<?> update(@RequestPart("product") ProductDto.Request req,
+		@RequestPart("imgUrl") List<MultipartFile> multipartFiles,
+		@PathVariable Long productId) {
+
+		productService.update(req, multipartFiles, productId);
+
+		return ResponseEntity.status(HttpStatus.OK).build();
+	}
+
 }
