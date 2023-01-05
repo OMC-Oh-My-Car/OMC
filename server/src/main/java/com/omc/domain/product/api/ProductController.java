@@ -27,20 +27,21 @@ public class ProductController {
 
 	/**
 	 * 상품 등록 (개발중)
-	 * @param request: 상품 정보
+	 * @param post: 상품 정보
 	 *                     - subject: 상품명
 	 *                     - description: 상품 설명
 	 * @param multipartFiles: 상품 이미지
 	 */
 	@PostMapping(value = "/product", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-	public ResponseEntity<?> create(@RequestPart("product") ProductDto.Request request,
+	public ResponseEntity<?> create(@RequestPart("product") ProductDto.Post post,
 		@RequestPart("imgUrl") List<MultipartFile> multipartFiles) {
 
 		if (multipartFiles == null) {
+			log.error("multipartFiles is null");
 			throw new BusinessException(ErrorCode.IMAGE_NOT_FOUND);
 		}
 
-		productService.uploadProduct(request, multipartFiles);
+		productService.uploadProduct(post, multipartFiles);
 
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
