@@ -25,6 +25,7 @@ public enum ErrorCode {
 	MEMBER_NOT_EXISTS(HttpStatus.BAD_REQUEST, "M-003", "해당 회원은 존재하지 않습니다."),
 
 	// 상품
+	PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "P-001", "해당 상품은 존재하지 않습니다."),
 	IMAGE_UPLOAD_ERROR(HttpStatus.BAD_REQUEST, "P-009", "이미지 업로드에 실패했습니다."),
 
 	WRONG_INPUT_IMAGE(HttpStatus.BAD_REQUEST, "P-010", "이미지 파일이 아닙니다."),
