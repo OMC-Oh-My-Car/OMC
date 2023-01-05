@@ -39,7 +39,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                         () -> new UsernameNotFoundException("'%s' email not found.".formatted(email))
                 );
 
-                forceAuthentication(member);
+                // 2차 체크(화이트리스트에 포함되는지)
+                if ( memberService.verifyWithWhiteList(member, token) ) {
+                    forceAuthentication(member);
+                }
             }
         }
 

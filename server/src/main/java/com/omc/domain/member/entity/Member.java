@@ -39,6 +39,13 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
+    @Column(columnDefinition = "TEXT")
+    private String accessToken;
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }

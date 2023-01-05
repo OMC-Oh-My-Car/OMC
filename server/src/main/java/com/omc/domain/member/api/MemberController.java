@@ -1,6 +1,7 @@
 package com.omc.domain.member.api;
 
 import com.omc.domain.member.dto.LoginDto;
+import com.omc.domain.member.dto.ReissueResponse;
 import com.omc.domain.member.dto.SignUpRequestDto;
 import com.omc.domain.member.dto.MemberResponseDto;
 import com.omc.domain.member.entity.Member;
@@ -13,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/member")
@@ -50,5 +53,13 @@ public class MemberController {
         headers.set("Authentication", accessToken);
 
         return MemberResponseDto.responseEntityOf(headers);
+    }
+
+    @GetMapping("/reissue")
+    public ResponseEntity<ReissueResponse> reissue(@CookieValue(value = "refreshToken", required = false) String refreshToken,
+                                                   HttpServletResponse response) {
+
+        ReissueResponse reissue = authService.reissue(refreshToken, response);
+        return new ResponseEntity<>(reissue, null, HttpStatus.CREATED);
     }
 }

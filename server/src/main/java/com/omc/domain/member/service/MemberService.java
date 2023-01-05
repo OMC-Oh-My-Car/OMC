@@ -2,6 +2,7 @@ package com.omc.domain.member.service;
 
 import com.omc.domain.member.dto.SignUpRequestDto;
 import com.omc.domain.member.dto.MemberResponseDto;
+import com.omc.domain.member.dto.TokenDto;
 import com.omc.domain.member.entity.Member;
 import com.omc.domain.member.exception.DuplicateEmail;
 import com.omc.domain.member.exception.DuplicateNickname;
@@ -11,6 +12,7 @@ import com.omc.global.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Optional;
 
@@ -25,6 +27,19 @@ public class MemberService {
     }
 
     public String generateAccessKey(Member member) {
-        return tokenProvider.generateAccessToken(member.getAccessTokenClaims());
+        String accessToken = member.getAccessToken();
+
+        if (StringUtils.hasLength(accessToken) == false ) {
+            TokenDto tokenDto = tokenProvider.generateToken(member.getAccessTokenClaims());
+
+            accessToken = tokenDto.getAccessToken();
+            member.setAccessToken(accessToken);
+        }
+
+        return accessToken;
+    }
+
+    public boolean verifyWithWhiteList(Member member, String token) {
+        return member.getAccessToken().equals(token);
     }
 }
