@@ -1,9 +1,10 @@
 // import React from 'react';
 
-export default function Dummy() {
+const Dummy = () => {
   return (
     <>
       <div>Dummy</div>
     </>
   );
-}
+};
+export default Dummy;
