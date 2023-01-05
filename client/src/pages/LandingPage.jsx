@@ -6,7 +6,7 @@ const LandingPage = () => {
   return (
     <>
       <Container>
-        <Header />
+        <Header type="long" />
       </Container>
     </>
   );
