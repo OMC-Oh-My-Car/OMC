@@ -4,7 +4,7 @@ import GlobalStyles from './style/GlobalStyles';
 import styled, { ThemeProvider } from 'styled-components';
 import Router from './router/Router';
 import theme from './style/Theme';
-function App() {
+export default function App() {
   return (
     <>
       <Container>
@@ -16,8 +16,6 @@ function App() {
     </>
   );
 }
-
-export default App;
 
 const Container = styled.div`
   display: flex;
