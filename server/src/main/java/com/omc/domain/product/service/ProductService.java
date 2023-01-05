@@ -15,8 +15,10 @@ import com.omc.domain.img.entity.Img;
 import com.omc.domain.img.repository.ImgRepository;
 import com.omc.domain.product.dto.ProductDto;
 import com.omc.domain.product.entity.Facilities;
+import com.omc.domain.product.entity.Location;
 import com.omc.domain.product.entity.Product;
 import com.omc.domain.product.repository.FacilitiesRepository;
+import com.omc.domain.product.repository.LocationRepository;
 import com.omc.domain.product.repository.ProductRepository;
 import com.omc.global.util.S3Service;
 
@@ -32,6 +34,7 @@ public class ProductService {
 	// private final MemberRepository memberRepository;
 	private final ProductRepository productRepository;
 	private final FacilitiesRepository facilitiesRepository;
+	private final LocationRepository locationRepository;
 	private final ImgRepository imgRepository;
 
 	private final S3Service s3Service;
@@ -48,6 +51,7 @@ public class ProductService {
 	public void uploadProduct(ProductDto.Post post, List<MultipartFile> multipartFiles) {
 
 		log.info("multipartFile imgs={}", multipartFiles);
+		String address = post.getAddress();
 
 		List<Img> imgList = new ArrayList<>();
 		List<ImgDto.Request> imgDtoList = new ArrayList<>();
@@ -65,7 +69,7 @@ public class ProductService {
 			.subject(post.getSubject())
 			.description(post.getDescription())
 			.imgList(imgList)
-			.address(post.getAddress())
+			.address(address)
 			.zipcode(post.getZipcode())
 			.price(post.getPrice())
 			.telephone(post.getTelephone())
@@ -91,6 +95,30 @@ public class ProductService {
 				.map(facility -> Facilities.builder()
 					.product(product)
 					.keyword(facility)
+					.build())
+				.collect(Collectors.toList())
+		);
+
+		st = new StringTokenizer(address, " ");
+
+		List<String> locations = new ArrayList<>();
+		while (st.hasMoreTokens()) {
+			String s = st.nextToken();
+			if (s.endsWith("도") || s.endsWith("시") ||
+				s.endsWith("군") || s.endsWith("구") ||
+				s.endsWith("읍") || s.endsWith("면") ||
+				s.endsWith("리") || s.endsWith("로") ||
+				s.endsWith("길") || s.endsWith("동") ||
+				s.endsWith("가") || s.endsWith("번지")) {
+				locations.add(s);
+			}
+		}
+
+		locationRepository.saveAll(
+			locations.stream()
+				.map(location -> Location.builder()
+					.product(product)
+					.keyword(location)
 					.build())
 				.collect(Collectors.toList())
 		);

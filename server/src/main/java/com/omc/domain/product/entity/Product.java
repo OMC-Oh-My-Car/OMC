@@ -41,8 +41,8 @@ public class Product extends BaseEntity {
 	@Column
 	private String zipcode;
 
-	@Column
-	private String location;
+	// @Column
+	// private String location;
 
 	@Column
 	private Long reportCount;
@@ -75,6 +75,9 @@ public class Product extends BaseEntity {
 	private List<Facilities> facilities = new ArrayList<>();
 
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Location> locations = new ArrayList<>();
+
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Stop> stops = new ArrayList<>();
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -83,8 +86,8 @@ public class Product extends BaseEntity {
 
 	@Builder
 	public Product(String subject, String description, List<Img> imgList, String address, String zipcode,
-		String location, Long reportCount, String telephone, Long count, Long price, Double star, String checkIn,
-		String checkOut, Long likes, List<Facilities> facilities) {
+		Long reportCount, String telephone, Long count, Long price, Double star, String checkIn, String checkOut,
+		Long likes) {
 		this.subject = subject;
 		this.description = description;
 		this.imgList = imgList;
@@ -93,7 +96,6 @@ public class Product extends BaseEntity {
 		}
 		this.address = address;
 		this.zipcode = zipcode;
-		this.location = location;
 		this.reportCount = reportCount;
 		this.telephone = telephone;
 		this.count = count;
