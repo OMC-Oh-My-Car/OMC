@@ -1,10 +1,9 @@
 // import React from 'react';
 
-function Dummy() {
+export default function Dummy() {
   return (
     <>
       <div>Dummy</div>
     </>
   );
 }
-export default Dummy;
