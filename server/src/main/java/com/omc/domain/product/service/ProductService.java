@@ -46,8 +46,6 @@ public class ProductService {
 	/**
 	 * 상품 등록
 	 * @param req: 상품 정보
-	 *                     - subject: 상품명
-	 *                     - description: 상품 설명
 	 * @param multipartFiles: 상품 이미지
 	 */
 	@SneakyThrows
@@ -83,20 +81,11 @@ public class ProductService {
 	}
 
 	/**
-	 * ImgDto를 Img로 변환
-	 * @param imgList : Img 리스트
-	 * @param imgDtoList : ImgDto 리스트
+	 * 상품 수정
+	 * @param req : 상품 정보
+	 * @param multipartFiles : 상품 이미지
+	 * @param productId : 상품 id
 	 */
-	private static void imgDtoToImg(List<Img> imgList, List<ImgDto.Request> imgDtoList) {
-		for (ImgDto.Request imgDto : imgDtoList) {
-			Img img = Img.builder()
-				.imgName(imgDto.getImgName())
-				.imgUrl(imgDto.getImgUrl())
-				.build();
-			imgList.add(img);
-		}
-	}
-
 	@Transactional
 	public void update(ProductDto.Request req, List<MultipartFile> multipartFiles, Long productId) {
 
@@ -122,6 +111,27 @@ public class ProductService {
 		productRepository.save(findProduct);
 	}
 
+
+	/**
+	 * ImgDto를 Img로 변환
+	 * @param imgList : Img 리스트
+	 * @param imgDtoList : ImgDto 리스트
+	 */
+	private static void imgDtoToImg(List<Img> imgList, List<ImgDto.Request> imgDtoList) {
+		for (ImgDto.Request imgDto : imgDtoList) {
+			Img img = Img.builder()
+				.imgName(imgDto.getImgName())
+				.imgUrl(imgDto.getImgUrl())
+				.build();
+			imgList.add(img);
+		}
+	}
+
+	/**
+	 * 상품 이미지 업로드 및 ImgDto를 Img로 변환
+	 * @param multipartFiles : 상품 이미지
+	 * @return : 이미지 리스트
+	 */
 	private List<Img> uploadImgAndImgDtoToEntity(List<MultipartFile> multipartFiles) {
 		List<Img> imgList = new ArrayList<>();
 		List<ImgDto.Request> imgDtoList = new ArrayList<>();
@@ -135,6 +145,11 @@ public class ProductService {
 		return imgList;
 	}
 
+	/**
+	 * 상품 위치 저장
+	 * @param product : 상품
+	 * @param req : 상품 정보
+	 */
 	private void saveLocation(Product product, ProductDto.Request req) {
 
 		st = new StringTokenizer(req.getAddress(), " ");
@@ -162,6 +177,11 @@ public class ProductService {
 		);
 	}
 
+	/**
+	 * 상품 편의시설 저장
+	 * @param product : 상품
+	 * @param req : 상품 정보
+	 */
 	private void saveFacilities(Product product, ProductDto.Request req) {
 
 		st = new StringTokenizer(req.getFacilities(), "#");
@@ -181,6 +201,11 @@ public class ProductService {
 		);
 	}
 
+	/**
+	 * 상품 존재 여부 확인
+	 * @param productId : 상품 id
+	 * @return : 상품
+	 */
 	private Product ifExistReturnProduct(Long productId) {
 		return productRepository.findById(productId)
 			.orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
