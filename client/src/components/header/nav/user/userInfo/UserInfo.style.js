@@ -23,6 +23,7 @@ export const UserInfoArea = styled.div`
   .userIcon {
     position: absolute;
     right: 10px;
-    font-size: 30px;
+    font-size: 33px;
+    color: ${(props) => props.theme.yellow};
   }
 `;
