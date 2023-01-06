@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.omc.domain.product.dto.ProductDto;
 import com.omc.domain.product.service.ProductService;
+import com.omc.global.common.dto.SingleResponseDto;
 import com.omc.global.error.ErrorCode;
 import com.omc.global.error.exception.BusinessException;
 
@@ -64,6 +66,19 @@ public class ProductController {
 		productService.update(req, multipartFiles, productId);
 
 		return ResponseEntity.status(HttpStatus.OK).build();
+	}
+
+	/**
+	 * 상품 상세 조회
+	 * @param productId : 상품 id
+	 * @return 상품 정보
+	 */
+	@GetMapping(value = "/product/{productId}")
+	public ResponseEntity<?> getProduct(@PathVariable Long productId) {
+
+		ProductDto.Response res = productService.getProduct(productId);
+
+		return new ResponseEntity<>(new SingleResponseDto<>(res), HttpStatus.OK);
 	}
 
 	/**
