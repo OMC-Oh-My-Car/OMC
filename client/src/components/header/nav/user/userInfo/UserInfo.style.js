@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 
-export const UserInfoArea = styled.div`
+export const UserInfoArea = styled.button`
   position: relative;
   display: flex;
+  background-color: white;
   justify-content: center;
   align-items: center;
   width: 100px;
@@ -11,6 +12,9 @@ export const UserInfoArea = styled.div`
   border-radius: 30px;
   padding: 0px 15px;
   cursor: pointer;
+  color: ${(props) => props.theme.gray};
+  box-shadow: ${(props) =>
+    props.isOpen && '0 1px 2px hsla(0, 0%, 0%, 0.1), 0 1px 4px hsla(0, 0%, 0%, 0.1), 0 2px 8px hsla(0, 0%, 0%, 0.1)'};
   :hover {
     box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.1), 0 1px 4px hsla(0, 0%, 0%, 0.1), 0 2px 8px hsla(0, 0%, 0%, 0.1);
   }

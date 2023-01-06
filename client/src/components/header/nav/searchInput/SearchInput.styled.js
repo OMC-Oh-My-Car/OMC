@@ -8,6 +8,7 @@ export const SearchInputArea = styled.div`
   flex-grow: 1;
   max-width: ${(props) => (props.type === 'short' ? '520px' : '670px')};
   height: 100%;
+  padding: 3px 0px;
   /* border: 1px solid black; */
   input {
     width: 100%;
@@ -17,7 +18,7 @@ export const SearchInputArea = styled.div`
     padding: 0.6em 1.2em;
     border-radius: 25px;
     outline: none;
-    border: 2px solid #94989c;
+    border: 1px solid #94989c;
     /* box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.1), 0 1px 4px hsla(0, 0%, 0%, 0.1), 0 2px 8px hsla(0, 0%, 0%, 0.1); */
   }
   Input:focus {
