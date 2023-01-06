@@ -9,6 +9,7 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Length;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -64,7 +65,7 @@ public class ProductDto {
 	@Getter
 	@Builder
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)
-	@AllArgsConstructor(access = AccessLevel.PRIVATE)
+	@AllArgsConstructor
 	public static class Response {
 		private Long id;
 		private String subject;
@@ -83,5 +84,25 @@ public class ProductDto {
 		private Long likes;
 		private Boolean isLike;
 
+	}
+
+	@Getter
+	@Builder
+	@NoArgsConstructor(access = AccessLevel.PROTECTED)
+	public static class Search {
+		private Long page;
+		private String sort;
+		private String facilities;
+		private String query;
+
+		public Search(@RequestParam(value = "page") Long page,
+					  @RequestParam(value = "sort", required = false) String sort,
+					  @RequestParam(value = "facilities", required = false) String facilities,
+					  @RequestParam(value = "query", required = false) String query) {
+			this.page = page == null ? 1 : page;
+			this.sort = sort;
+			this.facilities = facilities;
+			this.query = query;
+		}
 	}
 }

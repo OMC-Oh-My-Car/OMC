@@ -1,7 +1,6 @@
 package com.omc.domain.product.service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.stream.Collectors;
@@ -46,7 +45,8 @@ public class ProductService {
 
 	/**
 	 * 상품 등록
-	 * @param req: 상품 정보
+	 *
+	 * @param req:            상품 정보
 	 * @param multipartFiles: 상품 이미지
 	 */
 	@SneakyThrows
@@ -59,20 +59,20 @@ public class ProductService {
 		List<Img> imgList = uploadImgAndImgDtoToEntity(multipartFiles);
 
 		Product product = Product.builder()
-			.subject(req.getSubject())
-			.description(req.getDescription())
-			.imgList(imgList)
-			.address(address)
-			.zipcode(req.getZipcode())
-			.price(req.getPrice())
-			.telephone(req.getTelephone())
-			.checkIn(req.getCheckIn())
-			.checkOut(req.getCheckOut())
-			.likes(0L)
-			.star(0.0)
-			.reportCount(0L)
-			.count(0L)
-			.build();
+								 .subject(req.getSubject())
+								 .description(req.getDescription())
+								 .imgList(imgList)
+								 .address(address)
+								 .zipcode(req.getZipcode())
+								 .price(req.getPrice())
+								 .telephone(req.getTelephone())
+								 .checkIn(req.getCheckIn())
+								 .checkOut(req.getCheckOut())
+								 .likes(0L)
+								 .star(0.0)
+								 .reportCount(0L)
+								 .count(0L)
+								 .build();
 
 		saveLocation(product, req);
 		saveFacilities(product, req);
@@ -83,9 +83,10 @@ public class ProductService {
 
 	/**
 	 * 상품 수정
-	 * @param req : 상품 정보
+	 *
+	 * @param req            : 상품 정보
 	 * @param multipartFiles : 상품 이미지
-	 * @param productId : 상품 id
+	 * @param productId      : 상품 id
 	 */
 	@Transactional
 	public void update(ProductDto.Request req, List<MultipartFile> multipartFiles, Long productId) {
@@ -114,35 +115,37 @@ public class ProductService {
 
 	/**
 	 * 상품 상세 조회
+	 *
 	 * @param productId : 상품 id
 	 * @return 상품 정보
 	 */
 	@Transactional
 	public ProductDto.Response getProduct(Long productId) {
 		Product findProduct = productRepository.findById(productId)
-			.orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
+											   .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
 
 		return ProductDto.Response.builder()
-			.subject(findProduct.getSubject())
-			.description(findProduct.getDescription())
-			.address(findProduct.getAddress())
-			.zipcode(findProduct.getZipcode())
-			.locations(getLocations(productId))
-			.facilities(getFacilities(productId))
-			.reportCount(findProduct.getReportCount())
-			.telephone(findProduct.getTelephone())
-			.price(findProduct.getPrice())
-			.star(findProduct.getStar())
-			.checkIn(findProduct.getCheckIn())
-			.checkOut(findProduct.getCheckOut())
-			.img(getImgs(productId))
-			.likes(findProduct.getLikes())
-			// .isLike() todo : Member 적용 후 수정, 추천 여부, 회원일 경우 추천 여부 확인해서 넣어줘야함
-			.build();
+								  .subject(findProduct.getSubject())
+								  .description(findProduct.getDescription())
+								  .address(findProduct.getAddress())
+								  .zipcode(findProduct.getZipcode())
+								  .locations(getLocations(productId))
+								  .facilities(getFacilities(productId))
+								  .reportCount(findProduct.getReportCount())
+								  .telephone(findProduct.getTelephone())
+								  .price(findProduct.getPrice())
+								  .star(findProduct.getStar())
+								  .checkIn(findProduct.getCheckIn())
+								  .checkOut(findProduct.getCheckOut())
+								  .img(getImgs(productId))
+								  .likes(findProduct.getLikes())
+								  // .isLike() todo : Member 적용 후 수정, 추천 여부, 회원일 경우 추천 여부 확인해서 넣어줘야함
+								  .build();
 	}
 
 	/**
 	 * 상품 삭제
+	 *
 	 * @param productId : 상품 id
 	 */
 	@Transactional
@@ -154,57 +157,62 @@ public class ProductService {
 
 	/**
 	 * 상품의 이미지 조회
+	 *
 	 * @param productId : 상품 id
 	 * @return 상품 이미지 목록
 	 */
 	private List<String> getImgs(Long productId) {
 		return imgRepository.findAllByProductId(productId).stream()
-			.map(Img::getImgUrl)
-			.map(s -> "value\":\"" + s)
-			.toList();
+							.map(Img::getImgUrl)
+							.map(s -> "value\":\"" + s)
+							.toList();
 	}
 
 	/**
 	 * 상품의 편의시설 조회
+	 *
 	 * @param productId : 상품 id
 	 * @return 상품 편의시설 목록
 	 */
 	private List<String> getFacilities(Long productId) {
 		return facilitiesRepository.findAllByProductId(productId).stream()
-			.map(Facilities::getKeyword)
-			.map(s -> "value\":\"" + s)
-			.toList();
+								   .map(Facilities::getKeyword)
+								   .map(s -> "value\":\"" + s)
+								   .toList();
 	}
 
 	/**
 	 * 상품의 위치 키워드 조회
+	 *
 	 * @param productId : 상품 id
 	 * @return 상품 위치 키워드 목록
 	 */
 	private List<String> getLocations(Long productId) {
 		return locationRepository.findAllByProductId(productId).stream()
-			.map(Location::getKeyword)
-			.map(s -> "value\":\"" + s)
-			.toList();
+								 .map(Location::getKeyword)
+								 .map(s -> "value\":\"" + s)
+								 .toList();
 	}
 
 	/**
 	 * ImgDto를 Img로 변환
-	 * @param imgList : Img 리스트
+	 *
+	 * @param imgList    : Img 리스트
 	 * @param imgDtoList : ImgDto 리스트
 	 */
 	private static void imgDtoToImg(List<Img> imgList, List<ImgDto.Request> imgDtoList) {
 		for (ImgDto.Request imgDto : imgDtoList) {
 			Img img = Img.builder()
-				.imgName(imgDto.getImgName())
-				.imgUrl(imgDto.getImgUrl())
-				.build();
+						 .imgName(imgDto.getImgName())
+						 .imgUrl(imgDto.getImgUrl())
+						 .build();
 			imgList.add(img);
 		}
 	}
 
 	/**
 	 * 상품 이미지 업로드 및 ImgDto를 Img로 변환
+	 *
 	 * @param multipartFiles : 상품 이미지
 	 * @return : 이미지 리스트
 	 */
@@ -223,8 +231,9 @@ public class ProductService {
 
 	/**
 	 * 상품 위치 저장
+	 *
 	 * @param product : 상품
-	 * @param req : 상품 정보
+	 * @param req     : 상품 정보
 	 */
 	private void saveLocation(Product product, ProductDto.Request req) {
 
@@ -245,18 +254,19 @@ public class ProductService {
 
 		locationRepository.saveAll(
 			locations.stream()
-				.map(location -> Location.builder()
-					.product(product)
-					.keyword(location)
-					.build())
-				.collect(Collectors.toList())
-		);
+					 .map(location -> Location.builder()
+											  .product(product)
+											  .keyword(location)
+											  .build())
+					 .collect(Collectors.toList())
+								  );
 	}
 
 	/**
 	 * 상품 편의시설 저장
+	 *
 	 * @param product : 상품
-	 * @param req : 상품 정보
+	 * @param req     : 상품 정보
 	 */
 	private void saveFacilities(Product product, ProductDto.Request req) {
 
@@ -269,21 +279,22 @@ public class ProductService {
 
 		facilitiesRepository.saveAll(
 			keyword.stream()
-				.map(facility -> Facilities.builder()
-					.product(product)
-					.keyword(facility)
-					.build())
-				.collect(Collectors.toList())
-		);
+				   .map(facility -> Facilities.builder()
+											  .product(product)
+											  .keyword(facility)
+											  .build())
+				   .collect(Collectors.toList())
+									);
 	}
 
 	/**
 	 * 상품 존재 여부 확인
+	 *
 	 * @param productId : 상품 id
 	 * @return : 상품
 	 */
 	private Product ifExistReturnProduct(Long productId) {
 		return productRepository.findById(productId)
-			.orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
+								.orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
 	}
 }

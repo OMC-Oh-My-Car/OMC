@@ -26,11 +26,12 @@ public enum ErrorCode {
 
 	// 상품
 	PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "P-001", "해당 상품은 존재하지 않습니다."),
-	IMAGE_UPLOAD_ERROR(HttpStatus.BAD_REQUEST, "P-009", "이미지 업로드에 실패했습니다."),
 
-	WRONG_INPUT_IMAGE(HttpStatus.BAD_REQUEST, "P-010", "이미지 파일이 아닙니다."),
-	WRONG_IMAGE_FORMAT(HttpStatus.BAD_REQUEST, "P-011",	"이미지 파일 형식이 잘못되었습니다."),
-	IMAGE_NOT_FOUND(HttpStatus.BAD_REQUEST, "P-012", "이미지 파일이 존재하지 않습니다."),
+	// 이미지
+	IMAGE_NOT_FOUND(HttpStatus.BAD_REQUEST, "I-001", "이미지 파일이 존재하지 않습니다."),
+	WRONG_INPUT_IMAGE(HttpStatus.BAD_REQUEST, "I-002", "이미지 파일이 아닙니다."),
+	WRONG_IMAGE_FORMAT(HttpStatus.BAD_REQUEST, "I-003", "이미지 파일 형식이 잘못되었습니다."),
+	IMAGE_UPLOAD_ERROR(HttpStatus.BAD_REQUEST, "I-004", "이미지 업로드에 실패했습니다."),
 	;
 
 	private HttpStatus httpStatus;

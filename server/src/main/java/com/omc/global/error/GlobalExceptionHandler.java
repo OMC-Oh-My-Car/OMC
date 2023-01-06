@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
 		log.error("handleBindException", e);
 		ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.BAD_REQUEST.toString(), e.getBindingResult());
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-			.body(errorResponse);
+							 .body(errorResponse);
 	}
 
 	/**
@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
 		log.error("handleMethodArgumentTypeMismatchException", e);
 		ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.BAD_REQUEST.toString(), e.getMessage());
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-			.body(errorResponse);
+							 .body(errorResponse);
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class GlobalExceptionHandler {
 		log.error("BusinessException", e);
 		ErrorResponse errorResponse = ErrorResponse.of(e.getErrorCode().getErrorCode(), e.getMessage());
 		return ResponseEntity.status(e.getErrorCode().getHttpStatus())
-			.body(errorResponse);
+							 .body(errorResponse);
 	}
 
 	/**

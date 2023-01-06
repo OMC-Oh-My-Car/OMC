@@ -2,13 +2,12 @@ package com.omc.domain.product.api;
 
 import java.util.List;
 
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,13 +33,14 @@ public class ProductController {
 
 	/**
 	 * 상품 등록
-	 * @param req: 상품 정보
+	 *
+	 * @param req:            상품 정보
 	 * @param multipartFiles: 상품 이미지
 	 */
 	@PostMapping(value = "/product",
-		consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+				 consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<?> create(@RequestPart("product") ProductDto.Request req,
-		@RequestPart("imgUrl") List<MultipartFile> multipartFiles) {
+									@RequestPart("imgUrl") List<MultipartFile> multipartFiles) {
 
 		if (multipartFiles == null) {
 			log.error("multipartFiles is null");
@@ -54,14 +54,15 @@ public class ProductController {
 
 	/**
 	 * 상품 수정
-	 * @param req: 수정할 상품 정보
+	 *
+	 * @param req:            수정할 상품 정보
 	 * @param multipartFiles: 상품 이미지
 	 */
 	@PatchMapping(value = "/product/{productId}",
-		consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+				  consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<?> update(@RequestPart("product") ProductDto.Request req,
-		@RequestPart("imgUrl") List<MultipartFile> multipartFiles,
-		@PathVariable Long productId) {
+									@RequestPart("imgUrl") List<MultipartFile> multipartFiles,
+									@PathVariable Long productId) {
 
 		productService.update(req, multipartFiles, productId);
 
@@ -70,19 +71,37 @@ public class ProductController {
 
 	/**
 	 * 상품 상세 조회
+	 *
 	 * @param productId : 상품 id
 	 * @return 상품 정보
 	 */
 	@GetMapping(value = "/product/{productId}")
-	public ResponseEntity<?> getProduct(@PathVariable Long productId) {
+	public ResponseEntity<?> get(@PathVariable Long productId) {
 
 		ProductDto.Response res = productService.getProduct(productId);
 
 		return new ResponseEntity<>(new SingleResponseDto<>(res), HttpStatus.OK);
 	}
 
+	@GetMapping(value = "/product")
+	public ResponseEntity<?> getProductList(@ModelAttribute ProductDto.Search search) {
+
+		log.info("page: {}", search.getPage());
+		log.info("sort: {}", search.getSort());
+		log.info("facilities: {}", search.getFacilities());
+		log.info("query: {}", search.getQuery());
+
+		// Page<ProductDto.Response> resPage = productService.getProductList(page, sort, facilities, query);
+		// List<ProductDto.Response> res = resPage.getContent();
+
+		// return new ResponseEntity<>(new MultiResponse<>(res, resPage), HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
+
+	}
+
 	/**
 	 * 상품 삭제
+	 *
 	 * @param productId : 상품 아이디
 	 */
 	@DeleteMapping(value = "/product/{productId}")

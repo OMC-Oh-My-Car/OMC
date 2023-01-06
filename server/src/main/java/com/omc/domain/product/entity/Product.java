@@ -85,8 +85,9 @@ public class Product extends BaseEntity {
 
 	@Builder
 	public Product(String subject, String description, List<Img> imgList, String address, String zipcode,
-		Long reportCount, String telephone, Long count, Long price, Double star, String checkIn, String checkOut,
-		Long likes) {
+				   Long reportCount, String telephone, Long count, Long price, Double star, String checkIn,
+				   String checkOut,
+				   Long likes) {
 		this.subject = subject;
 		this.description = description;
 		this.imgList = imgList;
@@ -107,21 +108,21 @@ public class Product extends BaseEntity {
 
 	public void editProduct(ProductDto.Request dto) {
 		Optional.ofNullable(dto.getSubject())
-			.ifPresent(subject -> this.subject = subject);
+				.ifPresent(subject -> this.subject = subject);
 		Optional.ofNullable(dto.getDescription())
-			.ifPresent(description -> this.description = description);
+				.ifPresent(description -> this.description = description);
 		Optional.ofNullable(dto.getAddress())
-			.ifPresent(address -> this.address = address);
+				.ifPresent(address -> this.address = address);
 		Optional.ofNullable(dto.getZipcode())
-			.ifPresent(zipcode -> this.zipcode = zipcode);
+				.ifPresent(zipcode -> this.zipcode = zipcode);
 		Optional.ofNullable(dto.getTelephone())
-			.ifPresent(telephone -> this.telephone = telephone);
+				.ifPresent(telephone -> this.telephone = telephone);
 		Optional.ofNullable(dto.getPrice())
-			.ifPresent(price -> this.price = price);
+				.ifPresent(price -> this.price = price);
 		Optional.ofNullable(dto.getCheckIn())
-			.ifPresent(checkIn -> this.checkIn = checkIn);
+				.ifPresent(checkIn -> this.checkIn = checkIn);
 		Optional.ofNullable(dto.getCheckOut())
-			.ifPresent(checkOut -> this.checkOut = checkOut);
+				.ifPresent(checkOut -> this.checkOut = checkOut);
 	}
 
 	public void setImgList(List<Img> imgs) {

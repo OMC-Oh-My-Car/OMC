@@ -11,7 +11,6 @@ import com.omc.global.common.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
