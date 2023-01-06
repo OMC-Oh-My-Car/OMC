@@ -1,5 +1,7 @@
 package com.omc.domain.product.dto;
 
+import java.util.List;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -64,7 +66,22 @@ public class ProductDto {
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)
 	@AllArgsConstructor(access = AccessLevel.PRIVATE)
 	public static class Response {
+		private Long id;
 		private String subject;
 		private String description;
+		private String address;
+		private String zipcode;
+		private List<String> locations;
+		private List<String> facilities;
+		private Long reportCount;
+		private String telephone;
+		private Long price;
+		private Double star;
+		private String checkIn;
+		private String checkOut;
+		private List<String> img;
+		private Long likes;
+		private Boolean isLike;
+
 	}
 }
