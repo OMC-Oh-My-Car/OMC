@@ -4,7 +4,7 @@ export const ButtonArea = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
+  width: 180px;
   height: 100%;
   padding: 5px 0px;
   button {

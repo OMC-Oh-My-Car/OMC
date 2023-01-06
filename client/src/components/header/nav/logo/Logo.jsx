@@ -7,7 +7,6 @@ const Logo = () => {
     <>
       <LogoArea>
         <img className="logoIcon" src={logo} alt="omcLogo" />
-        {/* <FontAwesomeIcon className="logoIcon" icon={faCaravan} /> */}
         <div className="logo">OMC</div>
       </LogoArea>
     </>

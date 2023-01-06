@@ -1,11 +1,14 @@
 // import React from 'react';
 import { HeaderUserArea } from './HeaderUser.styled';
-import Button from './button/Button';
+// import Button from './button/Button';
+import UserInfo from './userInfo/UserInfo';
+
 const HeaderUser = () => {
   return (
     <>
       <HeaderUserArea>
-        <Button />
+        {/* <Button /> */}
+        <UserInfo />
       </HeaderUserArea>
     </>
   );
