@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,10 +31,8 @@ public class ProductController {
 	private final ProductService productService;
 
 	/**
-	 * 상품 등록 (개발중)
+	 * 상품 등록
 	 * @param req: 상품 정보
-	 *                     - subject: 상품명
-	 *                     - description: 상품 설명
 	 * @param multipartFiles: 상품 이미지
 	 */
 	@PostMapping(value = "/product", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -50,6 +49,11 @@ public class ProductController {
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
+	/**
+	 * 상품 수정
+	 * @param req: 수정할 상품 정보
+	 * @param multipartFiles: 상품 이미지
+	 */
 	@PatchMapping(value = "/product/{productId}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<?> update(@RequestPart("product") ProductDto.Request req,
 		@RequestPart("imgUrl") List<MultipartFile> multipartFiles,
@@ -59,5 +63,6 @@ public class ProductController {
 
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
+
 
 }
