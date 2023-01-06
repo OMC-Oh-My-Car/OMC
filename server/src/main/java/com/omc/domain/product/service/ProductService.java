@@ -111,6 +111,16 @@ public class ProductService {
 		productRepository.save(findProduct);
 	}
 
+	/**
+	 * 상품 삭제
+	 * @param productId : 상품 id
+	 */
+	@Transactional
+	public void delete(Long productId) {
+		Product findProduct = ifExistReturnProduct(productId);
+		findProduct.getImgList().stream().map(Img::getImgName).forEach(s3Service::deleteFile);
+		productRepository.delete(findProduct);
+	}
 
 	/**
 	 * ImgDto를 Img로 변환

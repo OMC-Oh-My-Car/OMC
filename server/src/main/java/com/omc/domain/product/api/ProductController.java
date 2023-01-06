@@ -35,7 +35,8 @@ public class ProductController {
 	 * @param req: 상품 정보
 	 * @param multipartFiles: 상품 이미지
 	 */
-	@PostMapping(value = "/product", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+	@PostMapping(value = "/product",
+		consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<?> create(@RequestPart("product") ProductDto.Request req,
 		@RequestPart("imgUrl") List<MultipartFile> multipartFiles) {
 
@@ -54,7 +55,8 @@ public class ProductController {
 	 * @param req: 수정할 상품 정보
 	 * @param multipartFiles: 상품 이미지
 	 */
-	@PatchMapping(value = "/product/{productId}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+	@PatchMapping(value = "/product/{productId}",
+		consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<?> update(@RequestPart("product") ProductDto.Request req,
 		@RequestPart("imgUrl") List<MultipartFile> multipartFiles,
 		@PathVariable Long productId) {
@@ -64,5 +66,16 @@ public class ProductController {
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
+	/**
+	 * 상품 삭제
+	 * @param productId : 상품 아이디
+	 */
+	@DeleteMapping(value = "/product/{productId}")
+	public ResponseEntity<?> delete(@PathVariable Long productId) {
+
+		productService.delete(productId);
+
+		return ResponseEntity.status(HttpStatus.OK).build();
+	}
 
 }
