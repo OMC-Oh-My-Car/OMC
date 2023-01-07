@@ -1,5 +1,5 @@
 // import React from 'react';
-import { HeaderUserArea } from './HeaderUser.styled';
+import { HeaderUserArea } from './HeaderUser.style';
 // import Button from './button/Button';
 import UserInfo from './userInfo/UserInfo';
 
