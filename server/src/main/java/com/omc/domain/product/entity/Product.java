@@ -83,6 +83,9 @@ public class Product extends BaseEntity {
 	@JoinColumn
 	private Member member;
 
+	@OneToMany(mappedBy = "product")
+	private List<LikeHistory> likeHistories = new ArrayList<>();
+
 	@Builder
 	public Product(String subject, String description, List<Img> imgList, String address, String zipcode,
 				   Long reportCount, String telephone, Long count, Long price, Double star, String checkIn,
@@ -130,5 +133,13 @@ public class Product extends BaseEntity {
 		for (Img img : imgs) {
 			img.setProduct(this);
 		}
+	}
+
+	public void like() {
+		this.likes += 1;
+	}
+
+	public void disLike() {
+		this.likes -= 1;
 	}
 }
