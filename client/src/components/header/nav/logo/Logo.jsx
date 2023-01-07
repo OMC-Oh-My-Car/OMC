@@ -1,5 +1,5 @@
 // import React from 'react';
-import { LogoArea } from './Logo.styled';
+import { LogoArea } from './Logo.style';
 import logo from '../../../../assets/images/logo.png';
 
 const Logo = () => {

@@ -1,8 +1,8 @@
 // import React from 'react';
-import { Container } from './LandingPage.style';
+import { Container } from './ProductListPage.style';
 import Header from '../components/header/Header';
 
-const LandingPage = () => {
+const ProductListPage = () => {
   return (
     <>
       <Container>
@@ -12,4 +12,4 @@ const LandingPage = () => {
   );
 };
 
-export default LandingPage;
+export default ProductListPage;
