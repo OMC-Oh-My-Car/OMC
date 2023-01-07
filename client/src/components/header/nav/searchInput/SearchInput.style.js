@@ -27,7 +27,7 @@ export const SearchInputArea = styled.div`
   }
   .searchIconArea {
     position: absolute;
-    right: 15px;
+    right: 7px;
     display: flex;
     justify-content: center;
     align-items: center;
