@@ -7,12 +7,18 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.omc.domain.img.dto.ImgDto;
 import com.omc.domain.img.entity.Img;
 import com.omc.domain.img.repository.ImgRepository;
+import com.omc.domain.member.entity.Member;
+import com.omc.domain.member.entity.UserRole;
 import com.omc.domain.product.dto.ProductDto;
 import com.omc.domain.product.entity.Facilities;
 import com.omc.domain.product.entity.Location;
@@ -296,5 +302,54 @@ public class ProductService {
 	private Product ifExistReturnProduct(Long productId) {
 		return productRepository.findById(productId)
 								.orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
+	}
+
+	/**
+	 * 등록한 상품 조회
+	 *
+	 * @param member : 회원 (판매자 or 관리자)
+	 * @param search : Pageable
+	 * @return : 상품 목록
+	 */
+	public Page<Product> getMyProductList(Member member, ProductDto.Search search) {
+
+		if (member.getUserRole() == UserRole.ROLE_USER) {
+			throw new BusinessException(ErrorCode.TEST); // todo : member 적용 후 에러코드 수정
+		}
+
+		Pageable pageable = PageRequest.of(Math.toIntExact(search.getPage()), Math.toIntExact(search.getSize()),
+										   Sort.by("id").descending());
+		// return productRepository.findAllBySellerId(member.getId(), pageable);
+		return productRepository.findAllByMemberId(member.getId(), pageable);
+	}
+
+	/**
+	 * Product to ResponseDto
+	 *
+	 * @param content : 상품 목록 (Product)
+	 * @return : 상품 목록 (ResponseDto)
+	 */
+	public List<ProductDto.Response> convertToResponse(List<Product> content) {
+		List<ProductDto.Response> responseList = new ArrayList<>();
+		for (Product product : content) {
+			responseList.add(ProductDto.Response.builder()
+												.id(product.getId())
+												.subject(product.getSubject())
+												.description(product.getDescription())
+												.address(product.getAddress())
+												.zipcode(product.getZipcode())
+												.reportCount(product.getReportCount())
+												.telephone(product.getTelephone())
+												.price(product.getPrice())
+												.star(product.getStar())
+												.checkIn(product.getCheckIn())
+												.checkOut(product.getCheckOut())
+												.likes(product.getLikes())
+												.locations(getLocations(product.getId()))
+												.facilities(getFacilities(product.getId()))
+												.img(getImgs(product.getId()))
+												.build());
+		}
+		return responseList;
 	}
 }

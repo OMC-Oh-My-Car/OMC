@@ -87,10 +87,10 @@ public class ProductDto {
 	}
 
 	@Getter
-	@Builder
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)
 	public static class Search {
 		private Long page;
+		private Long size;
 		private String sort;
 		private String facilities;
 		private String query;
@@ -101,8 +101,13 @@ public class ProductDto {
 					  @RequestParam(value = "query", required = false) String query) {
 			this.page = page == null ? 1 : page;
 			this.sort = sort;
+			this.size = 20L;
 			this.facilities = facilities;
 			this.query = query;
+		}
+
+		public Long getOffset() {
+			return (page - 1) * size;
 		}
 	}
 }
