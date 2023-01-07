@@ -317,8 +317,16 @@ public class ProductService {
 			throw new BusinessException(ErrorCode.TEST); // todo : member 적용 후 에러코드 수정
 		}
 
+		String sortBy = switch (search.getSort()) { // 최신순, 인기순, 조회순, 추천순
+			case "추천" -> "likes";
+			case "조회" -> "views";
+			case "인기" -> "reservations";
+			default -> "id";
+		};
+			;
+
 		Pageable pageable = PageRequest.of(Math.toIntExact(search.getPage()), Math.toIntExact(search.getSize()),
-										   Sort.by("id").descending());
+										   Sort.by(sortBy).descending());
 		// return productRepository.findAllBySellerId(member.getId(), pageable);
 		return productRepository.findAllByMemberId(member.getId(), pageable);
 	}
