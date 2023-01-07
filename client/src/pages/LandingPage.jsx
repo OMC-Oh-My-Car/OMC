@@ -1,5 +1,5 @@
 // import React from 'react';
-import { Container } from './LandingPage.styled';
+import { Container } from './LandingPage.style';
 import Header from '../components/header/Header';
 
 const LandingPage = () => {

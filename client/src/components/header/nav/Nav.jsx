@@ -1,5 +1,5 @@
 // import React from 'react';
-import { NavArea } from './Nav.styled';
+import { NavArea } from './Nav.style';
 import Logo from './logo/Logo';
 import SearchInput from './searchInput/SearchInput';
 import HeaderUser from './user/HeaderUser';
