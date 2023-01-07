@@ -134,4 +134,20 @@ public class ProductController {
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
+	/**
+	 * 상품 추천
+	 * @param productId : 상품 아이디
+	 * @param member : 로그인한 회원
+	 */
+	@PostMapping(value = "/product/{productId}/like")
+	public ResponseEntity<?> like(@PathVariable Long productId,
+								  @AuthMember Member member) {
+
+		productService.likeProduct(productId, member);
+
+		return ResponseEntity.status(HttpStatus.OK).build();
+	}
+
+
+
 }

@@ -2,6 +2,7 @@ package com.omc.domain.product.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
@@ -21,9 +22,11 @@ import com.omc.domain.member.entity.Member;
 import com.omc.domain.member.entity.UserRole;
 import com.omc.domain.product.dto.ProductDto;
 import com.omc.domain.product.entity.Facilities;
+import com.omc.domain.product.entity.LikeHistory;
 import com.omc.domain.product.entity.Location;
 import com.omc.domain.product.entity.Product;
 import com.omc.domain.product.repository.FacilitiesRepository;
+import com.omc.domain.product.repository.LikeHistoryRepository;
 import com.omc.domain.product.repository.LocationRepository;
 import com.omc.domain.product.repository.ProductRepository;
 import com.omc.global.error.ErrorCode;
@@ -44,6 +47,7 @@ public class ProductService {
 	private final FacilitiesRepository facilitiesRepository;
 	private final LocationRepository locationRepository;
 	private final ImgRepository imgRepository;
+	private final LikeHistoryRepository likeHistoryRepository;
 
 	private final S3Service s3Service;
 
@@ -147,6 +151,57 @@ public class ProductService {
 								  .likes(findProduct.getLikes())
 								  // .isLike() todo : Member 적용 후 수정, 추천 여부, 회원일 경우 추천 여부 확인해서 넣어줘야함
 								  .build();
+	}
+
+	/**
+	 * 등록한 상품 조회
+	 *
+	 * @param member : 회원 (판매자 or 관리자)
+	 * @param search : Pageable
+	 * @return : 상품 목록
+	 */
+	@Transactional
+	public Page<Product> getMyProductList(Member member, ProductDto.Search search) {
+
+		if (member.getUserRole() == UserRole.ROLE_USER) {
+			throw new BusinessException(ErrorCode.TEST); // todo : member 적용 후 에러코드 수정
+		}
+
+		String sortBy = switch (search.getSort()) { // 최신순, 인기순, 조회순, 추천순
+			case "추천" -> "likes";
+			case "조회" -> "views";
+			case "인기" -> "reservations";
+			default -> "id";
+		};
+
+		Pageable pageable = PageRequest.of(Math.toIntExact(search.getPage()), Math.toIntExact(search.getSize()),
+										   Sort.by(sortBy).descending());
+		// return productRepository.findAllBySellerId(member.getId(), pageable);
+		return productRepository.findAllByMemberId(member.getId(), pageable);
+	}
+
+	/**
+	 * 상품 추천
+	 *
+	 * @param productId : 상품 id
+	 * @param member    : 회원
+	 */
+	@Transactional
+	public void likeProduct(Long productId, Member member) {
+		Product product = ifExistReturnProduct(productId);
+		// todo 존재하는 회원인지, 일반 유저인지 확인하는 메서드 추가
+		Optional<LikeHistory> likeHistory = likeHistoryRepository.findByMemberIdAndProductId(member.getId(),
+																							 product.getId());
+		if (likeHistory.isPresent()) {
+			likeHistoryRepository.delete(likeHistory.get());
+			product.disLike();
+		} else {
+			likeHistoryRepository.save(LikeHistory.builder()
+												  .member(member)
+												  .product(product)
+												  .build());
+			product.like();
+		}
 	}
 
 	/**
@@ -305,33 +360,6 @@ public class ProductService {
 	}
 
 	/**
-	 * 등록한 상품 조회
-	 *
-	 * @param member : 회원 (판매자 or 관리자)
-	 * @param search : Pageable
-	 * @return : 상품 목록
-	 */
-	public Page<Product> getMyProductList(Member member, ProductDto.Search search) {
-
-		if (member.getUserRole() == UserRole.ROLE_USER) {
-			throw new BusinessException(ErrorCode.TEST); // todo : member 적용 후 에러코드 수정
-		}
-
-		String sortBy = switch (search.getSort()) { // 최신순, 인기순, 조회순, 추천순
-			case "추천" -> "likes";
-			case "조회" -> "views";
-			case "인기" -> "reservations";
-			default -> "id";
-		};
-			;
-
-		Pageable pageable = PageRequest.of(Math.toIntExact(search.getPage()), Math.toIntExact(search.getSize()),
-										   Sort.by(sortBy).descending());
-		// return productRepository.findAllBySellerId(member.getId(), pageable);
-		return productRepository.findAllByMemberId(member.getId(), pageable);
-	}
-
-	/**
 	 * Product to ResponseDto
 	 *
 	 * @param content : 상품 목록 (Product)
@@ -360,4 +388,5 @@ public class ProductService {
 		}
 		return responseList;
 	}
+
 }
