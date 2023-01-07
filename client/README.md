@@ -3,7 +3,7 @@
 1. 폴더는 camelCase로 작성.
 2. 컴포넌트 파일과 css는 camelCase로 작성하되 컴포넌트 파일 첫 글자는 대문자로 작성.
 3. 컴포넌트는 화살표 함수를 사용하여 작성.
-4. 컴포넌트와 페이지는 dummy.jsx, dummy.styled.js로 나누어 스타일 코드 분리.
+4. 컴포넌트와 페이지는 dummy.jsx, dummy.style.js로 나누어 스타일 코드 분리.
 5. API 관련 함수는 modules 폴더에 작성.
     1. index.js 파일에 있는 인스턴스를 import 하여 사용.  
 6. API 함수와 관련되지 않은 함수는 utils 폴더에 작성.
