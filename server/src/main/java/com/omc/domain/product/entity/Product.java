@@ -142,4 +142,11 @@ public class Product extends BaseEntity {
 	public void disLike() {
 		this.likes -= 1;
 	}
+
+	public void setStop(List<Stop> stops) {
+		this.stops = stops;
+		for (Stop stop : stops) {
+			stop.setProduct(this);
+		}
+	}
 }

@@ -8,10 +8,11 @@ import javax.persistence.ManyToOne;
 
 import com.omc.global.common.BaseEntity;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
+@Getter
 @NoArgsConstructor
 @Entity
 public class Stop extends BaseEntity {
@@ -25,4 +26,20 @@ public class Stop extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn
 	private Product product;
+
+	@Builder
+	public Stop(Long isStop, String reason, Product product) {
+		this.isStop = isStop;
+		this.reason = reason;
+		this.product = product;
+	}
+
+	public void update(Long isStop, String reason) {
+		this.isStop = isStop;
+		this.reason = reason;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
 }

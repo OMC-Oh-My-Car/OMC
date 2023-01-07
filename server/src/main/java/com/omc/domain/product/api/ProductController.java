@@ -12,12 +12,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.omc.domain.member.entity.Member;
 import com.omc.domain.product.dto.ProductDto;
+import com.omc.domain.product.dto.StopDto;
 import com.omc.domain.product.entity.Product;
 import com.omc.domain.product.service.ProductService;
 import com.omc.global.common.annotation.AuthMember;
@@ -136,8 +138,9 @@ public class ProductController {
 
 	/**
 	 * 상품 추천
+	 *
 	 * @param productId : 상품 아이디
-	 * @param member : 로그인한 회원
+	 * @param member    : 로그인한 회원
 	 */
 	@PostMapping(value = "/product/{productId}/like")
 	public ResponseEntity<?> like(@PathVariable Long productId,
@@ -148,6 +151,24 @@ public class ProductController {
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
+	/**
+	 * 상품 상태 관리
+	 *
+	 * @param productId : 상품 아이디
+	 * @param req       :
+	 *                  - isStop : 0: 판매중, 1: 판매중지, 2: 블라인드
+	 *                  - stopReason : 상품 상태 변경 사유
+	 * @param member    : 로그인한 회원
+	 * @return 상품 정보
+	 */
+	@PatchMapping(value = "/product/{productId}/stop")
+	public ResponseEntity<?> status(@PathVariable Long productId,
+									@RequestBody StopDto.Request req,
+									@AuthMember Member member) {
 
+		StopDto.Response res = productService.setStatus(productId, req, member);
+
+		return new ResponseEntity<>(new SingleResponseDto<>(res), HttpStatus.OK);
+	}
 
 }

@@ -21,10 +21,12 @@ import com.omc.domain.img.repository.ImgRepository;
 import com.omc.domain.member.entity.Member;
 import com.omc.domain.member.entity.UserRole;
 import com.omc.domain.product.dto.ProductDto;
+import com.omc.domain.product.dto.StopDto;
 import com.omc.domain.product.entity.Facilities;
 import com.omc.domain.product.entity.LikeHistory;
 import com.omc.domain.product.entity.Location;
 import com.omc.domain.product.entity.Product;
+import com.omc.domain.product.entity.Stop;
 import com.omc.domain.product.repository.FacilitiesRepository;
 import com.omc.domain.product.repository.LikeHistoryRepository;
 import com.omc.domain.product.repository.LocationRepository;
@@ -181,6 +183,18 @@ public class ProductService {
 	}
 
 	/**
+	 * 상품 삭제
+	 *
+	 * @param productId : 상품 id
+	 */
+	@Transactional
+	public void delete(Long productId) {
+		Product findProduct = ifExistReturnProduct(productId);
+		findProduct.getImgList().stream().map(Img::getImgName).forEach(s3Service::deleteFile);
+		productRepository.delete(findProduct);
+	}
+
+	/**
 	 * 상품 추천
 	 *
 	 * @param productId : 상품 id
@@ -205,15 +219,46 @@ public class ProductService {
 	}
 
 	/**
-	 * 상품 삭제
+	 * 상품 상태 관리
 	 *
 	 * @param productId : 상품 id
+	 * @param req       :
+	 *                  - isStop : 0: 판매중, 1: 판매중지, 2: 블라인드
+	 *                  - stopReason : 상품 상태 변경 사유
+	 * @param member    : 로그인한 회원
+	 * @return 상품 정보
 	 */
 	@Transactional
-	public void delete(Long productId) {
-		Product findProduct = ifExistReturnProduct(productId);
-		findProduct.getImgList().stream().map(Img::getImgName).forEach(s3Service::deleteFile);
-		productRepository.delete(findProduct);
+	public StopDto.Response setStatus(Long productId, StopDto.Request req, Member member) {
+		Product product = ifExistReturnProduct(productId);
+		if (!product.getMember().getId().equals(member.getId())) {
+			throw new BusinessException(ErrorCode.TEST); // todo member 추가 후 수정
+		}
+
+		ArrayList<Stop> stops = new ArrayList<>();
+		Stop stop = Stop.builder()
+						.product(product)
+						.isStop(req.getIsStop())
+						.reason(req.getStopReason())
+						.build();
+		stops.add(stop);
+		product.setStop(stops);
+
+		productRepository.save(product);
+
+		return StopDto.Response.builder()
+							   .productId(productId)
+							   .subject(product.getSubject())
+							   .description(product.getDescription())
+							   .locations(getLocations(productId))
+							   .reportCount(product.getReportCount())
+							   .price(product.getPrice())
+							   .star(product.getStar())
+							   .img(getImgs(productId))
+							   .likes(product.getLikes())
+							   .isStop(stop.getIsStop())
+							   .stopReason(stop.getReason())
+							   .build();
 	}
 
 	/**
