@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @Entity
-public class Stop extends BaseEntity {
+public class StopHistory extends BaseEntity {
 
 	@Column
 	private Long isStop;
@@ -28,7 +28,7 @@ public class Stop extends BaseEntity {
 	private Product product;
 
 	@Builder
-	public Stop(Long isStop, String reason, Product product) {
+	public StopHistory(Long isStop, String reason, Product product) {
 		this.isStop = isStop;
 		this.reason = reason;
 		this.product = product;

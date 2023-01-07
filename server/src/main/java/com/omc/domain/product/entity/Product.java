@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import com.omc.domain.img.entity.Img;
@@ -67,6 +68,10 @@ public class Product extends BaseEntity {
 	@Column
 	private Long likes;
 
+	@ColumnDefault("0")
+	@Column
+	private Long isStop;
+
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
 	private List<Img> imgList = new ArrayList<>();
 
@@ -77,7 +82,7 @@ public class Product extends BaseEntity {
 	private List<Location> locations = new ArrayList<>();
 
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Stop> stops = new ArrayList<>();
+	private List<StopHistory> stopHistories = new ArrayList<>();
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn
@@ -89,8 +94,7 @@ public class Product extends BaseEntity {
 	@Builder
 	public Product(String subject, String description, List<Img> imgList, String address, String zipcode,
 				   Long reportCount, String telephone, Long count, Long price, Double star, String checkIn,
-				   String checkOut,
-				   Long likes) {
+				   String checkOut, Long likes, Long isStop) {
 		this.subject = subject;
 		this.description = description;
 		this.imgList = imgList;
@@ -107,6 +111,7 @@ public class Product extends BaseEntity {
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
 		this.likes = likes;
+		this.isStop = isStop;
 	}
 
 	public void editProduct(ProductDto.Request dto) {
@@ -143,10 +148,14 @@ public class Product extends BaseEntity {
 		this.likes -= 1;
 	}
 
-	public void setStop(List<Stop> stops) {
-		this.stops = stops;
-		for (Stop stop : stops) {
-			stop.setProduct(this);
+	public void setIsStop(Long isStop) {
+		this.isStop = isStop;
+	}
+
+	public void addStopHistory(List<StopHistory> stopHistories) {
+		this.stopHistories = stopHistories;
+		for (StopHistory stopHistory : stopHistories) {
+			stopHistory.setProduct(this);
 		}
 	}
 }

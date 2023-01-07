@@ -26,7 +26,7 @@ import com.omc.domain.product.entity.Facilities;
 import com.omc.domain.product.entity.LikeHistory;
 import com.omc.domain.product.entity.Location;
 import com.omc.domain.product.entity.Product;
-import com.omc.domain.product.entity.Stop;
+import com.omc.domain.product.entity.StopHistory;
 import com.omc.domain.product.repository.FacilitiesRepository;
 import com.omc.domain.product.repository.LikeHistoryRepository;
 import com.omc.domain.product.repository.LocationRepository;
@@ -231,19 +231,25 @@ public class ProductService {
 	@Transactional
 	public StopDto.Response setStatus(Long productId, StopDto.Request req, Member member) {
 		Product product = ifExistReturnProduct(productId);
-		if (!product.getMember().getId().equals(member.getId())) {
+		UserRole userRole = member.getUserRole();
+
+		if (!product.getMember().getId().equals(member.getId()) || userRole != UserRole.ROLE_ADMIN) {
 			throw new BusinessException(ErrorCode.TEST); // todo member 추가 후 수정
 		}
 
-		ArrayList<Stop> stops = new ArrayList<>();
-		Stop stop = Stop.builder()
-						.product(product)
-						.isStop(req.getIsStop())
-						.reason(req.getStopReason())
-						.build();
-		stops.add(stop);
-		product.setStop(stops);
+		if (product.getIsStop() == 2) {
+			throw new BusinessException(ErrorCode.TEST); // todo 관리자만 블라인드 해제 가능
+		}
 
+		ArrayList<StopHistory> stopHistories = new ArrayList<>();
+		StopHistory stopHistory = StopHistory.builder()
+											 .product(product)
+											 .isStop(req.getIsStop())
+											 .reason(req.getStopReason())
+											 .build();
+		stopHistories.add(stopHistory);
+		product.setIsStop(req.getIsStop());
+		product.addStopHistory(stopHistories);
 		productRepository.save(product);
 
 		return StopDto.Response.builder()
@@ -256,8 +262,8 @@ public class ProductService {
 							   .star(product.getStar())
 							   .img(getImgs(productId))
 							   .likes(product.getLikes())
-							   .isStop(stop.getIsStop())
-							   .stopReason(stop.getReason())
+							   .isStop(stopHistory.getIsStop())
+							   .stopReason(stopHistory.getReason())
 							   .build();
 	}
 
