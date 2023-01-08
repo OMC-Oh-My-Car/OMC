@@ -27,37 +27,42 @@ export const ProductListArea = styled.main`
   }
   .productList {
     width: 100%;
-    /* height: 500px; */
-    /* border: 1px solid black; */
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    gap: 25px;
+    grid-template-columns: repeat(6, 1fr);
     /* vw 길이 - padding 길이 - gap 길이* + 텍스트 길이 */
-    grid-auto-rows: calc((100vw - 200px - 100px) / 5 + 88px);
-    grid-gap: 25px;
+    grid-auto-rows: calc((100vw - 200px - 125px) / 6 + 88px);
+  }
+  @media (max-width: 1880px) {
+    .productList {
+      grid-template-columns: repeat(5, 1fr);
+      /* vw 길이 - padding 길이 - gap 길이) / 컬럼 갯수 + 텍스트 길이 */
+      grid-auto-rows: calc((100vw - 200px - 100px) / 5 + 88px);
+    }
   }
   @media (max-width: 1640px) {
     .productList {
       grid-template-columns: repeat(4, 1fr);
-      /*( vw 길이 - padding 길이 - gap 길이) / 컬럼 갯수 + 텍스트 길이 */
+      /* vw 길이 - padding 길이 - gap 길이) / 컬럼 갯수 + 텍스트 길이 */
       grid-auto-rows: calc((100vw - 200px - 75px) / 4 + 88px);
     }
   }
   @media (max-width: 1425px) {
     padding: 40px 50px;
-    /*( vw 길이 - padding 길이 - gap 길이) / 컬럼 갯수 + 텍스트 길이 */
+    /* vw 길이 - padding 길이 - gap 길이) / 컬럼 갯수 + 텍스트 길이 */
     grid-auto-rows: calc((100vw - 100px - 100px) / 4 + 88px);
   }
   @media (max-width: 1128px) {
     .productList {
       grid-template-columns: repeat(3, 1fr);
-      /*( vw 길이 - padding 길이 - gap 길이) / 컬럼 갯수 + 텍스트 길이 */
+      /* vw 길이 - padding 길이 - gap 길이) / 컬럼 갯수 + 텍스트 길이 */
       grid-auto-rows: calc((100vw - 100px - 50px) / 3 + 88px);
     }
   }
   @media (max-width: 950px) {
     .productList {
       grid-template-columns: repeat(2, 1fr);
-      /*( vw 길이 - padding 길이 - gap 길이) / 컬럼 갯수 + 텍스트 길이 */
+      /* vw 길이 - padding 길이 - gap 길이) / 컬럼 갯수 + 텍스트 길이 */
       grid-auto-rows: calc((100vw - 100px - 25px) / 2 + 88px);
     }
   }
