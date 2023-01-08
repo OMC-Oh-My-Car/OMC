@@ -54,6 +54,26 @@ public class AuthMemberService {
         return memberRepository.save(member).toResponseDto();
     }
 
+    public TokenDto login(LoginDto loginDto, HttpServletResponse response) {
+        UsernamePasswordAuthenticationToken authenticationToken = loginDto.toAuthentication();
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        TokenDto tokenDto = tokenProvider.generateTokenWithAuthentication(authentication);
+
+        // TokenDto의 accessToken을 Header의 Authorization이름으로 넣어줌
+        response.setHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
+
+        RefreshToken refreshToken = RefreshToken.builder()
+                .key(loginDto.getEmail())
+                .value(tokenDto.getRefreshToken())
+                .build();
+
+        refreshTokenRepository.save(refreshToken);
+
+        // 토큰 발급
+        return tokenDto;
+    }
+
     public ReissueResponse reissue(String refreshToken, HttpServletResponse response) {
         refreshToken = Optional.ofNullable(refreshToken)
                 .orElseThrow(TokenNotFound::new);
@@ -94,22 +114,5 @@ public class AuthMemberService {
         return ReissueResponse.toResponse(member);
     }
 
-    public TokenDto login(LoginDto loginDto, HttpServletRequest request, HttpServletResponse response) {
-        UsernamePasswordAuthenticationToken authenticationToken = loginDto.toAuthentication();
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-        TokenDto tokenDto = tokenProvider.generateTokenWithAuthentication(authentication);
-
-        response.setHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
-        // 4. RefreshToken 저장
-        RefreshToken refreshToken = RefreshToken.builder()
-                .key(loginDto.getEmail())
-                .value(tokenDto.getRefreshToken())
-                .build();
-
-        refreshTokenRepository.save(refreshToken);
-
-        // 5. 토큰 발급
-        return tokenDto;
-    }
 }

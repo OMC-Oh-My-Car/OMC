@@ -9,6 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -42,8 +45,8 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenDto> login(@RequestBody LoginDto loginDto, HttpServletRequest request, HttpServletResponse response) {
-        return ResponseEntity.ok(authService.login(loginDto, request, response));
+    public ResponseEntity<TokenDto> login(@RequestBody LoginDto loginDto, HttpServletResponse response) {
+        return ResponseEntity.ok(authService.login(loginDto, response));
     }
 
     @GetMapping("/reissue")
@@ -52,5 +55,16 @@ public class MemberController {
 
         ReissueResponse reissue = authService.reissue(refreshToken, response);
         return new ResponseEntity<>(reissue, null, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<MemberResponseDto> findMemberInfoByEmail() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || authentication.getName() == null) {
+            throw  new RuntimeException("Security Context 에 인증 정보가 없습니다.");
+        }
+
+        return ResponseEntity.ok(memberService.findByEmail(authentication.getName()).map(MemberResponseDto::of).orElseThrow(() -> new RuntimeException("로그인 유저 정보 없음")));
     }
 }
