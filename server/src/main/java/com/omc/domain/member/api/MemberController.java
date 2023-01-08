@@ -2,8 +2,10 @@ package com.omc.domain.member.api;
 
 import com.omc.domain.member.dto.*;
 import com.omc.domain.member.entity.Member;
+import com.omc.domain.member.repository.RefreshTokenRepository;
 import com.omc.domain.member.service.AuthMemberService;
 import com.omc.domain.member.service.MemberService;
+import com.omc.global.common.annotation.AuthMember;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -27,6 +29,7 @@ import java.net.URI;
 public class MemberController {
     private final MemberService memberService;
     private final AuthMemberService authService;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @PostMapping()
     public ResponseEntity<MemberResponseDto> join(@RequestBody SignUpRequestDto signUpRequestDto) {
@@ -50,10 +53,16 @@ public class MemberController {
     }
 
     @GetMapping("/reissue")
-    public ResponseEntity<ReissueResponse> reissue(@CookieValue(value = "refreshToken", required = false) String refreshToken,
-                                                   HttpServletResponse response) {
+    public ResponseEntity<ReissueResponse> reissue(HttpServletRequest request, HttpServletResponse response) {
+        String accessToken = request.getHeader("Authorization");
 
-        ReissueResponse reissue = authService.reissue(refreshToken, response);
+        if (accessToken.startsWith("Bearer ")) {
+            accessToken = accessToken.substring(7);
+        }
+
+        log.debug("accessToken : " + accessToken);
+
+        ReissueResponse reissue = authService.reissue(accessToken, response);
         return new ResponseEntity<>(reissue, null, HttpStatus.CREATED);
     }
 

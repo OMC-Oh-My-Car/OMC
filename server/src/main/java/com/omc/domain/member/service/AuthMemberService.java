@@ -74,40 +74,42 @@ public class AuthMemberService {
         return tokenDto;
     }
 
-    public ReissueResponse reissue(String refreshToken, HttpServletResponse response) {
-        refreshToken = Optional.ofNullable(refreshToken)
-                .orElseThrow(TokenNotFound::new);
+    public ReissueResponse reissue(String accessToken, HttpServletResponse response) {
+        Authentication authentication = tokenProvider.getAuthentication(accessToken);
+        Claims claims = tokenProvider.getClaims(accessToken);
+//        log.debug("email : " + authentication.getName());
 
-        Map<String, Object> claims = tokenProvider.getClaims(refreshToken);
+        RefreshToken refreshToken = refreshTokenRepository.findByKey((String)claims.get("email"))
+                .orElseThrow(() -> new RuntimeException("로그아웃 된 사용자입니다."));
 
-        Member member = memberRepository.findByEmail(claims.get("email").toString())
-                .orElseThrow(MemberNotFoundException::new);
+        String savedRefreshToken = refreshToken.getValue();
+        log.debug("refreshToken : " + savedRefreshToken);
 
-        AuthMember authMember = AuthMember.of(member);
+        if (!tokenProvider.validateToken(savedRefreshToken)) {
+            throw new RuntimeException("Refresh Token 이 유효하지 않습니다.");
+        }
 
-        TokenDto tokenDto = tokenProvider.generateTokenWithClaims(member.getAccessTokenClaims(), authMember);
+        Member member = memberRepository.findByEmail(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+
+        TokenDto tokenDto = tokenProvider.generateTokenWithAuthentication(authentication);
         String newRT = tokenDto.getRefreshToken();
         String newAT = tokenDto.getAccessToken();
 
-        RefreshToken savedRefreshToken = refreshTokenRepository.findByKey(authMember.getEmail())
-                .orElseThrow(IsNotLogined::new);
+//        if (!savedRefreshToken.getValue().equals(refreshToken)) {
+//            throw new TokenInvalid();
+//        }
 
-        if (!savedRefreshToken.getValue().equals(refreshToken)) {
-            throw new TokenInvalid();
-        }
-
-        RefreshToken newRefreshToken = savedRefreshToken.updateValue(newRT);
+        RefreshToken newRefreshToken = refreshToken.updateValue(newRT);
         refreshTokenRepository.save(newRefreshToken);
 
-        ResponseCookie cookie = ResponseCookie.from("refreshToken", newRT)
-                .maxAge(7 * 24 * 60 * 60)
-                .path("/")
-                .secure(true)
-                .sameSite("None")
-                .httpOnly(true)
-                .build();
-        response.setHeader("Set-Cookie", cookie.toString());
-
+//        ResponseCookie cookie = ResponseCookie.from("refreshToken", newRT)
+//                .maxAge(7 * 24 * 60 * 60)
+//                .path("/")
+//                .secure(true)
+//                .sameSite("None")
+//                .httpOnly(true)
+//                .build();
+//        response.setHeader("Set-Cookie", cookie.toString());
 
         response.setHeader("Authentication", "Bearer " + newAT);
 
