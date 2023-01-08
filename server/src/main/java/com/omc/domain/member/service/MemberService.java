@@ -3,6 +3,7 @@ package com.omc.domain.member.service;
 import com.omc.domain.member.dto.SignUpRequestDto;
 import com.omc.domain.member.dto.MemberResponseDto;
 import com.omc.domain.member.dto.TokenDto;
+import com.omc.domain.member.entity.AuthMember;
 import com.omc.domain.member.entity.Member;
 import com.omc.domain.member.exception.DuplicateEmail;
 import com.omc.domain.member.exception.DuplicateNickname;
@@ -20,23 +21,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final TokenProvider tokenProvider;
 
     public Optional<Member> findByEmail(String email) {
         return memberRepository.findByEmail(email);
-    }
-
-    public String generateAccessKey(Member member) {
-        String accessToken = member.getAccessToken();
-
-        if (StringUtils.hasLength(accessToken) == false ) {
-            TokenDto tokenDto = tokenProvider.generateToken(member.getAccessTokenClaims());
-
-            accessToken = tokenDto.getAccessToken();
-            member.setAccessToken(accessToken);
-        }
-
-        return accessToken;
     }
 
     public boolean verifyWithWhiteList(Member member, String token) {

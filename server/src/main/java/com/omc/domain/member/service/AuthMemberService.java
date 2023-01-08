@@ -1,9 +1,6 @@
 package com.omc.domain.member.service;
 
-import com.omc.domain.member.dto.MemberResponseDto;
-import com.omc.domain.member.dto.ReissueResponse;
-import com.omc.domain.member.dto.SignUpRequestDto;
-import com.omc.domain.member.dto.TokenDto;
+import com.omc.domain.member.dto.*;
 import com.omc.domain.member.entity.AuthMember;
 import com.omc.domain.member.entity.Member;
 import com.omc.domain.member.entity.RefreshToken;
@@ -15,10 +12,14 @@ import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseCookie;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 import java.util.Optional;
@@ -31,9 +32,9 @@ public class AuthMemberService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     public MemberResponseDto join(SignUpRequestDto signUpRequestDto) {
-        System.out.println(signUpRequestDto.getEmail());
         if (memberRepository.existsByEmail(signUpRequestDto.getEmail())) {
             throw new DuplicateEmail();
         }
@@ -64,11 +65,11 @@ public class AuthMemberService {
 
         AuthMember authMember = AuthMember.of(member);
 
-        TokenDto tokenDto = tokenProvider.generateToken(member.getAccessTokenClaims());
+        TokenDto tokenDto = tokenProvider.generateTokenWithClaims(member.getAccessTokenClaims(), authMember);
         String newRT = tokenDto.getRefreshToken();
         String newAT = tokenDto.getAccessToken();
 
-        RefreshToken savedRefreshToken = refreshTokenRepository.findByEmail(authMember.getEmail())
+        RefreshToken savedRefreshToken = refreshTokenRepository.findByKey(authMember.getEmail())
                 .orElseThrow(IsNotLogined::new);
 
         if (!savedRefreshToken.getValue().equals(refreshToken)) {
@@ -91,5 +92,24 @@ public class AuthMemberService {
         response.setHeader("Authentication", "Bearer " + newAT);
 
         return ReissueResponse.toResponse(member);
+    }
+
+    public TokenDto login(LoginDto loginDto, HttpServletRequest request, HttpServletResponse response) {
+        UsernamePasswordAuthenticationToken authenticationToken = loginDto.toAuthentication();
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        TokenDto tokenDto = tokenProvider.generateTokenWithAuthentication(authentication);
+
+        response.setHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
+        // 4. RefreshToken 저장
+        RefreshToken refreshToken = RefreshToken.builder()
+                .key(loginDto.getEmail())
+                .value(tokenDto.getRefreshToken())
+                .build();
+
+        refreshTokenRepository.save(refreshToken);
+
+        // 5. 토큰 발급
+        return tokenDto;
     }
 }

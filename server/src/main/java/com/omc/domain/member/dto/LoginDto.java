@@ -1,6 +1,7 @@
 package com.omc.domain.member.dto;
 
 import lombok.*;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import javax.validation.constraints.NotBlank;
 
@@ -14,5 +15,9 @@ public class LoginDto {
 
     public boolean isNotValid() {
         return email == null || password == null || email.trim().length() == 0 || password.trim().length() == 0;
+    }
+
+    public UsernamePasswordAuthenticationToken toAuthentication() {
+        return new UsernamePasswordAuthenticationToken(email, password);
     }
 }

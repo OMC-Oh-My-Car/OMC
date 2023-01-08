@@ -20,7 +20,8 @@ public class AuthMember extends Member implements UserDetails {
         this.nickname = member.getUsername();
     }
 
-    private AuthMember(List<String> roles) {
+    private AuthMember(String email, List<String> roles) {
+        this.email = email;
         this.password = "";
         this.roles = roles;
     }
@@ -29,8 +30,8 @@ public class AuthMember extends Member implements UserDetails {
         return new AuthMember(member);
     }
 
-    public static AuthMember of(List<String> roles) {
-        return new AuthMember( roles);
+    public static AuthMember of(String email, List<String> userRole) {
+        return new AuthMember(email, userRole);
     }
 
     @Override

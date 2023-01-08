@@ -15,15 +15,15 @@ import javax.persistence.Entity;
 public class RefreshToken extends BaseEntity {
     @Column(name = "rt_key")
     // member id 값이 들어감
-    private String email;
+    private String key;
 
     @Column(name = "rt_value")
     // refresh token (String)
     private String value;
 
     @Builder
-    public RefreshToken(String email, String value) {
-        this.email = email;
+    public RefreshToken(String key, String value) {
+        this.key = key;
         this.value = value;
     }
 

@@ -1,16 +1,24 @@
 package com.omc.global.config.security;
 
-import com.omc.global.config.security.filter.JwtAuthorizationFilter;
+import com.omc.domain.member.repository.MemberRepository;
+import com.omc.domain.member.repository.RefreshTokenRepository;
+import com.omc.global.jwt.JwtSecurityConfig;
+import com.omc.global.jwt.filter.JwtFilter;
+import com.omc.global.config.security.handler.MemberAuthenticationSuccessHandler;
+import com.omc.global.jwt.JwtAccessDeniedHandler;
+import com.omc.global.jwt.JwtAuthenticationEntryPoint;
+import com.omc.global.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -19,17 +27,18 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final JwtAuthorizationFilter jwtAuthorizationFilter;
+    private final TokenProvider tokenProvider;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final MemberRepository memberRepository;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests(
-                        authorizeRequests -> authorizeRequests
-                                .antMatchers("/member/login", "/member")
-                                .permitAll()
-                                .anyRequest()
-                                .authenticated() // 최소자격 : 로그인
-                )
+                .exceptionHandling()
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .accessDeniedHandler(jwtAccessDeniedHandler)
+                .and()
                 .csrf(
                         csrf -> csrf.disable()
                 )
@@ -42,10 +51,15 @@ public class SecurityConfig {
                         sessionManagement ->
                         sessionManagement.sessionCreationPolicy(STATELESS)
                 )
-                .addFilterBefore( // 로그인, 회원가입 제외 모든 엔드포인트에 인증필요 필터 추가
-                        jwtAuthorizationFilter,
-                        UsernamePasswordAuthenticationFilter.class
-                );
+                .authorizeRequests(
+                        authorizeRequests -> authorizeRequests
+                                .antMatchers("/member/login", "/member")
+                                .permitAll()
+                                .anyRequest()
+                                .authenticated() // 최소자격 : 로그인
+                )
+                .apply(new JwtSecurityConfig(tokenProvider))
+//                .and()
         ; // 세션 사용안함
                 // 없어도 된다.
 //                .logout(logout -> logout
@@ -59,4 +73,21 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+//    private class CustomFilterConfigurer extends AbstractHttpConfigurer<CustomFilterConfigurer, HttpSecurity> {
+//        @Override
+//        public void configure(HttpSecurity http) throws Exception {
+//            AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
+//
+//            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(tokenProvider, authenticationManager, memberRepository);
+//            jwtAuthenticationFilter.setFilterProcessesUrl("/member/login");
+//            jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler(refreshTokenRepository));
+//
+////            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(tokenProvider, memberService);
+//            JwtFilter jwtFilter = new JwtFilter(tokenProvider);
+//            http
+//                    .addFilter(jwtAuthenticationFilter)
+//                    .addFilterAfter(jwtFilter, JwtAuthenticationFilter.class);
+//        }
+//    }
 }

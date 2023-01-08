@@ -1,4 +1,4 @@
-package com.omc.global.config.security;
+package com.omc.domain.member.service;
 
 import com.omc.domain.member.entity.AuthMember;
 import com.omc.domain.member.entity.Member;
@@ -6,15 +6,18 @@ import com.omc.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+
 @Service
 @RequiredArgsConstructor
-public class CustomUserDetailService implements UserDetailsService {
+public class CustomMemberDetailService implements UserDetailsService {
     private final MemberRepository memberRepository;
 
     @Override
@@ -26,6 +29,12 @@ public class CustomUserDetailService implements UserDetailsService {
     }
 
     private UserDetails createUserDetails(Member member) {
-        return AuthMember.of(member);
+        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(member.getUserRole().toString());
+
+        return new User(
+                member.getEmail(),
+                member.getPassword(),
+                Collections.singleton(grantedAuthority)
+        );
     }
 }
