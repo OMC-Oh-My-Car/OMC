@@ -24,7 +24,7 @@ const ProductList = () => {
       isLike: true,
     },
     {
-      productId: 1,
+      productId: 2,
       subject: '상호명',
       description: '상품 설명',
       location: [{ value: '서울특별시' }, { value: '마포구' }, { value: '월드컵로' }],
