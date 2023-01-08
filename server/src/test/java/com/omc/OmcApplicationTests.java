@@ -33,6 +33,25 @@ class OmcApplicationTests {
 	void test1() throws Exception {
 		ResultActions resultActions = mvc
 				.perform(
+						post("/member")
+								.content("""
+										{
+											"username": "홍길동",
+											"password": "1234",
+											"email": "test@gmail.com",
+											"nickname": "gildong",
+											"phone": "010-0000-0000"
+										}
+										""".stripIndent())
+								.contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+				)
+				.andDo((print()));
+
+		resultActions
+				.andExpect(status().is2xxSuccessful());
+
+		resultActions = mvc
+				.perform(
 						post("/member/login")
 								.content("""
 										{
@@ -56,7 +75,7 @@ class OmcApplicationTests {
 		resultActions = mvc
 				.perform(
 						get("/member/me")
-								.header("Authorization", "Bearer " + accessToken)
+								.header("Authorization", accessToken)
 				)
 				.andDo(print());
 

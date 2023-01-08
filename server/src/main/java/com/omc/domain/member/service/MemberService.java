@@ -29,4 +29,8 @@ public class MemberService {
     public boolean verifyWithWhiteList(Member member, String token) {
         return member.getAccessToken().equals(token);
     }
+
+    public Optional<Member> findById(Long id) {
+        return memberRepository.findById(id);
+    }
 }

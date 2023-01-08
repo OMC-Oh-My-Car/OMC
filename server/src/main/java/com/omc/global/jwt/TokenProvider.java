@@ -109,7 +109,7 @@ public class TokenProvider {
     public Authentication getAuthentication(String accessToken) {
         Map<String, Object> claims = getClaims(accessToken);
 
-        if(claims.get("UserRole") == null) {
+        if(claims.get("userRole") == null) {
             throw new RuntimeException("권한 정보 없음");
         }
 

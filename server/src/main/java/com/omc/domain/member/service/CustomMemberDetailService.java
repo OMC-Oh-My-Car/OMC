@@ -32,9 +32,9 @@ public class CustomMemberDetailService implements UserDetailsService {
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(member.getUserRole().toString());
 
         return new User(
-                member.getEmail(),
-                member.getPassword(),
-                Collections.singleton(grantedAuthority)
+            member.getEmail(),
+            member.getPassword(),
+            Collections.singleton(grantedAuthority)
         );
     }
 }

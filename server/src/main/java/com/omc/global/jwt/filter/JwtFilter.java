@@ -47,6 +47,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
         } catch (RuntimeException e) {
+            e.printStackTrace();
 
 //            if (e instanceof BusinessException) {
 //                ObjectMapper objectMapper = new ObjectMapper();
