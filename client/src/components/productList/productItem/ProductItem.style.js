@@ -10,8 +10,7 @@ export const ProductItemArea = styled.div`
   .imageArea {
     position: relative;
     width: 100%;
-    height: calc(100% - 88px - 10px);
-    margin-bottom: 10px;
+    height: calc(100% - 88px);
     font-size: 30px;
     color: rgba(255, 255, 255, 0.5);
     img {
@@ -54,6 +53,7 @@ export const ProductItemArea = styled.div`
     font-size: 15px;
     width: 100%;
     height: 88px;
+    padding-top: 10px;
     /* border: 1px solid black; */
     font-family: sans-serif;
     .productTitle {
@@ -69,13 +69,13 @@ export const ProductItemArea = styled.div`
         color: ${(props) => props.theme.gray};
       }
     }
-    .productIsLike {
+    .productGrade {
       position: absolute;
-      top: 0px;
+      top: 10px;
       right: 0px;
       .starIcon {
-        font-size: 12px;
-        margin-right: 3px;
+        font-size: 13px;
+        margin-right: 5px;
       }
     }
   }

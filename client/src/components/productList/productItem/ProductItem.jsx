@@ -21,7 +21,9 @@ const ProductItem = ({ item }) => {
               <HeartRegular fill="red" className="heartIcon" alt="heartIcon" />
             </>
           )}
+
           <img src={item.img[currentImage].value} alt="" />
+
           {currentImage !== 0 && (
             <>
               <FontAwesomeIcon
@@ -31,6 +33,7 @@ const ProductItem = ({ item }) => {
               />
             </>
           )}
+
           {currentImage !== item.img.length - 1 && (
             <>
               <FontAwesomeIcon
@@ -52,7 +55,7 @@ const ProductItem = ({ item }) => {
               <span className="colorGray"> /박</span>
             </p>
           </div>
-          <p className="productIsLike">
+          <p className="productGrade">
             <FontAwesomeIcon className="starIcon" icon={faStar} />
             <span>{item.star}</span>
           </p>
