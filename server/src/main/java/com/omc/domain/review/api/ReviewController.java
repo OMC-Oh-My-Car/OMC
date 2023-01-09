@@ -20,7 +20,7 @@ public class ReviewController {
 
     // @PreAuthorize("isAuthenticated()")
     @PostMapping(value = "/{reservationId}", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> createReview(@RequestPart("review") ReviewDto.Request request, @PathVariable long reservationId) {
+    public ResponseEntity<?> createReview(@RequestBody ReviewDto.Request request, @PathVariable long reservationId) {
         reviewService.createReview(request, reservationId);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -28,7 +28,7 @@ public class ReviewController {
 
     // @PreAuthorize("isAuthenticated()")
     @PatchMapping(value = "/{reviewId}", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> modifyReview(@RequestPart("review") ReviewDto.Request request, @PathVariable long reviewId) {
+    public ResponseEntity<?> modifyReview(@RequestBody ReviewDto.Request request, @PathVariable long reviewId) {
         reviewService.modifyReview(request, reviewId);
 
         return ResponseEntity.status(HttpStatus.OK).build();
