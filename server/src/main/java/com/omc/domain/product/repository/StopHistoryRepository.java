@@ -8,5 +8,5 @@ import com.omc.domain.product.entity.StopHistory;
 public interface StopHistoryRepository extends JpaRepository<StopHistory, Long> {
 
 	// findTopByProductIdOrderByStopDateDesc
-	StopHistory findTopByProductIdOrderByStopDateDesc(Long productId);
+	StopHistory findTopByProductIdOrderByCreatedAtDesc(Long productId);
 }

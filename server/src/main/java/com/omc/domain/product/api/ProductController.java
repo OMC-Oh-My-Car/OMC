@@ -187,7 +187,7 @@ public class ProductController {
 
 		Member member = productService.ifExistReturnMember(id); // todo 테스트용
 
-		StopDto.Response res = productService.setStatus(productId, req, member);
+		StopDto.Response res = productService.setStatusForSeller(productId, req, member);
 
 		return new ResponseEntity<>(new SingleResponseDto<>(res), HttpStatus.OK);
 	}
@@ -209,6 +209,29 @@ public class ProductController {
 		List<ProductDto.ResponseForAdmin> res = productService.convertToResponseForAdmin(resPage.getContent(), member);
 
 		return new ResponseEntity<>(new MultiResponse<>(res, resPage), HttpStatus.OK);
+	}
+
+	/**
+	 * 상품 상태 관리(관리자)
+	 *
+	 * @param productId : 상품 아이디
+	 * @param req       :
+	 *                  - isStop : 0: 판매중, 1: 판매중지, 2: 블라인드
+	 *                  - stopReason : 상품 상태 변경 사유
+	 * @param id    : 로그인한 회원
+	 * @return 상품 정보
+	 */
+	@PatchMapping(value = "/admin/product/stop/{productId}")
+	public ResponseEntity<?> statusAdmin(@PathVariable Long productId,
+									@RequestBody StopDto.Request req,
+									@RequestParam(value = "member") Long id// todo 테스트용
+								   ) {
+
+		Member member = productService.ifExistReturnMember(id); // todo 테스트용
+
+		ProductDto.ResponseForAdmin res = productService.setStatusForAdmin(productId, req, member);
+
+		return new ResponseEntity<>(new SingleResponseDto<>(res), HttpStatus.OK);
 	}
 
 }

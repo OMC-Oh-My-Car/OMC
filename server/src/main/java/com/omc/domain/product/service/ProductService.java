@@ -249,7 +249,7 @@ public class ProductService {
 	 * @return 상품 정보
 	 */
 	@Transactional
-	public StopDto.Response setStatus(Long productId, StopDto.Request req, Member member) {
+	public StopDto.Response setStatusForSeller(Long productId, StopDto.Request req, Member member) {
 		Product findProduct = ifExistReturnProduct(productId);
 		Member findMember = ifExistReturnMember(member.getId());
 
@@ -286,6 +286,40 @@ public class ProductService {
 							   .isStop(stopHistory.getIsStop())
 							   .stopReason(stopHistory.getReason())
 							   .build();
+	}
+
+	public ProductDto.ResponseForAdmin setStatusForAdmin(Long productId, StopDto.Request req, Member member) {
+		Product findProduct = ifExistReturnProduct(productId);
+		Member findMember = ifExistReturnMember(member.getId());
+
+		if (!findProduct.getMember().getId().equals(findMember.getId())
+			|| findMember.getUserRole() != UserRole.ROLE_ADMIN) {
+			throw new BusinessException(ErrorCode.TEST); // todo member 추가 후 수정
+		}
+
+		if (findProduct.getIsStop() == 2 && member.getUserRole() != UserRole.ROLE_ADMIN) {
+			throw new BusinessException(ErrorCode.TEST); // todo 관리자만 블라인드 해제 가능
+		}
+
+		ArrayList<StopHistory> stopHistories = new ArrayList<>();
+		StopHistory stopHistory = StopHistory.builder()
+											 .product(findProduct)
+											 .isStop(req.getIsStop())
+											 .reason(req.getStopReason())
+											 .build();
+		stopHistories.add(stopHistory);
+		findProduct.setIsStop(req.getIsStop());
+		findProduct.addStopHistory(stopHistories);
+		productRepository.save(findProduct);
+
+		return ProductDto.ResponseForAdmin.builder()
+										  .productId(productId)
+										  .isStop(stopHistory.getIsStop())
+										  .productImage(getImgs(productId).get(0))
+										  .reportCount(findProduct.getReportCount())
+										  .stopReason(stopHistory.getReason())
+										  // .seller() todo seller 추가 후 수정
+										  .build();
 	}
 
 	/**
@@ -481,7 +515,7 @@ public class ProductService {
 		String reason = "";
 		for (Product product : content) {
 			if (product.getIsStop() != 0) {
-				StopHistory stopHistory = stopHistoryRepository.findTopByProductIdOrderByStopDateDesc(product.getId());
+				StopHistory stopHistory = stopHistoryRepository.findTopByProductIdOrderByCreatedAtDesc(product.getId());
 				reason = stopHistory.getReason();
 			}
 			responseList.add(ProductDto.ResponseForAdmin.builder()
