@@ -83,6 +83,7 @@ public class ProductDto {
 		private List<String> img;
 		private Long likes;
 		private Boolean isLike;
+		private Long isStop;
 
 	}
 

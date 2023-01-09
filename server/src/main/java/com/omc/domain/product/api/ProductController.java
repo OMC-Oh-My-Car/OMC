@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,7 +23,6 @@ import com.omc.domain.product.dto.ProductDto;
 import com.omc.domain.product.dto.StopDto;
 import com.omc.domain.product.entity.Product;
 import com.omc.domain.product.service.ProductService;
-import com.omc.global.common.annotation.AuthMember;
 import com.omc.global.common.dto.MultiResponse;
 import com.omc.global.common.dto.SingleResponseDto;
 import com.omc.global.error.ErrorCode;
@@ -47,14 +47,18 @@ public class ProductController {
 	@PostMapping(value = "/product",
 				 consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<?> create(@RequestPart("product") ProductDto.Request req,
-									@RequestPart("imgUrl") List<MultipartFile> multipartFiles) {
+									@RequestPart("imgUrl") List<MultipartFile> multipartFiles,
+									@RequestParam(value = "member") Long id// todo 테스트용
+								   ) {
+
+		Member member = productService.ifExistReturnMember(id); // todo 테스트용
 
 		if (multipartFiles == null) {
 			log.error("multipartFiles is null");
 			throw new BusinessException(ErrorCode.IMAGE_NOT_FOUND);
 		}
 
-		productService.create(req, multipartFiles);
+		productService.create(req, multipartFiles, member);
 
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
@@ -69,9 +73,13 @@ public class ProductController {
 				  consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<?> update(@RequestPart("product") ProductDto.Request req,
 									@RequestPart("imgUrl") List<MultipartFile> multipartFiles,
-									@PathVariable Long productId) {
+									@PathVariable Long productId,
+									@RequestParam(value = "member") Long id// todo 테스트용
+								   ) {
 
-		productService.update(req, multipartFiles, productId);
+		Member member = productService.ifExistReturnMember(id); // todo 테스트용
+
+		productService.update(req, multipartFiles, productId, member);
 
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
@@ -109,16 +117,19 @@ public class ProductController {
 	/**
 	 * 등록한 상품 조회 (내 상품)
 	 *
-	 * @param member : 로그인한 회원
+	 * @param id : 로그인한 회원
 	 * @param search : 검색 조건
 	 * @return 상품 정보
 	 */
 	@GetMapping(value = "/product/my")
-	public ResponseEntity<?> getMyProductList(@AuthMember Member member,
-											  @ModelAttribute ProductDto.Search search) {
+	public ResponseEntity<?> getMyProductList(@ModelAttribute ProductDto.Search search,
+											  @RequestParam(value = "member") Long id// todo 테스트용
+											 ) {
+
+		Member member = productService.ifExistReturnMember(id); // todo 테스트용
 
 		Page<Product> resPage = productService.getMyProductList(member, search);
-		List<ProductDto.Response> res = productService.convertToResponse(resPage.getContent());
+		List<ProductDto.Response> res = productService.convertToResponse(resPage.getContent(), member);
 
 		return new ResponseEntity<>(new MultiResponse<>(res, resPage), HttpStatus.OK);
 	}
@@ -129,9 +140,13 @@ public class ProductController {
 	 * @param productId : 상품 아이디
 	 */
 	@DeleteMapping(value = "/product/{productId}")
-	public ResponseEntity<?> delete(@PathVariable Long productId) {
+	public ResponseEntity<?> delete(@PathVariable Long productId,
+									@RequestParam(value = "member") Long id// todo 테스트용
+								   ) {
 
-		productService.delete(productId);
+		Member member = productService.ifExistReturnMember(id); // todo 테스트용
+
+		productService.delete(productId, member);
 
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
@@ -140,11 +155,14 @@ public class ProductController {
 	 * 상품 추천
 	 *
 	 * @param productId : 상품 아이디
-	 * @param member    : 로그인한 회원
+	 * @param id    : 로그인한 회원
 	 */
 	@PostMapping(value = "/product/{productId}/like")
 	public ResponseEntity<?> like(@PathVariable Long productId,
-								  @AuthMember Member member) {
+								  @RequestParam(value = "member") Long id// todo 테스트용
+								 ) {
+
+		Member member = productService.ifExistReturnMember(id); // todo 테스트용
 
 		productService.likeProduct(productId, member);
 
@@ -158,13 +176,16 @@ public class ProductController {
 	 * @param req       :
 	 *                  - isStop : 0: 판매중, 1: 판매중지, 2: 블라인드
 	 *                  - stopReason : 상품 상태 변경 사유
-	 * @param member    : 로그인한 회원
+	 * @param id    : 로그인한 회원
 	 * @return 상품 정보
 	 */
 	@PatchMapping(value = "/product/{productId}/stop")
 	public ResponseEntity<?> status(@PathVariable Long productId,
 									@RequestBody StopDto.Request req,
-									@AuthMember Member member) {
+									@RequestParam(value = "member") Long id// todo 테스트용
+								   ) {
+
+		Member member = productService.ifExistReturnMember(id); // todo 테스트용
 
 		StopDto.Response res = productService.setStatus(productId, req, member);
 

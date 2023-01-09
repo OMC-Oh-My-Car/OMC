@@ -81,10 +81,10 @@ public class Product extends BaseEntity {
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Location> locations = new ArrayList<>();
 
-	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
 	private List<StopHistory> stopHistories = new ArrayList<>();
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn
 	private Member member;
 
@@ -94,7 +94,7 @@ public class Product extends BaseEntity {
 	@Builder
 	public Product(String subject, String description, List<Img> imgList, String address, String zipcode,
 				   Long reportCount, String telephone, Long count, Long price, Double star, String checkIn,
-				   String checkOut, Long likes, Long isStop) {
+				   String checkOut, Long likes, Long isStop, Member member) {
 		this.subject = subject;
 		this.description = description;
 		this.imgList = imgList;
@@ -112,6 +112,7 @@ public class Product extends BaseEntity {
 		this.checkOut = checkOut;
 		this.likes = likes;
 		this.isStop = isStop;
+		this.member = member;
 	}
 
 	public void editProduct(ProductDto.Request dto) {
