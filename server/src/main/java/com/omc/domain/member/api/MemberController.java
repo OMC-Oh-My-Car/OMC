@@ -70,12 +70,16 @@ public class MemberController {
     public ResponseEntity<?> modify(@RequestBody @Valid MemberModifyDto memberModifyDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+        if (authentication == null || authentication.getName() == null) {
+            throw  new RuntimeException("Security Context 에 인증 정보가 없습니다.");
+        }
+
         Member modifyMember = memberService.modify(authentication.getName(), memberModifyDto);
 
         return ResponseEntity.ok(modifyMember);
     }
 
-    @GetMapping("/me")
+    @GetMapping("/detail")
     public ResponseEntity<MemberResponseDto> findMemberInfoByEmail() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
