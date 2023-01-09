@@ -2,7 +2,7 @@
 import { ProductListArea } from './ProductList.style';
 import ProductItem from './productItem/ProductItem';
 
-const ProductList = ({ filter, setFilter }) => {
+const ProductList = () => {
   // 임시 데이터
   let data = [
     {
@@ -46,20 +46,6 @@ const ProductList = ({ filter, setFilter }) => {
   return (
     <>
       <ProductListArea>
-        <div className="productFilter">
-          <button className={`productFilterItem ${filter === 0 ? ' active' : ''}`} onClick={() => setFilter(0)}>
-            최신순
-          </button>
-          <button className={`productFilterItem ${filter === 1 ? ' active' : ''}`} onClick={() => setFilter(1)}>
-            인기순
-          </button>
-          <button className={`productFilterItem ${filter === 2 ? ' active' : ''}`} onClick={() => setFilter(2)}>
-            조회순
-          </button>
-          <button className={`productFilterItem ${filter === 3 ? ' active' : ''}`} onClick={() => setFilter(3)}>
-            추천순
-          </button>
-        </div>
         <div className="productList">
           {data.map((item) => {
             return <ProductItem key={item.productId} item={item} />;
