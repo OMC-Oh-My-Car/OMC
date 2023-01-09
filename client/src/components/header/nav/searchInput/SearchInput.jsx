@@ -1,5 +1,5 @@
 // import React from 'react';
-import { SearchInputArea } from './SearchInput.styled';
+import { SearchInputArea } from './SearchInput.style';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 

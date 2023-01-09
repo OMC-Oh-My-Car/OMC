@@ -1,5 +1,5 @@
 // import React from 'react';
-import { ButtonArea } from './Button.styled';
+import { ButtonArea } from './Button.style';
 
 const Button = () => {
   return (

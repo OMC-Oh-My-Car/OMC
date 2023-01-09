@@ -1,5 +1,5 @@
 // import React from 'react';
-import { HeaderArea } from './Header.styled';
+import { HeaderArea } from './Header.style';
 import Nav from './nav/Nav';
 
 const Header = ({ type }) => {
