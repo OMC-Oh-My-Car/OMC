@@ -28,6 +28,9 @@ export const ProductItemArea = styled.div`
         transform: scale(1.15);
       }
     }
+    .circleLeftIcon.disabled {
+      display: none;
+    }
     .circleRightIcon {
       position: absolute;
       top: calc(50% - 15px);
@@ -36,6 +39,9 @@ export const ProductItemArea = styled.div`
         color: rgba(255, 255, 255, 1);
         transform: scale(1.15);
       }
+    }
+    .disabled {
+      display: none;
     }
     .heartIcon {
       position: absolute;
