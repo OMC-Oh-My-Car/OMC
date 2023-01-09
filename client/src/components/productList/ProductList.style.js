@@ -15,11 +15,22 @@ export const ProductListArea = styled.main`
     gap: 10px;
     width: 100%;
     height: 40px;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     /* border: 1px solid black; */
     .productFilterItem {
       cursor: pointer;
-      padding: 5px;
+      font-size: 15px;
+      padding: 7px 10px;
+      outline: none;
+      border: none;
+      background-color: white;
+      margin: 0;
+    }
+    .productFilterItem.active {
+      color: ${(props) => props.theme.yellow};
+      font-weight: 700;
+      border: 2px solid ${(props) => props.theme.yellow};
+      border-radius: 20px;
     }
     .productFilterItem:hover {
       color: ${(props) => props.theme.red};
