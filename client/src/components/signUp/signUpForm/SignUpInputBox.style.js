@@ -16,5 +16,6 @@ export const InputContainer = styled.div`
     border-bottom: 2px solid darkgray;
     border-radius: 5px;
     background-color: #f5f5f5;
+    padding-left: 10px;
   }
 `;
