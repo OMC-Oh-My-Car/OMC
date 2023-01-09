@@ -2,6 +2,7 @@ package com.omc.domain.member.entity;
 
 import javax.persistence.*;
 
+import com.omc.domain.member.dto.MemberModifyDto;
 import com.omc.domain.member.dto.MemberResponseDto;
 import com.omc.global.common.BaseEntity;
 import com.omc.global.util.Util;
@@ -16,13 +17,13 @@ import java.util.*;
 @Builder
 @ToString(callSuper = true)
 public class Member extends BaseEntity {
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     private String username;
 
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, updatable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false, unique = true)
@@ -38,13 +39,6 @@ public class Member extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
-
-    @Column(columnDefinition = "TEXT")
-    private String accessToken;
-
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
-    }
 
     public void setPassword(String password) {
         this.password = password;
@@ -66,5 +60,13 @@ public class Member extends BaseEntity {
                 "email", getEmail(),
                 "userRole", getUserRole()
         );
+    }
+
+    public void patch(MemberModifyDto memberModifyDto) {
+        this.username = memberModifyDto.getUsername();
+        this.email = memberModifyDto.getEmail();
+        Optional.ofNullable(memberModifyDto.getProfileImg())
+                .ifPresent(image -> this.profileImg = image);
+        this.phone = memberModifyDto.getPhone();
     }
 }

@@ -5,21 +5,21 @@ import com.omc.domain.member.entity.Member;
 import com.omc.domain.member.repository.RefreshTokenRepository;
 import com.omc.domain.member.service.AuthMemberService;
 import com.omc.domain.member.service.MemberService;
-import com.omc.global.common.annotation.AuthMember;
+import com.omc.domain.member.entity.AuthMember;
+import com.omc.global.common.annotation.CurrentMember;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
@@ -64,6 +64,15 @@ public class MemberController {
 
         ReissueResponse reissue = authService.reissue(accessToken, response);
         return new ResponseEntity<>(reissue, null, HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/modify")
+    public ResponseEntity<?> modify(@RequestBody @Valid MemberModifyDto memberModifyDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Member modifyMember = memberService.modify(authentication.getName(), memberModifyDto);
+
+        return ResponseEntity.ok(modifyMember);
     }
 
     @GetMapping("/me")

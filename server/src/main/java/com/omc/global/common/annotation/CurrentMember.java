@@ -10,5 +10,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
 @AuthenticationPrincipal // todo: Spring Security 적용 후 사용
-public @interface AuthMember {
+public @interface CurrentMember {
 }
