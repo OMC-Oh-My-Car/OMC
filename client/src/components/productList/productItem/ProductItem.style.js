@@ -40,7 +40,7 @@ export const ProductItemArea = styled.div`
         transform: scale(1.15);
       }
     }
-    .disabled {
+    .circleRightIcon.disabled {
       display: none;
     }
     .heartIcon {
