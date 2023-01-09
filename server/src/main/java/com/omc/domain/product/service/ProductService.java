@@ -32,6 +32,7 @@ import com.omc.domain.product.repository.FacilitiesRepository;
 import com.omc.domain.product.repository.LikeHistoryRepository;
 import com.omc.domain.product.repository.LocationRepository;
 import com.omc.domain.product.repository.ProductRepository;
+import com.omc.domain.product.repository.StopHistoryRepository;
 import com.omc.global.error.ErrorCode;
 import com.omc.global.error.exception.BusinessException;
 import com.omc.global.util.S3Service;
@@ -51,6 +52,7 @@ public class ProductService {
 	private final LocationRepository locationRepository;
 	private final ImgRepository imgRepository;
 	private final LikeHistoryRepository likeHistoryRepository;
+	private final StopHistoryRepository stopHistoryRepository;
 
 	private final S3Service s3Service;
 
@@ -463,6 +465,33 @@ public class ProductService {
 												.isStop(product.getIsStop())
 												.isLike(isLike(member, product))
 												.build());
+		}
+		return responseList;
+	}
+
+	/**
+	 * Product to ResponseDto
+	 *
+	 * @param content : 상품 목록 (Product)
+	 * @return : 상품 목록 (ResponseDto)
+	 */
+	public List<ProductDto.ResponseForAdmin> convertToResponseForAdmin(List<Product> content, Member member) {
+		List<ProductDto.ResponseForAdmin> responseList = new ArrayList<>();
+
+		String reason = "";
+		for (Product product : content) {
+			if (product.getIsStop() != 0) {
+				StopHistory stopHistory = stopHistoryRepository.findTopByProductIdOrderByStopDateDesc(product.getId());
+				reason = stopHistory.getReason();
+			}
+			responseList.add(ProductDto.ResponseForAdmin.builder()
+														.productId(product.getId())
+														.isStop(product.getIsStop())
+														.stopReason(reason)
+														.reportCount(product.getReportCount())
+														.seller(product.getMember().getNickname())
+														.productImage(product.getImgList().get(0).getImgUrl())
+														.build());
 		}
 		return responseList;
 	}

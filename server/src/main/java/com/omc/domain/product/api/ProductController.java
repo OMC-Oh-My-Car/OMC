@@ -192,4 +192,23 @@ public class ProductController {
 		return new ResponseEntity<>(new SingleResponseDto<>(res), HttpStatus.OK);
 	}
 
+	/**
+	 * 등록한 상품 목록 조회(관리자)
+	 * @param search : 검색 조건
+	 * @param id : 로그인한 회원
+	 * @return 상품 정보
+	 */
+	@GetMapping(value = "/admin/product")
+	public ResponseEntity<?> getAdminProductList(@ModelAttribute ProductDto.Search search,
+												 @RequestParam(value = "member") Long id// todo 테스트용
+												) {
+
+		Member member = productService.ifExistReturnMember(id); // todo 테스트용
+
+		Page<Product> resPage = productService.getMyProductList(member, search);
+		List<ProductDto.ResponseForAdmin> res = productService.convertToResponseForAdmin(resPage.getContent(), member);
+
+		return new ResponseEntity<>(new MultiResponse<>(res, resPage), HttpStatus.OK);
+	}
+
 }

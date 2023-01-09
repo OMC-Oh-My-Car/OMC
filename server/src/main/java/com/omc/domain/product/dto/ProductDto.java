@@ -111,4 +111,26 @@ public class ProductDto {
 			return (page - 1) * size;
 		}
 	}
+
+	@Getter
+	@NoArgsConstructor(access = AccessLevel.PROTECTED)
+	public static class ResponseForAdmin {
+		private Long productId;
+		private Long isStop;
+		private String productImage;
+		private Long reportCount;
+		private String seller;
+		private String stopReason;
+
+		@Builder
+		public ResponseForAdmin(Long productId, Long isStop, String productImage, Long reportCount, String seller,
+								String stopReason) {
+			this.productId = productId;
+			this.isStop = isStop;
+			this.productImage = productImage;
+			this.reportCount = reportCount;
+			this.seller = seller;
+			this.stopReason = stopReason;
+		}
+	}
 }
