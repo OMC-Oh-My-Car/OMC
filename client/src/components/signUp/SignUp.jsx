@@ -1,6 +1,5 @@
 // import React from 'react';
 import OrangeButton from './signUpForm/OrangeButton';
-import WhiteButton from './signUpForm/WhiteButton';
 import SignUpInputBox from './signUpForm/SignUpInputBox';
 import { Template, SignUpForm, SignUpButton, SignInComment } from './SignUp.style';
 import { faFile } from '@fortawesome/free-solid-svg-icons';
@@ -23,7 +22,7 @@ const SignUp = () => {
             name="id"
             // onChangeInput={onChangeInput}
             placeholder="아이디를 입력해주세요!"
-          ></SignUpInputBox>
+          />
           <OrangeButton text="아이디 확인" width="120px" height="40px" />
         </SignUpForm>
         <SignUpInputBox
@@ -33,7 +32,7 @@ const SignUp = () => {
           name="password"
           // onChangeInput={onChangeInput}
           placeholder="비밀번호를 입력해주세요!"
-        ></SignUpInputBox>
+        />
         <SignUpInputBox
           labelName="비밀번호 확인"
           inputId="passwordConfirm"
@@ -41,7 +40,7 @@ const SignUp = () => {
           name="passwordConfirm"
           // onChangeInput={onChangeInput}
           placeholder="비밀번호를 다시 입력해주세요!"
-        ></SignUpInputBox>
+        />
         <SignUpForm>
           <SignUpInputBox
             labelName="이메일"
@@ -50,11 +49,11 @@ const SignUp = () => {
             name="email"
             // onChangeInput={onChangeInput}
             placeholder="이메일을 입력해주세요!"
-          ></SignUpInputBox>
+          />
           <OrangeButton text="인증하기" width="120px" height="40px" />
         </SignUpForm>
         <SignUpButton>
-          <WhiteButton text="회원가입" width="180px" height="40px" />
+          <OrangeButton text="회원가입" width="180px" height="40px" />
         </SignUpButton>
         <SignInComment>
           이미 가입하셨나요?
