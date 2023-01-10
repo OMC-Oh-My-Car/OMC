@@ -4,6 +4,10 @@ export const getProductList = () => {
   console.log('상품 리스트 Loading');
   return axiosInstance.get('/product');
 };
+export const recommendProduct = (productId) => {
+  console.log('상품 추천');
+  return axiosInstance.post(`/product/like/${productId}`);
+};
 // export const getProductList = (filter, page, search) => {
 //   let params = {
 //     filter: filter,
