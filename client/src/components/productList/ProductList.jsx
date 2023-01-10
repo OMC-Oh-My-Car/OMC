@@ -1,11 +1,28 @@
 // import React from 'react';
 import { ProductListArea } from './ProductList.style';
 import ProductItem from './productItem/ProductItem';
+import ProductItemSkeleton from './productItem/ProductItemSkeleton';
 
 const ProductList = ({ data, isLoading, isError }) => {
-  console.log(data);
+  const skeletonMapArr = Array.from({ length: 12 }, (v, i) => i);
+
   console.log(isLoading);
   console.log(isError);
+
+  if (isLoading) {
+    return (
+      <>
+        <ProductListArea>
+          <div className="productList">
+            {skeletonMapArr.map((el) => {
+              return <ProductItemSkeleton key={el} />;
+            })}
+          </div>
+        </ProductListArea>
+      </>
+    );
+  }
+
   return (
     <>
       <ProductListArea>
