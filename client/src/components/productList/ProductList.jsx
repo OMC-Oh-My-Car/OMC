@@ -10,9 +10,10 @@ const ProductList = ({ data, isLoading, isError }) => {
     <>
       <ProductListArea>
         <div className="productList">
-          {data.data.map((item) => {
-            return <ProductItem key={item.productId} item={item} />;
-          })}
+          {data &&
+            data.data.map((item) => {
+              return <ProductItem key={item.productId} item={item} />;
+            })}
         </div>
       </ProductListArea>
     </>
