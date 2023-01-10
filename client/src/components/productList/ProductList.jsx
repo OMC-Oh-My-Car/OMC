@@ -6,9 +6,6 @@ import ProductItemSkeleton from './productItem/ProductItemSkeleton';
 const ProductList = ({ data, isLoading, isError }) => {
   const skeletonMapArr = Array.from({ length: 12 }, (v, i) => i);
 
-  console.log(isLoading);
-  console.log(isError);
-
   if (isLoading) {
     return (
       <>
@@ -19,6 +16,13 @@ const ProductList = ({ data, isLoading, isError }) => {
             })}
           </div>
         </ProductListArea>
+      </>
+    );
+  }
+  if (isError) {
+    return (
+      <>
+        <div>err</div>
       </>
     );
   }

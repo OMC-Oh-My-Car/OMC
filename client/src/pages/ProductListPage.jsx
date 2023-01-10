@@ -4,12 +4,17 @@ import { Container } from './ProductListPage.style';
 import Header from '../components/header/Header';
 import ProductList from '../components/productList/ProductList';
 import { getProductList } from '../modules/product/productList';
+import Pagination from '../components/pagination/Pagination';
 
 const ProductListPage = () => {
   const [filter, setFilter] = useState(0);
-
+  const [page, setpage] = useState(1);
+  const itemChange = (page) => {
+    console.log(page.selected + 1);
+    setpage(page.selected + 1);
+  };
   const { isLoading, data, isError } = useQuery('productList', async () => {
-    const data = await getProductList(filter, 1, 'search');
+    const data = await getProductList(filter, page, 'search');
     return data;
   });
   return (
@@ -31,6 +36,7 @@ const ProductListPage = () => {
           </button>
         </div>
         <ProductList data={data} isLoading={isLoading} isError={isError} />
+        <Pagination itemChange={itemChange} />
       </Container>
     </>
   );
