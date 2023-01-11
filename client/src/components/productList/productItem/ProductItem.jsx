@@ -7,10 +7,16 @@ import { ReactComponent as HeartSolid } from '../../../assets/images/heart-solid
 
 const ProductItem = ({ item }) => {
   const [currentImage, setCurrentImage] = useState(0);
+  const [hover, setHover] = useState(false);
 
   return (
     <>
-      <ProductItemArea>
+      <ProductItemArea
+        onMouseOver={() => setHover(true)}
+        onFocus={() => setHover(true)}
+        onMouseOut={() => setHover(false)}
+        onBlur={() => setHover(false)}
+      >
         <div className="imageArea">
           {item.isLike ? (
             <>
@@ -22,13 +28,13 @@ const ProductItem = ({ item }) => {
             </>
           )}
 
-          <img src={item.img[currentImage].value} alt="" />
+          <img src={item.img[currentImage].value} alt="상품사진" />
 
           {currentImage !== 0 && (
             <>
               <FontAwesomeIcon
                 onClick={() => setCurrentImage(currentImage - 1)}
-                className="circleLeftIcon"
+                className={!hover ? 'circleLeftIcon disabled' : 'circleLeftIcon'}
                 icon={faCircleLeft}
               />
             </>
@@ -38,7 +44,7 @@ const ProductItem = ({ item }) => {
             <>
               <FontAwesomeIcon
                 onClick={() => setCurrentImage(currentImage + 1)}
-                className="circleRightIcon"
+                className={!hover ? 'circleRightIcon disabled' : 'circleRightIcon'}
                 icon={faCircleRight}
               />
             </>

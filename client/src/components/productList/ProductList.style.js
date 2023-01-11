@@ -6,7 +6,7 @@ export const ProductListArea = styled.main`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  padding: 40px 100px;
+  padding: 20px 100px;
   /* border: 1px solid black; */
   .productFilter {
     display: flex;
@@ -15,11 +15,22 @@ export const ProductListArea = styled.main`
     gap: 10px;
     width: 100%;
     height: 40px;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     /* border: 1px solid black; */
     .productFilterItem {
       cursor: pointer;
-      padding: 5px;
+      font-size: 15px;
+      padding: 7px 10px;
+      outline: none;
+      border: none;
+      background-color: white;
+      margin: 0;
+    }
+    .productFilterItem.active {
+      color: ${(props) => props.theme.yellow};
+      font-weight: 700;
+      border: 2px solid ${(props) => props.theme.yellow};
+      border-radius: 20px;
     }
     .productFilterItem:hover {
       color: ${(props) => props.theme.red};
@@ -48,7 +59,7 @@ export const ProductListArea = styled.main`
     }
   }
   @media (max-width: 1425px) {
-    padding: 40px 50px;
+    padding: 20px 50px;
     /* vw 길이 - padding 길이 - gap 길이) / 컬럼 갯수 + 텍스트 길이 */
     grid-auto-rows: calc((100vw - 100px - 100px) / 4 + 88px);
   }
@@ -67,7 +78,7 @@ export const ProductListArea = styled.main`
     }
   }
   @media (max-width: 744px) {
-    padding: 40px 25px;
+    padding: 20px 25px;
     /* vw 길이 - padding 길이 - gap 길이 - 가로 세로 비율 유지 + 텍스트 길이 */
     grid-auto-rows: calc(100vw - 50px - 25px + 88px);
   }
