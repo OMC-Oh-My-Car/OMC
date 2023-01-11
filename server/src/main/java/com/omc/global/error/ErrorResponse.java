@@ -17,16 +17,16 @@ public class ErrorResponse {
 
 	public static ErrorResponse of(String errorCode, String errorMessage) {
 		return ErrorResponse.builder()
-			.errorCode(errorCode)
-			.errorMessage(errorMessage)
-			.build();
+							.errorCode(errorCode)
+							.errorMessage(errorMessage)
+							.build();
 	}
 
 	public static ErrorResponse of(String errorCode, BindingResult bindingResult) {
 		return ErrorResponse.builder()
-			.errorCode(errorCode)
-			.errorMessage(createErrorMessage(bindingResult))
-			.build();
+							.errorCode(errorCode)
+							.errorMessage(createErrorMessage(bindingResult))
+							.build();
 	}
 
 	private static String createErrorMessage(BindingResult bindingResult) {
