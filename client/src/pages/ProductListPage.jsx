@@ -10,7 +10,6 @@ const ProductListPage = () => {
   const [filter, setFilter] = useState(0);
   const [page, setpage] = useState(1);
   const itemChange = (page) => {
-    console.log(page.selected + 1);
     setpage(page.selected + 1);
   };
   const { isLoading, data, isError } = useQuery('productList', async () => {
