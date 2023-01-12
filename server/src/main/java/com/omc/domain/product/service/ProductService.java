@@ -32,7 +32,6 @@ import com.omc.domain.product.repository.FacilitiesRepository;
 import com.omc.domain.product.repository.LikeHistoryRepository;
 import com.omc.domain.product.repository.LocationRepository;
 import com.omc.domain.product.repository.ProductRepository;
-import com.omc.domain.product.repository.StopHistoryRepository;
 import com.omc.global.error.ErrorCode;
 import com.omc.global.error.exception.BusinessException;
 import com.omc.global.util.S3Service;
@@ -52,7 +51,6 @@ public class ProductService {
 	private final LocationRepository locationRepository;
 	private final ImgRepository imgRepository;
 	private final LikeHistoryRepository likeHistoryRepository;
-	private final StopHistoryRepository stopHistoryRepository;
 
 	private final S3Service s3Service;
 
@@ -66,11 +64,8 @@ public class ProductService {
 	 */
 	@SneakyThrows
 	@Transactional
-	public void create(ProductDto.Request req, List<MultipartFile> multipartFiles, Member member) {
-
-		if (member.getUserRole() == UserRole.ROLE_USER) {
-			throw new BusinessException(ErrorCode.TEST); // todo: 권한 예외 처리
-		}
+	public void create(ProductDto.Request req,
+					   List<MultipartFile> multipartFiles) {
 
 		log.info("multipartFile imgs={}", multipartFiles);
 		String address = req.getAddress();
@@ -91,7 +86,6 @@ public class ProductService {
 								 .star(0.0)
 								 .reportCount(0L)
 								 .count(0L)
-								 .member(member)
 								 .build();
 
 		saveLocation(product, req);
@@ -109,12 +103,12 @@ public class ProductService {
 	 * @param productId      : 상품 id
 	 */
 	@Transactional
-	public void update(ProductDto.Request req, List<MultipartFile> multipartFiles, Long productId, Member member) {
+	public void update(ProductDto.Request req,
+					   List<MultipartFile> multipartFiles,
+					   Long productId) {
 
 		Product findProduct = ifExistReturnProduct(productId);
 		findProduct.editProduct(req);
-
-		checkPermission(member, findProduct);
 
 		if (req.getFacilities() != null) {
 			facilitiesRepository.deleteByProductId(productId);
@@ -162,8 +156,77 @@ public class ProductService {
 								  .img(getImgs(productId))
 								  .likes(findProduct.getLikes())
 								  // .isLike() todo : Member 적용 후 수정, 추천 여부, 회원일 경우 추천 여부 확인해서 넣어줘야함
-								  .isStop(findProduct.getIsStop())
 								  .build();
+	}
+
+	/**
+	 * 상품 목록 조회 (검색어, 편의시설)
+	 * @param member : 회원 정보
+	 * @param search : 검색어
+	 * @return 상품 목록
+	 */
+	@Transactional
+	public Page<Product> getProductList(Member member, ProductDto.Search search) {
+		// todo 리팩터링
+
+		if (member.getUserRole() == UserRole.ROLE_USER) {
+			throw new BusinessException(ErrorCode.TEST); // todo : member 적용 후 에러코드 수정
+		}
+
+		String sortBy = switch (search.getSort()) { // 최신순, 인기순, 조회순, 추천순
+			case "추천" -> "likes";
+			case "조회" -> "views";
+			case "인기" -> "reservations";
+			default -> "id";
+		};
+
+		Pageable pageable = PageRequest.of(Math.toIntExact(search.getPage() - 1),
+										   Math.toIntExact(search.getSize()),
+										   Sort.by(sortBy).descending());
+
+		String searchQuery = search.getQuery() == null ? "null" : search.getQuery();
+
+		if (search.getFacilities() != null && !searchQuery.equals("null")) { // 편의시설, 검색어
+			List<String> keywords = new ArrayList<>();
+			StringTokenizer st = new StringTokenizer(search.getFacilities(), "#");
+			while (st.hasMoreTokens()) {
+				keywords.add(st.nextToken());
+			}
+
+			List<Long> productIds = new ArrayList<>();
+
+			for (String keyword : keywords) {
+				List<Facilities> allByKeywordContaining = facilitiesRepository.findAllByKeywordContaining(keyword);
+				allByKeywordContaining.stream().map(s -> s.getProduct().getId()).forEach(productIds::add);
+			}
+			;
+
+			return productRepository.findBySubjectContainingOrDescriptionContainingAndIdIn(searchQuery,
+																						   searchQuery,
+																						   productIds,
+																						   pageable);
+		} else if (search.getFacilities() == null && !searchQuery.equals("null")) { // 검색어
+			return productRepository.findBySubjectContainingOrDescriptionContaining(searchQuery,
+																					searchQuery,
+																					pageable);
+		} else if (search.getFacilities() != null) { // 편의시설
+			List<String> keywords = new ArrayList<>();
+			StringTokenizer st = new StringTokenizer(search.getFacilities(), "#");
+			while (st.hasMoreTokens()) {
+				keywords.add(st.nextToken());
+			}
+
+			List<Long> productIds = new ArrayList<>();
+
+			for (String keyword : keywords) {
+				List<Facilities> allByKeywordContaining = facilitiesRepository.findAllByKeywordContaining(keyword);
+				allByKeywordContaining.stream().map(s -> s.getProduct().getId()).forEach(productIds::add);
+			}
+			;
+			return productRepository.findByIdIn(productIds, pageable);
+		} else { // 검색어, 편의시설 없음
+			return productRepository.findAll(pageable);
+		}
 	}
 
 	/**
@@ -180,18 +243,15 @@ public class ProductService {
 			throw new BusinessException(ErrorCode.TEST); // todo : member 적용 후 에러코드 수정
 		}
 
-		String sortBy = "id";
-		Optional<String> sort = Optional.ofNullable(search.getSort());
-		if (sort.isPresent()) {
-			sortBy = switch (sort.get()) { // todo 최신순, 인기순, 조회순, 추천순
-				case "추천" -> "likes";
-				case "조회" -> "views";
-				case "인기" -> "reservations";
-				default -> "id";
-			};
-		}
+		String sortBy = switch (search.getSort()) { // 최신순, 인기순, 조회순, 추천순
+			case "추천" -> "likes";
+			case "조회" -> "views";
+			case "인기" -> "reservations";
+			default -> "id";
+		};
 
-		Pageable pageable = PageRequest.of(Math.toIntExact(search.getPage() - 1), Math.toIntExact(search.getSize()),
+		Pageable pageable = PageRequest.of(Math.toIntExact(search.getPage() - 1),
+										   Math.toIntExact(search.getSize()),
 										   Sort.by(sortBy).descending());
 		// return productRepository.findAllBySellerId(member.getId(), pageable);
 		return productRepository.findAllByMemberId(member.getId(), pageable);
@@ -203,11 +263,8 @@ public class ProductService {
 	 * @param productId : 상품 id
 	 */
 	@Transactional
-	public void delete(Long productId, Member member) {
+	public void delete(Long productId) {
 		Product findProduct = ifExistReturnProduct(productId);
-
-		checkPermission(member, findProduct);
-
 		findProduct.getImgList().stream().map(Img::getImgName).forEach(s3Service::deleteFile);
 		productRepository.delete(findProduct);
 	}
@@ -220,21 +277,19 @@ public class ProductService {
 	 */
 	@Transactional
 	public void likeProduct(Long productId, Member member) {
-		Product findProduct = ifExistReturnProduct(productId);
-
-		Member findMember = ifExistReturnMember(member.getId());
-
-		Optional<LikeHistory> likeHistory = likeHistoryRepository.findByMemberIdAndProductId(findMember.getId(),
-																							 findProduct.getId());
+		Product product = ifExistReturnProduct(productId);
+		// todo 존재하는 회원인지, 일반 유저인지 확인하는 메서드 추가
+		Optional<LikeHistory> likeHistory = likeHistoryRepository.findByMemberIdAndProductId(member.getId(),
+																							 product.getId());
 		if (likeHistory.isPresent()) {
 			likeHistoryRepository.delete(likeHistory.get());
-			findProduct.disLike();
+			product.disLike();
 		} else {
 			likeHistoryRepository.save(LikeHistory.builder()
-												  .member(findMember)
-												  .product(findProduct)
+												  .member(member)
+												  .product(product)
 												  .build());
-			findProduct.like();
+			product.like();
 		}
 	}
 
@@ -249,77 +304,42 @@ public class ProductService {
 	 * @return 상품 정보
 	 */
 	@Transactional
-	public StopDto.Response setStatusForSeller(Long productId, StopDto.Request req, Member member) {
-		Product findProduct = ifExistReturnProduct(productId);
-		Member findMember = ifExistReturnMember(member.getId());
+	public StopDto.Response setStatus(Long productId, StopDto.Request req, Member member) {
+		Product product = ifExistReturnProduct(productId);
+		UserRole userRole = member.getUserRole();
 
-		if (!findProduct.getMember().getId().equals(findMember.getId())
-			|| findMember.getUserRole() != UserRole.ROLE_ADMIN) {
+		if (!product.getMember().getId().equals(member.getId()) || userRole != UserRole.ROLE_ADMIN) {
 			throw new BusinessException(ErrorCode.TEST); // todo member 추가 후 수정
 		}
 
-		if (findProduct.getIsStop() == 2 && member.getUserRole() != UserRole.ROLE_ADMIN) {
+		if (product.getIsStop() == 2) {
 			throw new BusinessException(ErrorCode.TEST); // todo 관리자만 블라인드 해제 가능
 		}
 
 		ArrayList<StopHistory> stopHistories = new ArrayList<>();
 		StopHistory stopHistory = StopHistory.builder()
-											 .product(findProduct)
+											 .product(product)
 											 .isStop(req.getIsStop())
 											 .reason(req.getStopReason())
 											 .build();
 		stopHistories.add(stopHistory);
-		findProduct.setIsStop(req.getIsStop());
-		findProduct.addStopHistory(stopHistories);
-		productRepository.save(findProduct);
+		product.setIsStop(req.getIsStop());
+		product.addStopHistory(stopHistories);
+		productRepository.save(product);
 
 		return StopDto.Response.builder()
 							   .productId(productId)
-							   .subject(findProduct.getSubject())
-							   .description(findProduct.getDescription())
+							   .subject(product.getSubject())
+							   .description(product.getDescription())
 							   .locations(getLocations(productId))
-							   .reportCount(findProduct.getReportCount())
-							   .price(findProduct.getPrice())
-							   .star(findProduct.getStar())
+							   .reportCount(product.getReportCount())
+							   .price(product.getPrice())
+							   .star(product.getStar())
 							   .img(getImgs(productId))
-							   .likes(findProduct.getLikes())
+							   .likes(product.getLikes())
 							   .isStop(stopHistory.getIsStop())
 							   .stopReason(stopHistory.getReason())
 							   .build();
-	}
-
-	public ProductDto.ResponseForAdmin setStatusForAdmin(Long productId, StopDto.Request req, Member member) {
-		Product findProduct = ifExistReturnProduct(productId);
-		Member findMember = ifExistReturnMember(member.getId());
-
-		if (!findProduct.getMember().getId().equals(findMember.getId())
-			|| findMember.getUserRole() != UserRole.ROLE_ADMIN) {
-			throw new BusinessException(ErrorCode.TEST); // todo member 추가 후 수정
-		}
-
-		if (findProduct.getIsStop() == 2 && member.getUserRole() != UserRole.ROLE_ADMIN) {
-			throw new BusinessException(ErrorCode.TEST); // todo 관리자만 블라인드 해제 가능
-		}
-
-		ArrayList<StopHistory> stopHistories = new ArrayList<>();
-		StopHistory stopHistory = StopHistory.builder()
-											 .product(findProduct)
-											 .isStop(req.getIsStop())
-											 .reason(req.getStopReason())
-											 .build();
-		stopHistories.add(stopHistory);
-		findProduct.setIsStop(req.getIsStop());
-		findProduct.addStopHistory(stopHistories);
-		productRepository.save(findProduct);
-
-		return ProductDto.ResponseForAdmin.builder()
-										  .productId(productId)
-										  .isStop(stopHistory.getIsStop())
-										  .productImage(getImgs(productId).get(0))
-										  .reportCount(findProduct.getReportCount())
-										  .stopReason(stopHistory.getReason())
-										  // .seller() todo seller 추가 후 수정
-										  .build();
 	}
 
 	/**
@@ -331,7 +351,7 @@ public class ProductService {
 	private List<String> getImgs(Long productId) {
 		return imgRepository.findAllByProductId(productId).stream()
 							.map(Img::getImgUrl)
-							// .map(s -> "value\":\"" + s)
+							.map(s -> "value\":\"" + s)
 							.toList();
 	}
 
@@ -344,7 +364,7 @@ public class ProductService {
 	private List<String> getFacilities(Long productId) {
 		return facilitiesRepository.findAllByProductId(productId).stream()
 								   .map(Facilities::getKeyword)
-								   // .map(s -> "value\":\"" + s)
+								   .map(s -> "value\":\"" + s)
 								   .toList();
 	}
 
@@ -357,7 +377,7 @@ public class ProductService {
 	private List<String> getLocations(Long productId) {
 		return locationRepository.findAllByProductId(productId).stream()
 								 .map(Location::getKeyword)
-								 // .map(s -> "value\":\"" + s)
+								 .map(s -> "value\":\"" + s)
 								 .toList();
 	}
 
@@ -465,19 +485,13 @@ public class ProductService {
 								.orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
 	}
 
-	// todo 임시 테스트용
-	public Member ifExistReturnMember(Long memberId) {
-		return memberRepository.findById(memberId)
-							   .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_EXISTS));
-	}
-
 	/**
 	 * Product to ResponseDto
 	 *
 	 * @param content : 상품 목록 (Product)
 	 * @return : 상품 목록 (ResponseDto)
 	 */
-	public List<ProductDto.Response> convertToResponse(List<Product> content, Member member) {
+	public List<ProductDto.Response> convertToResponse(List<Product> content) {
 		List<ProductDto.Response> responseList = new ArrayList<>();
 		for (Product product : content) {
 			responseList.add(ProductDto.Response.builder()
@@ -496,61 +510,9 @@ public class ProductService {
 												.locations(getLocations(product.getId()))
 												.facilities(getFacilities(product.getId()))
 												.img(getImgs(product.getId()))
-												.isStop(product.getIsStop())
-												.isLike(isLike(member, product))
 												.build());
 		}
 		return responseList;
-	}
-
-	/**
-	 * Product to ResponseDto
-	 *
-	 * @param content : 상품 목록 (Product)
-	 * @return : 상품 목록 (ResponseDto)
-	 */
-	public List<ProductDto.ResponseForAdmin> convertToResponseForAdmin(List<Product> content, Member member) {
-		List<ProductDto.ResponseForAdmin> responseList = new ArrayList<>();
-
-		String reason = "";
-		for (Product product : content) {
-			if (product.getIsStop() != 0) {
-				StopHistory stopHistory = stopHistoryRepository.findTopByProductIdOrderByCreatedAtDesc(product.getId());
-				reason = stopHistory.getReason();
-			}
-			responseList.add(ProductDto.ResponseForAdmin.builder()
-														.productId(product.getId())
-														.isStop(product.getIsStop())
-														.stopReason(reason)
-														.reportCount(product.getReportCount())
-														.seller(product.getMember().getNickname())
-														.productImage(product.getImgList().get(0).getImgUrl())
-														.build());
-		}
-		return responseList;
-	}
-
-	/**
-	 * 추천기록이 있는지 확인
-	 *
-	 * @param member  : 회원
-	 * @param product : 상품
-	 * @return : 추천 여부
-	 */
-	private Boolean isLike(Member member, Product product) {
-		return likeHistoryRepository.existsByMemberIdAndProductId(member.getId(), product.getId());
-	}
-
-	/**
-	 * 상품에 대한 회원의 권한 확인
-	 *
-	 * @param member      : 회원
-	 * @param findProduct : 상품
-	 */
-	private static void checkPermission(Member member, Product findProduct) {
-		if (member.getUserRole() == UserRole.ROLE_USER || !findProduct.getMember().getId().equals(member.getId())) {
-			throw new BusinessException(ErrorCode.TEST); // todo: 권한 예외 처리
-		}
 	}
 
 }

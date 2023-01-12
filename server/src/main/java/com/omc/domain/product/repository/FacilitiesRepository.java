@@ -12,4 +12,7 @@ public interface FacilitiesRepository extends JpaRepository<Facilities, Long> {
 
 	List<Facilities> findAllByProductId(Long productId);
 
+	List<Facilities> findAllByKeywordContaining(String keyword);
+
+
 }
