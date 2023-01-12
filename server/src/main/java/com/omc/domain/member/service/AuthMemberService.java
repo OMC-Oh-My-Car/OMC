@@ -125,11 +125,17 @@ public class AuthMemberService {
         return ReissueResponse.toResponse(member);
     }
 
-    public void logout(String accessToken, HttpServletRequest request, HttpServletResponse response) {
-        accessToken = Optional.ofNullable(accessToken).orElseThrow(TokenNotFound::new);
+    public void logout(String email, String refreshToken, HttpServletResponse response) {
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
+                .maxAge(0)
+                .path("/")
+                .secure(true)
+                .sameSite("None")
+                .httpOnly(true)
+                .build();
+        response.setHeader("Set-Cookie", cookie.toString());
 
-        response.setHeader("Authorization", "");
-
+        refreshTokenRepository.deleteByKey(email);
     }
 
     public void delete(String email, String refreshToken, HttpServletResponse response) {

@@ -2,6 +2,8 @@ package com.omc.domain.member.api;
 
 import com.omc.domain.member.dto.*;
 import com.omc.domain.member.entity.Member;
+import com.omc.domain.member.exception.MemberNotFoundException;
+import com.omc.domain.member.exception.TokenNotFound;
 import com.omc.domain.member.repository.RefreshTokenRepository;
 import com.omc.domain.member.service.AuthMemberService;
 import com.omc.domain.member.service.MemberService;
@@ -10,6 +12,7 @@ import com.omc.global.common.annotation.CurrentMember;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -50,6 +53,19 @@ public class MemberController {
     @PostMapping("/login")
     public ResponseEntity<TokenDto> login(@RequestBody LoginDto loginDto, HttpServletResponse response) {
         return ResponseEntity.ok(authService.login(loginDto, response));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@CookieValue(value = "refreshToken", required = false) String refreshToken, HttpServletResponse response) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if(authentication == null) {
+            throw new MemberNotFoundException();
+        }
+
+        authService.logout(authentication.getName(), refreshToken, response);
+
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/reissue")

@@ -94,6 +94,7 @@ public class TokenProvider {
                 .compact();
 
         String refreshToken = Jwts.builder()
+                .setSubject(member.getEmail())
                 .setExpiration(refreshTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
