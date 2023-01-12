@@ -100,14 +100,11 @@ public class ProductDto {
 					  @RequestParam(value = "facilities", required = false) String facilities,
 					  @RequestParam(value = "query", required = false) String query) {
 			this.page = page == null ? 1 : page;
-			this.sort = sort;
+			this.sort = sort == null ? "id" : sort;
 			this.size = 20L;
 			this.facilities = facilities;
 			this.query = query;
 		}
 
-		public Long getOffset() {
-			return (page - 1) * size;
-		}
 	}
 }

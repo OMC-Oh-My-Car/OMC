@@ -20,6 +20,7 @@ import com.omc.domain.img.entity.Img;
 import com.omc.domain.img.repository.ImgRepository;
 import com.omc.domain.member.entity.Member;
 import com.omc.domain.member.entity.UserRole;
+import com.omc.domain.member.repository.MemberRepository;
 import com.omc.domain.product.dto.ProductDto;
 import com.omc.domain.product.dto.StopDto;
 import com.omc.domain.product.entity.Facilities;
@@ -44,7 +45,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class ProductService {
 
-	// private final MemberRepository memberRepository;
+	private final MemberRepository memberRepository;
 	private final ProductRepository productRepository;
 	private final FacilitiesRepository facilitiesRepository;
 	private final LocationRepository locationRepository;
@@ -63,7 +64,8 @@ public class ProductService {
 	 */
 	@SneakyThrows
 	@Transactional
-	public void create(ProductDto.Request req, List<MultipartFile> multipartFiles) {
+	public void create(ProductDto.Request req,
+					   List<MultipartFile> multipartFiles) {
 
 		log.info("multipartFile imgs={}", multipartFiles);
 		String address = req.getAddress();
@@ -101,7 +103,9 @@ public class ProductService {
 	 * @param productId      : 상품 id
 	 */
 	@Transactional
-	public void update(ProductDto.Request req, List<MultipartFile> multipartFiles, Long productId) {
+	public void update(ProductDto.Request req,
+					   List<MultipartFile> multipartFiles,
+					   Long productId) {
 
 		Product findProduct = ifExistReturnProduct(productId);
 		findProduct.editProduct(req);
@@ -156,6 +160,76 @@ public class ProductService {
 	}
 
 	/**
+	 * 상품 목록 조회 (검색어, 편의시설)
+	 * @param member : 회원 정보
+	 * @param search : 검색어
+	 * @return 상품 목록
+	 */
+	@Transactional
+	public Page<Product> getProductList(Member member, ProductDto.Search search) {
+		// todo 리팩터링
+
+		if (member.getUserRole() == UserRole.ROLE_USER) {
+			throw new BusinessException(ErrorCode.TEST); // todo : member 적용 후 에러코드 수정
+		}
+
+		String sortBy = switch (search.getSort()) { // 최신순, 인기순, 조회순, 추천순
+			case "추천" -> "likes";
+			case "조회" -> "views";
+			case "인기" -> "reservations";
+			default -> "id";
+		};
+
+		Pageable pageable = PageRequest.of(Math.toIntExact(search.getPage() - 1),
+										   Math.toIntExact(search.getSize()),
+										   Sort.by(sortBy).descending());
+
+		String searchQuery = search.getQuery() == null ? "null" : search.getQuery();
+
+		if (search.getFacilities() != null && !searchQuery.equals("null")) { // 편의시설, 검색어
+			List<String> keywords = new ArrayList<>();
+			StringTokenizer st = new StringTokenizer(search.getFacilities(), "#");
+			while (st.hasMoreTokens()) {
+				keywords.add(st.nextToken());
+			}
+
+			List<Long> productIds = new ArrayList<>();
+
+			for (String keyword : keywords) {
+				List<Facilities> allByKeywordContaining = facilitiesRepository.findAllByKeywordContaining(keyword);
+				allByKeywordContaining.stream().map(s -> s.getProduct().getId()).forEach(productIds::add);
+			}
+			;
+
+			return productRepository.findBySubjectContainingOrDescriptionContainingAndIdIn(searchQuery,
+																						   searchQuery,
+																						   productIds,
+																						   pageable);
+		} else if (search.getFacilities() == null && !searchQuery.equals("null")) { // 검색어
+			return productRepository.findBySubjectContainingOrDescriptionContaining(searchQuery,
+																					searchQuery,
+																					pageable);
+		} else if (search.getFacilities() != null) { // 편의시설
+			List<String> keywords = new ArrayList<>();
+			StringTokenizer st = new StringTokenizer(search.getFacilities(), "#");
+			while (st.hasMoreTokens()) {
+				keywords.add(st.nextToken());
+			}
+
+			List<Long> productIds = new ArrayList<>();
+
+			for (String keyword : keywords) {
+				List<Facilities> allByKeywordContaining = facilitiesRepository.findAllByKeywordContaining(keyword);
+				allByKeywordContaining.stream().map(s -> s.getProduct().getId()).forEach(productIds::add);
+			}
+			;
+			return productRepository.findByIdIn(productIds, pageable);
+		} else { // 검색어, 편의시설 없음
+			return productRepository.findAll(pageable);
+		}
+	}
+
+	/**
 	 * 등록한 상품 조회
 	 *
 	 * @param member : 회원 (판매자 or 관리자)
@@ -176,7 +250,8 @@ public class ProductService {
 			default -> "id";
 		};
 
-		Pageable pageable = PageRequest.of(Math.toIntExact(search.getPage()), Math.toIntExact(search.getSize()),
+		Pageable pageable = PageRequest.of(Math.toIntExact(search.getPage() - 1),
+										   Math.toIntExact(search.getSize()),
 										   Sort.by(sortBy).descending());
 		// return productRepository.findAllBySellerId(member.getId(), pageable);
 		return productRepository.findAllByMemberId(member.getId(), pageable);

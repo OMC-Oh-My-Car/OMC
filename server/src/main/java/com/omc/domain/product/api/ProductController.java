@@ -46,8 +46,8 @@ public class ProductController {
 	 */
 	@PostMapping(value = "/product",
 				 consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-	public ResponseEntity<?> create(@RequestPart("product") ProductDto.Request req,
-									@RequestPart("imgUrl") List<MultipartFile> multipartFiles) {
+	public ResponseEntity<?> create(@RequestPart(value = "product") ProductDto.Request req,
+									@RequestPart(value = "imgUrl") List<MultipartFile> multipartFiles) {
 
 		if (multipartFiles == null) {
 			log.error("multipartFiles is null");
@@ -90,20 +90,25 @@ public class ProductController {
 		return new ResponseEntity<>(new SingleResponseDto<>(res), HttpStatus.OK);
 	}
 
+	/**
+	 * 상품 목록 조회 (편의시설, 검색어)
+	 * @param member : 로그인한 회원
+	 * @param search : 검색어, 편의시설
+	 * @return 상품 목록
+	 */
 	@GetMapping(value = "/product")
-	public ResponseEntity<?> getProductList(@ModelAttribute ProductDto.Search search) {
+	public ResponseEntity<?> getProductList(@AuthMember Member member,
+											@ModelAttribute ProductDto.Search search) {
 
 		log.info("page: {}", search.getPage());
 		log.info("sort: {}", search.getSort());
 		log.info("facilities: {}", search.getFacilities());
 		log.info("query: {}", search.getQuery());
 
-		// Page<ProductDto.Response> resPage = productService.getProductList(page, sort, facilities, query);
-		// List<ProductDto.Response> res = resPage.getContent();
+		Page<Product> resPage = productService.getProductList(member, search);
+		List<ProductDto.Response> res = productService.convertToResponse(resPage.getContent());
 
-		// return new ResponseEntity<>(new MultiResponse<>(res, resPage), HttpStatus.OK);
-		return new ResponseEntity<>(HttpStatus.OK);
-
+		return new ResponseEntity<>(new MultiResponse<>(res, resPage), HttpStatus.OK);
 	}
 
 	/**
