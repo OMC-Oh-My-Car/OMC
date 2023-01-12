@@ -15,7 +15,7 @@ export const MainContainer = styled.main`
   max-width: 1320px;
   padding: 50px 80px;
   @media (max-width: 1128px) {
-    padding: 50px 40px;
+    padding: 40px 40px;
   }
   /*모바일 */
   @media (max-width: 744px) {

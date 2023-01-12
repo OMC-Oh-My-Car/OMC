@@ -2,6 +2,7 @@
 import { Container, MainContainer } from './ProductDetailPage.style';
 import Header from '../components/header/Header';
 import ProductImage from '../components/productDetail/ProductImage';
+import ProductInfo from '../components/productDetail/ProductInfo';
 const ProductDetailPage = () => {
   return (
     <>
@@ -9,6 +10,7 @@ const ProductDetailPage = () => {
         <Header type="short" />
         <MainContainer>
           <ProductImage />
+          <ProductInfo />
         </MainContainer>
       </Container>
     </>
