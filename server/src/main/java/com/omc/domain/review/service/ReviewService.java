@@ -25,9 +25,9 @@ public class ReviewService {
     public void createReview(ReviewDto.Request request, long reservationId) {
         Reservation reservation = reservationService.findById(reservationId);
         // 해당 예약에 이미 리뷰가 있는지 중복 확인
-//        if () {
-//            throw new BusinessException(ErrorCode.ALREADY_EXIST);
-//        }
+        if (reservation.getReview() != null) {
+            throw new BusinessException(ErrorCode.REVIEW_ALREADY_EXIST);
+        }
 
         Review review = Review.builder()
                 .reservation(reservation)
@@ -38,6 +38,8 @@ public class ReviewService {
                 .starLocation(toStarPoint(request.getStarLocation()))
                 .starCostEffective(toStarPoint(request.getStarCostEffective()))
                 .build();
+
+        reservation.setReview(review);
 
         reviewRepository.save(review);
     }
@@ -67,8 +69,20 @@ public class ReviewService {
         return reviewRepository.findById(reviewId).orElse(null);
     }
 
-    public Review findByResId(long reservationId) {
-        return reviewRepository.findByReservationId(reservationId).orElse(null);
+    public ReviewDto.Response findByResId(long reservationId) {
+        Review review = reviewRepository.findByReservationId(reservationId).orElse(null);
+        if (review == null) {
+            throw new BusinessException(ErrorCode.REVIEW_NOT_FOUND);
+        }
+        return ReviewDto.Response.builder()
+                .content(review.getContent())
+                .totalStar(review.getTotalStar())
+                .starCleanliness(review.getStarCleanliness())
+                .starAccuracy(review.getStarAccuracy())
+                .starLocation(review.getStarLocation())
+                .starCostEffective(review.getStarCostEffective())
+                .createTime(review.getCreatedAt())
+                .build();
     }
 
     public void findAllReviewsByDesc(long productId) {

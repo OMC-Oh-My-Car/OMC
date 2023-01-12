@@ -3,6 +3,8 @@ package com.omc.domain.review.dto;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 public class ReviewDto {
 
     @Getter
@@ -25,5 +27,6 @@ public class ReviewDto {
         private Double starAccuracy; // 정확도, 소수 1자리까지
         private Double starLocation; // 위치, 소수 1자리까지
         private Double starCostEffective; // 가격 대비 만족도, 소수 1자리까지
+        private LocalDateTime createTime;
     }
 }

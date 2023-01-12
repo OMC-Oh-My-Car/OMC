@@ -28,7 +28,7 @@ public enum ErrorCode {
 	PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "P-001", "해당 상품은 존재하지 않습니다."),
 
 	// 리뷰
-	ALREADY_EXIST(HttpStatus.BAD_REQUEST, "R-001", "리뷰가 이미 존재합니다"),
+	REVIEW_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "R-001", "리뷰가 이미 존재합니다"),
 	REVIEW_NOT_FOUND(HttpStatus.BAD_REQUEST, "R-002", "해당 리뷰가 존재하지 않습니다"),
 
 	// 이미지
@@ -36,6 +36,13 @@ public enum ErrorCode {
 	WRONG_INPUT_IMAGE(HttpStatus.BAD_REQUEST, "I-002", "이미지 파일이 아닙니다."),
 	WRONG_IMAGE_FORMAT(HttpStatus.BAD_REQUEST, "I-003", "이미지 파일 형식이 잘못되었습니다."),
 	IMAGE_UPLOAD_ERROR(HttpStatus.BAD_REQUEST, "I-004", "이미지 업로드에 실패했습니다."),
+
+	// 예약
+	RESERVATION_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "R-001", "해당 예약이 이미 존재합니다."),
+	RESERVATION_NOT_FOUND(HttpStatus.BAD_REQUEST, "R-002", "해당 예약이 존재하지 않습니다."),
+
+	// 취소
+	CANCEL_NOT_FOUND(HttpStatus.BAD_REQUEST, "C-002", "해당 예약이 존재하지 않습니다.")
 	;
 
 

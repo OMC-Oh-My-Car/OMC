@@ -34,7 +34,7 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @GetMapping(value = "/{productId}", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(value = "/{productId}")
     public ResponseEntity<?> getReviews(@PathVariable long productId) {
         reviewService.findAllReviewsByDesc(productId);
 
@@ -42,7 +42,7 @@ public class ReviewController {
     }
 
     // @PreAuthorize("isAuthenticated()")
-    @DeleteMapping(value = "/{reviewId}", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @DeleteMapping(value = "/{reviewId}")
     public ResponseEntity<?> deleteReview(@PathVariable long reviewId) {
         reviewService.deleteReview(reviewId);
 

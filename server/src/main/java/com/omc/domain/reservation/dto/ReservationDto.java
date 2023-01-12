@@ -19,15 +19,20 @@ public class ReservationDto {
     @Builder
     public static class Request {
         private long productId;
+        @NotBlank
         private String phoneNumber;
-        private LocalDate startDate; // 입실 날짜
-        private LocalDate endDate; // 퇴실 날짜
+        @NotBlank
+        private String startDate; // 입실 날짜
+        @NotBlank
+        private String endDate; // 퇴실 날짜
+//        private LocalDate startDate; // 입실 날짜
+//        private LocalDate endDate; // 퇴실 날짜
     }
 
     @Getter
     @Builder
     public static class Response {
-        private long reservationId;
+        private String reservationId;
         private String phoneNumber;
         private LocalDateTime checkIn;
         private LocalDateTime checkOut;
