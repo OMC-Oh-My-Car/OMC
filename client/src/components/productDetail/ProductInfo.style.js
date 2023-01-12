@@ -82,7 +82,7 @@ export const ProductInfoArea = styled.div`
         font-size: 18px;
         font-weight: 600;
         outline: none;
-        border-radius: 10px;
+        border-radius: 5px;
         transition: all 0.2s;
         font-family: sans-serif;
         background-color: ${(props) => props.theme.yellow};
