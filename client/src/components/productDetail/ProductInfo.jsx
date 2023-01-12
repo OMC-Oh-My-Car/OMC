@@ -31,35 +31,39 @@ const ProductInfo = () => {
           <div className="facilities">
             <h2>숙소 편의시설</h2>
             <div className="facilityList">
-              <div className="facilityItem">
-                <div>해변과 인접 - 해변</div>
+              <div className="facilityLeft">
+                <div className="facilityItem">
+                  <div>해변과 인접 - 해변</div>
+                </div>
+                <div className="facilityItem">
+                  <div>무선 인터넷</div>
+                </div>
+                <div className="facilityItem">
+                  <div>온수 욕조</div>
+                </div>
+                <div className="facilityItem">
+                  <div>세탁기</div>
+                </div>
+                <div className="facilityItem">
+                  <div>에어컨</div>
+                </div>
               </div>
-              <div className="facilityItem">
-                <div>해변과 인접 - 해변</div>
-              </div>
-              <div className="facilityItem">
-                <div>해변과 인접 - 해변</div>
-              </div>
-              <div className="facilityItem">
-                <div>해변과 인접 - 해변</div>
-              </div>
-              <div className="facilityItem">
-                <div>해변과 인접 - 해변</div>
-              </div>
-              <div className="facilityItem">
-                <div>해변과 인접 - 해변</div>
-              </div>
-              <div className="facilityItem">
-                <div>해변과 인접 - 해변</div>
-              </div>
-              <div className="facilityItem">
-                <div>해변과 인접 - 해변</div>
-              </div>
-              <div className="facilityItem">
-                <div>해변과 인접 - 해변</div>
-              </div>
-              <div className="facilityItem">
-                <div>해변과 인접 - 해변</div>
+              <div className="facilityRight">
+                <div className="facilityItem">
+                  <div>주방</div>
+                </div>
+                <div className="facilityItem">
+                  <div>TV</div>
+                </div>
+                <div className="facilityItem">
+                  <div>건물 내 무료 주차</div>
+                </div>
+                <div className="facilityItem">
+                  <div>건조기</div>
+                </div>
+                <div className="facilityItem">
+                  <div>숙소 내 보안 카메라</div>
+                </div>
               </div>
             </div>
             <button className="more">편의시설 모두 보기</button>

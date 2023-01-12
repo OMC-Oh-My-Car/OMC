@@ -7,14 +7,12 @@ export const ProductInfoArea = styled.div`
   width: 100%;
   margin: 30px 0px;
   padding-bottom: 30px;
+  margin-bottom: 30px;
   border-bottom: 1px solid black;
   .productInfo {
     display: flex;
     flex-direction: column;
-    /* flex-wrap: wrap; */
-    /* flex-grow: 1; */
     width: 65%;
-    /* border: 1px solid black; */
     h1 {
       font-size: 28px;
       font-weight: 700;
@@ -57,13 +55,19 @@ export const ProductInfoArea = styled.div`
       h2 {
         font-size: 24px;
         font-weight: 700;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
       }
       .facilityList {
         display: flex;
         flex-wrap: wrap;
         width: 100%;
-        margin-bottom: 30px;
+        margin-bottom: 20px;
+        .facilityLeft {
+          width: 50%;
+        }
+        .facilityRight {
+          width: 50%;
+        }
         .facilityItem {
           display: flex;
           align-items: center;
@@ -74,7 +78,7 @@ export const ProductInfoArea = styled.div`
         }
       }
       .more {
-        padding: 11px 20px;
+        padding: 10px 20px;
         font-size: 18px;
         font-weight: 600;
         outline: none;
@@ -100,5 +104,16 @@ export const ProductInfoArea = styled.div`
     border: 1px solid black;
     position: sticky !important;
     top: var(--navigation-bar-offset, 200px) !important;
+  }
+  @media (max-width: 1128px) {
+    .facilityList {
+      flex-direction: column;
+    }
+    .facilityLeft {
+      width: 100%;
+    }
+    .facilityRight {
+      display: none;
+    }
   }
 `;
