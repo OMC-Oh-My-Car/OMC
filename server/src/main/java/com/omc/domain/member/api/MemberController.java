@@ -89,4 +89,13 @@ public class MemberController {
 
         return ResponseEntity.ok(memberService.findByEmail(authentication.getName()).map(MemberResponseDto::of).orElseThrow(() -> new RuntimeException("로그인 유저 정보 없음")));
     }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> delete(@CookieValue(value = "refreshToken", required = false) String refreshToken, HttpServletResponse response) {
+        log.debug("refreshToken : " + refreshToken);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        authService.delete(authentication.getName(), refreshToken, response);
+
+        return ResponseEntity.ok().build();
+    }
 }

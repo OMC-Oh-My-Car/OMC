@@ -1,7 +1,6 @@
 package com.omc.domain.member.service;
 
 import com.omc.domain.member.dto.*;
-import com.omc.domain.member.entity.AuthMember;
 import com.omc.domain.member.entity.Member;
 import com.omc.domain.member.entity.RefreshToken;
 import com.omc.domain.member.exception.*;
@@ -17,11 +16,9 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -60,6 +57,18 @@ public class AuthMemberService {
 
         TokenDto tokenDto = tokenProvider.generateTokenWithAuthentication(authentication);
 
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
+                .maxAge(7 * 24 * 60 * 60)
+                .path("/")
+                .secure(true)
+                .sameSite("None")
+                .httpOnly(true)
+                .build();
+
+        // 회원탈퇴 및 로그인 처리를 위해 사용.
+        // cookie의 refreshToken값과 비교하여 없을 경우 로그아웃 및 회원탈퇴 처리에 이용
+        response.setHeader("Set-Cookie", cookie.toString());
+
         // TokenDto의 accessToken을 Header의 Authorization이름으로 넣어줌
         response.setHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
 
@@ -79,8 +88,8 @@ public class AuthMemberService {
         Claims claims = tokenProvider.getClaims(accessToken);
 //        log.debug("email : " + authentication.getName());
 
-        RefreshToken refreshToken = refreshTokenRepository.findByKey((String)claims.get("email"))
-                .orElseThrow(() -> new RuntimeException("로그아웃 된 사용자입니다."));
+        RefreshToken refreshToken = refreshTokenRepository.findByKey((String) claims.get("email"))
+                .orElseThrow(() -> new RuntimeException("로그아웃 혹은 회원탈퇴 된 사용자입니다."));
 
         String savedRefreshToken = refreshToken.getValue();
         log.debug("refreshToken : " + savedRefreshToken);
@@ -102,19 +111,37 @@ public class AuthMemberService {
         RefreshToken newRefreshToken = refreshToken.updateValue(newRT);
         refreshTokenRepository.save(newRefreshToken);
 
-//        ResponseCookie cookie = ResponseCookie.from("refreshToken", newRT)
-//                .maxAge(7 * 24 * 60 * 60)
-//                .path("/")
-//                .secure(true)
-//                .sameSite("None")
-//                .httpOnly(true)
-//                .build();
-//        response.setHeader("Set-Cookie", cookie.toString());
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", newRT)
+                .maxAge(7 * 24 * 60 * 60)
+                .path("/")
+                .secure(true)
+                .sameSite("None")
+                .httpOnly(true)
+                .build();
+        response.setHeader("Set-Cookie", cookie.toString());
 
-        response.setHeader("Authentication", "Bearer " + newAT);
+        response.setHeader("Authorization", "Bearer " + newAT);
 
         return ReissueResponse.toResponse(member);
     }
 
+    public void logout(String accessToken, HttpServletRequest request, HttpServletResponse response) {
+        accessToken = Optional.ofNullable(accessToken).orElseThrow(TokenNotFound::new);
 
+        response.setHeader("Authorization", "");
+
+    }
+
+    public void delete(String email, String refreshToken, HttpServletResponse response) {
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
+                .maxAge(0)
+                .path("/")
+                .secure(true)
+                .sameSite("None")
+                .httpOnly(true)
+                .build();
+        response.setHeader("Set-Cookie", cookie.toString());
+        memberRepository.deleteByEmail(email);
+        refreshTokenRepository.deleteByKey(email);
+    }
 }
