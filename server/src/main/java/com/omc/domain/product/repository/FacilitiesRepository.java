@@ -14,5 +14,4 @@ public interface FacilitiesRepository extends JpaRepository<Facilities, Long> {
 
 	List<Facilities> findAllByKeywordContaining(String keyword);
 
-
 }

@@ -161,17 +161,13 @@ public class ProductService {
 
 	/**
 	 * 상품 목록 조회 (검색어, 편의시설)
-	 * @param member : 회원 정보
+	 *
 	 * @param search : 검색어
 	 * @return 상품 목록
 	 */
 	@Transactional
-	public Page<Product> getProductList(Member member, ProductDto.Search search) {
+	public Page<Product> getProductList(ProductDto.Search search) {
 		// todo 리팩터링
-
-		if (member.getUserRole() == UserRole.ROLE_USER) {
-			throw new BusinessException(ErrorCode.TEST); // todo : member 적용 후 에러코드 수정
-		}
 
 		String sortBy = switch (search.getSort()) { // 최신순, 인기순, 조회순, 추천순
 			case "추천" -> "likes";

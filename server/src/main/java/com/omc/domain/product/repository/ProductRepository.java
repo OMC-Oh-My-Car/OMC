@@ -1,6 +1,5 @@
 package com.omc.domain.product.repository;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -14,13 +13,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	Page<Product> findAllByMemberId(Long id, Pageable pageable);
 
 	Page<Product> findBySubjectContainingOrDescriptionContainingAndIdIn(String subject,
-																		 String description,
-																		 List<Long> id,
-																		 Pageable pageable);
+																		String description,
+																		List<Long> id,
+																		Pageable pageable);
 
 	Page<Product> findBySubjectContainingOrDescriptionContaining(String searchQuery,
-																  String description,
-																  Pageable pageable);
+																 String description,
+																 Pageable pageable);
 
 	Page<Product> findByIdIn(List<Long> productIds, Pageable pageable);
 }

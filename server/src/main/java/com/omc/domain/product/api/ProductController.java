@@ -92,20 +92,19 @@ public class ProductController {
 
 	/**
 	 * 상품 목록 조회 (편의시설, 검색어)
-	 * @param member : 로그인한 회원
+	 *
 	 * @param search : 검색어, 편의시설
 	 * @return 상품 목록
 	 */
 	@GetMapping(value = "/product")
-	public ResponseEntity<?> getProductList(@AuthMember Member member,
-											@ModelAttribute ProductDto.Search search) {
+	public ResponseEntity<?> getProductList(@ModelAttribute ProductDto.Search search) {
 
 		log.info("page: {}", search.getPage());
 		log.info("sort: {}", search.getSort());
 		log.info("facilities: {}", search.getFacilities());
 		log.info("query: {}", search.getQuery());
 
-		Page<Product> resPage = productService.getProductList(member, search);
+		Page<Product> resPage = productService.getProductList(search);
 		List<ProductDto.Response> res = productService.convertToResponse(resPage.getContent());
 
 		return new ResponseEntity<>(new MultiResponse<>(res, resPage), HttpStatus.OK);
