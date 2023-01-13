@@ -2,7 +2,7 @@ import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 
 const GoogleButton = () => {
   return (
-    <GoogleOAuthProvider clientId="22249000667-f7k5t25nm5qobstfhbfc533v27gd5lpf.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId={process.env.REACT_APP_API_URL_GOOGLE_CLIENTID}>
       <GoogleLogin
         onSuccess={(response) => {
           console.log(response);
