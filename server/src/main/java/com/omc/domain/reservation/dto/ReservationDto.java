@@ -41,10 +41,11 @@ public class ReservationDto {
         private Long size;
         private String sort;
 
-        PageRequest(@RequestParam(value = "page") Long page, @RequestParam(value = "sort", required = false) String sort){
-            if (page == null || page <= 0) {
-                this.page = 1L;
-            }
+        PageRequest(@RequestParam(value = "page", required = false) Long page, @RequestParam(value = "sort", required = false) String sort){
+//            if (page == null || page <= 0) {
+//                this.page = 1L;
+//            }
+            this.page = page == null ? 1 : page;
             this.size = 18L;
             this.sort = sort == null ? "id" : sort;
         }
