@@ -3,7 +3,7 @@ import { ProductReviewArea, ProductReviewScoreArea, ProductReviewListArea } from
 import { faStar, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-export default function ProductReview() {
+const ProductReview = () => {
   return (
     <>
       <ProductReviewArea>
@@ -173,4 +173,6 @@ export default function ProductReview() {
       </ProductReviewArea>
     </>
   );
-}
+};
+
+export default ProductReview;

@@ -81,7 +81,7 @@ export const ProductReviewListArea = styled.div`
   flex-wrap: wrap;
   width: 100%;
   border-bottom: 1px solid ${(props) => props.theme.gray};
-  margin-bottom: 30px;
+  margin-bottom: 40px;
   .reviewListItem {
     display: flex;
     flex-direction: column;

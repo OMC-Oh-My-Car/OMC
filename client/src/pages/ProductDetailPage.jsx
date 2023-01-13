@@ -4,6 +4,7 @@ import Header from '../components/header/Header';
 import ProductImage from '../components/productDetail/ProductImage';
 import ProductInfo from '../components/productDetail/ProductInfo';
 import ProductReview from '../components/productDetail/ProductReview';
+import ProductMap from '../components/productDetail/ProductMap';
 
 const ProductDetailPage = () => {
   return (
@@ -14,6 +15,7 @@ const ProductDetailPage = () => {
           <ProductImage />
           <ProductInfo />
           <ProductReview />
+          <ProductMap />
         </MainContainer>
       </Container>
     </>
