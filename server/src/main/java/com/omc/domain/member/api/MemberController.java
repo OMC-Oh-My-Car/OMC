@@ -114,4 +114,11 @@ public class MemberController {
 
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/confirm/mail")
+    public ResponseEntity<?> confirmEmail(@RequestBody SingleParamDto emailDto) {
+        memberService.confirmMail(emailDto);
+
+        return ResponseEntity.ok().build();
+    }
 }
