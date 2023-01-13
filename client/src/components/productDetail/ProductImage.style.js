@@ -14,6 +14,7 @@ export const ProductImageArea = styled.div`
     width: 100%;
     height: 100%;
     object-fit: fill;
+    cursor: pointer;
   }
   .image1 {
     grid-area: a;

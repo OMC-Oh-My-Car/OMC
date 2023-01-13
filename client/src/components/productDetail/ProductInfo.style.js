@@ -5,10 +5,10 @@ export const ProductInfoArea = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
-  margin: 30px 0px;
-  padding-bottom: 30px;
-  margin-bottom: 30px;
-  border-bottom: 1px solid black;
+  margin: 40px 0px;
+  padding-bottom: 40px;
+  margin-bottom: 40px;
+  border-bottom: 1px solid ${(props) => props.theme.gray};
   .productInfo {
     display: flex;
     flex-direction: column;
@@ -21,8 +21,8 @@ export const ProductInfoArea = styled.div`
     .prductDescription {
       width: 100%;
       font-size: 15px;
-      padding-bottom: 30px;
-      margin-bottom: 30px;
+      padding-bottom: 40px;
+      margin-bottom: 40px;
       border-bottom: 1px solid ${(props) => props.theme.gray};
     }
     .starIcon {
@@ -40,10 +40,13 @@ export const ProductInfoArea = styled.div`
       /* display: flex; */
       /* flex-wrap: wrap; */
       width: 100%;
-      padding-bottom: 30px;
-      margin-bottom: 30px;
+      padding-bottom: 40px;
+      margin-bottom: 40px;
       border-bottom: 1px solid ${(props) => props.theme.gray};
       span {
+        display: -webkit-box;
+        -webkit-line-clamp: 6;
+        -webkit-box-orient: vertical;
         font-weight: 300;
         text-overflow: ellipsis;
         line-height: 24px;
