@@ -4,7 +4,7 @@ export const ProductMapArea = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  border: 1px solid black;
+  margin-bottom: 40px;
   h2 {
     font-size: 24px;
     font-weight: 700;
@@ -13,6 +13,11 @@ export const ProductMapArea = styled.div`
   .kakaoMap {
     width: 100%;
     height: 480px;
-    border: 1px solid black;
+    margin-bottom: 20px;
+  }
+  h3 {
+    font-size: 16px;
+    font-weight: 700;
+    padding-bottom: 40px;
   }
 `;

@@ -10,6 +10,7 @@ const ProductMap = () => {
         <div className="kakaoMap">
           <KakaoMap />
         </div>
+        <h3>속초시, 강원도, 한국</h3>
       </ProductMapArea>
     </>
   );

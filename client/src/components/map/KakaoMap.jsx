@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { KakaoMapArea } from './KakaoMap.style';
 
 const KakaoMap = () => {
   const mapContainer = useRef(null);
@@ -10,12 +11,29 @@ const KakaoMap = () => {
   };
   useEffect(() => {
     const map = new kakao.maps.Map(mapContainer.current, mapOptions);
-    console.log(map);
-  });
+    const mapTypeControl = new kakao.maps.MapTypeControl();
+    map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
+
+    const geocoder = new kakao.maps.services.Geocoder();
+    const zoomControl = new kakao.maps.ZoomControl();
+    map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+
+    geocoder.addressSearch('제주특별자치도 제주시 첨단로 242', function (result, status) {
+      if (status === kakao.maps.services.Status.OK) {
+        const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+        const marker = new kakao.maps.Marker({
+          map: map,
+          position: coords,
+        });
+        marker.setMap(map);
+        map.setCenter(coords);
+      }
+    });
+  }, []);
 
   return (
     <>
-      <div id="map" ref={mapContainer} style={{ width: '100%', height: '100%', display: 'block' }}></div>
+      <KakaoMapArea id="map" ref={mapContainer} />
     </>
   );
 };
