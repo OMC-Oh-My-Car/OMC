@@ -4,12 +4,16 @@ import com.omc.domain.cancel.dto.CancelDto;
 import com.omc.domain.member.entity.Member;
 import com.omc.domain.product.service.ProductService;
 import com.omc.domain.reservation.dto.ReservationDto;
+import com.omc.domain.reservation.entity.Reservation;
 import com.omc.domain.reservation.service.ReservationService;
 import com.omc.domain.review.dto.ReviewDto;
 import com.omc.domain.review.service.ReviewService;
+import com.omc.global.common.dto.MultiResponse;
 import com.omc.global.common.dto.SingleResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -48,18 +52,22 @@ public class ReservationController {
 
     // @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "")
-    public ResponseEntity<?> getReservationList() {
-        List<ReservationDto.Response> reservationDtoList = reservationService.getReservationDtoList();
+    public ResponseEntity<?> getReservationList(@ModelAttribute ReservationDto.PageRequest pageRequest) {
+        Page<Reservation> reservationPage = reservationService.getReservationPages(pageRequest);
+        List<ReservationDto.Response> responseList = reservationService.pageToResponseList(reservationPage.getContent());
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return new ResponseEntity<>(new MultiResponse<>(responseList, reservationPage), HttpStatus.OK);
     }
 
     //    특정 상품 예약 목록 조회
     // @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/p/{productId}")
-    public ResponseEntity<?> getProductReservationList(@PathVariable long productId) {
+    public ResponseEntity<?> getProductsReservationList(@PathVariable long productId,
+                                                        @ModelAttribute ReservationDto.PageRequest pageRequest) {
+        Page<Reservation> reservationPage = reservationService.getProductsReservationList(productId, pageRequest);
+        List<ReservationDto.Response> responseList = reservationService.pageToResponseList(reservationPage.getContent());
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return new ResponseEntity<>(new MultiResponse<>(responseList, reservationPage), HttpStatus.OK);
     }
 
     // @PreAuthorize("isAuthenticated()")

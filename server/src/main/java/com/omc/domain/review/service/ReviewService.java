@@ -8,10 +8,16 @@ import com.omc.domain.review.repository.ReviewRepository;
 import com.omc.global.error.ErrorCode;
 import com.omc.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.DecimalFormat;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -85,10 +91,6 @@ public class ReviewService {
                 .build();
     }
 
-    public void findAllReviewsByDesc(long productId) {
-        // 리뷰들의 예약 정보 중에서 productId가 일치하는 것을 찾아서 내림차순 정렬
-    }
-
     @Transactional
     public void deleteReview(long reviewId) {
         Review review = reviewRepository.findById(reviewId).orElse(null);
@@ -96,5 +98,33 @@ public class ReviewService {
             throw new BusinessException(ErrorCode.REVIEW_NOT_FOUND);
         }
         reviewRepository.delete(review);
+    }
+
+    public Page<Review> getProductReviews(long productId, ReviewDto.PageRequest pageRequest) {
+        Pageable pageable = PageRequest.of(Math.toIntExact(pageRequest.getPage() - 1),
+                Math.toIntExact(pageRequest.getSize()),
+                Sort.by(pageRequest.getSort()).descending());
+        Page<Review> reviewPage = reviewRepository.findAllByproductId(productId, pageable);
+
+        return reviewPage;
+
+    }
+
+    public List<ReviewDto.Response> pageToResponseList(List<Review> content) {
+        return content.stream().map(review -> toResponseDto(review)).collect(Collectors.toList());
+    }
+
+    private ReviewDto.Response toResponseDto(Review review) {
+        ReviewDto.Response response = ReviewDto.Response.builder()
+                .content(review.getContent())
+                .totalStar(review.getTotalStar())
+                .starCleanliness(review.getStarCleanliness())
+                .starAccuracy(review.getStarAccuracy())
+                .starLocation(review.getStarLocation())
+                .starCostEffective(review.getStarCostEffective())
+                .createTime(review.getCreatedAt())
+                .build();
+
+        return response;
     }
 }

@@ -1,17 +1,12 @@
 package com.omc.domain.reservation.dto;
 
-import com.omc.domain.member.entity.Member;
-import com.omc.domain.product.entity.Product;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.persistence.CascadeType;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.validation.constraints.NotBlank;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 public class ReservationDto {
 
@@ -38,4 +33,22 @@ public class ReservationDto {
         private LocalDateTime checkOut;
         private int isCancel;
     }
+
+    @Getter
+    @NoArgsConstructor
+    public static class PageRequest {
+        private Long page;
+        private Long size;
+        private String sort;
+
+        PageRequest(@RequestParam(value = "page") Long page, @RequestParam(value = "sort", required = false) String sort){
+            if (page == null || page <= 0) {
+                this.page = 1L;
+            }
+            this.size = 18L;
+            this.sort = sort == null ? "id" : sort;
+        }
+    }
+
+
 }

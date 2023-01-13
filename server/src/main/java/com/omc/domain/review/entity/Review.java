@@ -1,5 +1,12 @@
 package com.omc.domain.review.entity;
 
+import com.omc.domain.reservation.entity.Reservation;
+import com.omc.global.common.BaseEntity;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,15 +14,10 @@ import javax.persistence.OneToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import com.omc.domain.reservation.entity.Reservation;
-import com.omc.global.common.BaseEntity;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
 @Entity
 @Getter
 @NoArgsConstructor
+@DynamicInsert
 public class Review extends BaseEntity {
 
     @OneToOne(mappedBy = "review", cascade = CascadeType.ALL)

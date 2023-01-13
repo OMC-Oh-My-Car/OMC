@@ -1,7 +1,5 @@
 package com.omc.domain.reservation.entity;
 
-import javax.persistence.*;
-
 import com.omc.domain.cancel.entity.Cancel;
 import com.omc.domain.member.entity.Member;
 import com.omc.domain.product.entity.Product;
@@ -11,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

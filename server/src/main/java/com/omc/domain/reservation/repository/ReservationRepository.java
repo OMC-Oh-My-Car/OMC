@@ -1,11 +1,13 @@
 package com.omc.domain.reservation.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import com.omc.domain.reservation.entity.Reservation;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
-    List<Reservation> findAllByOrderByIdDesc();
+    Page<Reservation> findAllByOrderByIdDesc(Pageable pageable);
+    Page<Reservation> findAllByProductIdOrderByIdDesc(long productId, Pageable pageable);
 }

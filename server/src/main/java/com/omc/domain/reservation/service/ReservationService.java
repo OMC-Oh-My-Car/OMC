@@ -13,6 +13,10 @@ import com.omc.domain.reservation.repository.ReservationRepository;
 import com.omc.global.error.ErrorCode;
 import com.omc.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -70,12 +74,13 @@ public class ReservationService {
         return responseDto;
     }
 
-    public List<ReservationDto.Response> getReservationDtoList() {
-        List<Reservation> reservationList = reservationRepository.findAllByOrderByIdDesc();
+    public Page<Reservation> getReservationPages(ReservationDto.PageRequest pageRequest) {
+        Pageable pageable = PageRequest.of(Math.toIntExact(pageRequest.getPage() - 1),
+                Math.toIntExact(pageRequest.getSize()),
+                Sort.by(pageRequest.getSort()).descending());
+        Page<Reservation> reservationPage = reservationRepository.findAllByOrderByIdDesc(pageable);
 
-        List<ReservationDto.Response> responseList = reservationList.stream().map(reservation -> toResponseDto(reservation)).collect(Collectors.toList());
-
-        return responseList;
+        return reservationPage;
     }
 
     private ReservationDto.Response toResponseDto(Reservation reservation) {
@@ -116,5 +121,18 @@ public class ReservationService {
         // 취소 사유 생성
         reservation.setIsCancelOn(cancelService.createCancel(request, reservation));
         reservationRepository.save(reservation);
+    }
+
+    public Page<Reservation> getProductsReservationList(long productId, ReservationDto.PageRequest pageRequest) {
+        Pageable pageable = PageRequest.of(Math.toIntExact(pageRequest.getPage() - 1),
+                Math.toIntExact(pageRequest.getSize()),
+                Sort.by(pageRequest.getSort()).descending());
+        Page<Reservation> reservationPage = reservationRepository.findAllByProductIdOrderByIdDesc(productId, pageable);
+
+        return reservationPage;
+    }
+
+    public List<ReservationDto.Response> pageToResponseList(List<Reservation> reservationList) {
+        return reservationList.stream().map(reservation -> toResponseDto(reservation)).collect(Collectors.toList());
     }
 }

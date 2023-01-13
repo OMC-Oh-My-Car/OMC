@@ -1,15 +1,20 @@
 package com.omc.domain.review.api;
 
+import com.omc.domain.reservation.dto.ReservationDto;
+import com.omc.domain.reservation.entity.Reservation;
 import com.omc.domain.review.dto.ReviewDto;
 import com.omc.domain.review.entity.Review;
 import com.omc.domain.review.service.ReviewService;
-import com.omc.global.common.dto.SingleResponseDto;
+import com.omc.global.common.dto.MultiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,10 +40,12 @@ public class ReviewController {
     }
 
     @GetMapping(value = "/{productId}")
-    public ResponseEntity<?> getReviews(@PathVariable long productId) {
-        reviewService.findAllReviewsByDesc(productId);
+    public ResponseEntity<?> getReviews(@PathVariable long productId,
+                                        @ModelAttribute ReviewDto.PageRequest pageRequest) {
+        Page<Review> reviewPage = reviewService.getProductReviews(productId, pageRequest);
+        List<ReviewDto.Response> responseList = reviewService.pageToResponseList(reviewPage.getContent());
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return new ResponseEntity<>(new MultiResponse<>(responseList, reviewPage), HttpStatus.OK);
     }
 
     // @PreAuthorize("isAuthenticated()")
