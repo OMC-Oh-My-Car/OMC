@@ -51,6 +51,26 @@ public class AuthMemberService {
         return memberRepository.save(member).toResponseDto();
     }
 
+    public MemberResponseDto sellerJoin(SignUpRequestDto signUpRequestDto) {
+        if (memberRepository.existsByEmail(signUpRequestDto.getEmail())) {
+            throw new DuplicateEmail();
+        }
+
+        if (memberRepository.existsByUsername(signUpRequestDto.getUsername())) {
+            throw new DuplicateUsername();
+        }
+
+        if (memberRepository.existsByNickname(signUpRequestDto.getNickname())) {
+            throw new DuplicateNickname();
+        }
+
+        // encoding된 password를 사용한 build
+        Member member = signUpRequestDto.encodePasswordSellerSignUp(passwordEncoder);
+
+        // 객체형태의 Response Body 생성
+        return memberRepository.save(member).toResponseDto();
+    }
+
     public TokenDto login(LoginDto loginDto, HttpServletResponse response) {
         UsernamePasswordAuthenticationToken authenticationToken = loginDto.toAuthentication();
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);

@@ -54,7 +54,20 @@ public class SignUpRequestDto {
                 .phone(phone)
                 .profileImg("https://picsum.photos/200/300")
                 .isSocial(Social.ORIGIN)
-                .userRole(UserRole.ROLE_ADMIN)
+                .userRole(UserRole.ROLE_USER)
+                .build();
+    }
+
+    public Member encodePasswordSellerSignUp(PasswordEncoder passwordEncoder) {
+        return Member.builder()
+                .username(username)
+                .password(passwordEncoder.encode(password))
+                .email(email)
+                .nickname(nickname)
+                .phone(phone)
+                .profileImg("https://picsum.photos/200/300")
+                .isSocial(Social.ORIGIN)
+                .userRole(UserRole.ROLE_SELLER)
                 .build();
     }
 }
