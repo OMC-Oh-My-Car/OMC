@@ -130,4 +130,15 @@ public class MemberController {
 
         return ResponseEntity.ok(singleResponseDto);
     }
+
+    @PatchMapping("new-pw")
+    public ResponseEntity<?> newPassword(@RequestBody ModifyPasswordDto modifyPasswordDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Member member = memberService.findByEmail(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+
+        memberService.adaptPassword(modifyPasswordDto, member);
+
+        return ResponseEntity.ok().build();
+    }
 }

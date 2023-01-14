@@ -1,6 +1,7 @@
 package com.omc.domain.member.service;
 
 import com.omc.domain.member.dto.MemberModifyDto;
+import com.omc.domain.member.dto.ModifyPasswordDto;
 import com.omc.domain.member.dto.SingleParamDto;
 import com.omc.domain.member.entity.Member;
 import com.omc.domain.member.exception.DuplicateEmail;
@@ -62,5 +63,16 @@ public class MemberService {
             Member member = memberRepository.findByPhone(param).orElseThrow(MemberNotFoundException::new);
 
             return member.getEmail();
+    }
+
+    public void adaptPassword(ModifyPasswordDto modifyPasswordDto, Member member) {
+        if (!passwordEncoder.matches(modifyPasswordDto.getOldPassword(), member.getPassword())) {
+            throw new RuntimeException();
+        }
+
+        String encryptedPassword = passwordEncoder.encode(modifyPasswordDto.getNewPassword());
+
+        member.setPassword(encryptedPassword);
+        memberRepository.save(member);
     }
 }
