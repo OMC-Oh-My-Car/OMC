@@ -21,4 +21,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Transactional
     void deleteByEmail(String email);
+
+    Optional<Member> findByPhone(String param);
 }

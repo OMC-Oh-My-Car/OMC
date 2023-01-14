@@ -53,7 +53,7 @@ public class SecurityConfig {
                 )
                 .authorizeRequests(
                         authorizeRequests -> authorizeRequests
-                                .antMatchers("/member/login", "/member", "/member/confirm/mail")
+                                .antMatchers("/member/login", "/member", "/member/confirm/mail", "/member/find/id")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated() // 최소자격 : 로그인

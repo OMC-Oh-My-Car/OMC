@@ -47,7 +47,7 @@ public class MemberService {
 
     public void confirmMail(SingleParamDto emailDto) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("OMC@OMC.com");
+//        message.setFrom("OMC@OMC.com");
         message.setTo(emailDto.getParam());
         byte[] array = new byte[7];
         new Random().nextBytes(array);
@@ -56,5 +56,11 @@ public class MemberService {
         message.setSubject("OMC 이메일 인증입니다.");
         message.setText(text);
         emailSender.send(message);
+    }
+
+    public String findByPhone(String param) {
+            Member member = memberRepository.findByPhone(param).orElseThrow(MemberNotFoundException::new);
+
+            return member.getEmail();
     }
 }

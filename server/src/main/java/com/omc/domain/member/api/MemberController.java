@@ -9,6 +9,7 @@ import com.omc.domain.member.service.AuthMemberService;
 import com.omc.domain.member.service.MemberService;
 import com.omc.domain.member.entity.AuthMember;
 import com.omc.global.common.annotation.CurrentMember;
+import com.omc.global.common.dto.SingleResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -120,5 +121,13 @@ public class MemberController {
         memberService.confirmMail(emailDto);
 
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/find/id")
+    public ResponseEntity<?> findEmail(@RequestBody SingleParamDto phoneDto) {
+        String email = memberService.findByPhone(phoneDto.getParam());
+        SingleResponseDto singleResponseDto = new SingleResponseDto<>(email);
+
+        return ResponseEntity.ok(singleResponseDto);
     }
 }
