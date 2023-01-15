@@ -2,7 +2,7 @@
 import { ProductInfoArea } from './ProductInfo.style';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
+import ProductReservation from './ProductReservation';
 const ProductInfo = () => {
   return (
     <>
@@ -71,7 +71,9 @@ const ProductInfo = () => {
             <button className="more">편의시설 모두 보기</button>
           </div>
         </div>
-        <div className="reservation">123</div>
+        <div className="reservation">
+          <ProductReservation />
+        </div>
       </ProductInfoArea>
     </>
   );
