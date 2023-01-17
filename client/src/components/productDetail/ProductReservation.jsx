@@ -1,9 +1,47 @@
-// import React from 'react';
+import { useState } from 'react';
 import { ProductReservationArea } from './ProductReservation.style';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import ProductCalendarModal from './ProductCalendarModal';
 
 const ProductReservation = () => {
+  const [calendarOpen, setCalendarOpen] = useState(false);
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+
+  const onChangeDate = (dates) => {
+    const [start, end] = dates;
+    console.log(new Date());
+    console.log(start);
+
+    setStartDate(start);
+    setEndDate(end);
+  };
+
+  function leftPad(value) {
+    if (value >= 10) {
+      return value;
+    }
+
+    return `0${value}`;
+  }
+  function toStringByFormatting(source, delimiter = '-', type = 0) {
+    if (source === null) return;
+    if (type === 0) {
+      const year = source.getFullYear();
+      const month = leftPad(source.getMonth() + 1);
+      const day = leftPad(source.getDate());
+
+      return [year, month, day].join(delimiter);
+    } else {
+      const year = source.getFullYear() + '년';
+      const month = leftPad(source.getMonth() + 1) + '월';
+      const day = leftPad(source.getDate()) + '일';
+
+      return [year, month, day].join(' ');
+    }
+  }
+
   return (
     <>
       <ProductReservationArea>
@@ -18,24 +56,42 @@ const ProductReservation = () => {
           </div>
         </div>
         <div className="reservationDate">
-          <div className="startDate">
+          <div className="startDate" role="presentation" onClick={() => setCalendarOpen(true)}>
             <span>체크인</span>
-            <span className="checkDate">2023.02.09</span>
+            <span className="checkDate">{toStringByFormatting(startDate)}</span>
           </div>
-          <div className="endDate">
+          <div className="endDate" role="presentation" onClick={() => setCalendarOpen(true)}>
             <span>체크아웃</span>
-            <span className="checkDate">2023.02.10</span>
+            <span className="checkDate">{toStringByFormatting(endDate)}</span>
           </div>
+          {calendarOpen && (
+            <>
+              <ProductCalendarModal
+                setCalendarOpen={setCalendarOpen}
+                startDate={startDate}
+                endDate={endDate}
+                onChangeDate={onChangeDate}
+                toStringByFormatting={toStringByFormatting}
+              />
+            </>
+          )}
         </div>
         <button className="reserveButton">예약하기</button>
-        <div className="priceFlex">
-          <span>₩77,500 x 2박</span>
-          <span>₩155,000</span>
-        </div>
-        <div className="totalPriceFlex">
-          <span>총 합계</span>
-          <span>₩155,000</span>
-        </div>
+
+        {endDate !== null && !startDate !== null ? (
+          <>
+            <div className="priceFlex">
+              <span>{'₩77,500' + ' x ' + (endDate.getDate() - startDate.getDate()) + '박'}</span>
+              <span>₩155,000</span>
+            </div>
+            <div className="totalPriceFlex">
+              <span>총 합계</span>
+              <span>₩155,000</span>
+            </div>
+          </>
+        ) : (
+          <></>
+        )}
       </ProductReservationArea>
     </>
   );

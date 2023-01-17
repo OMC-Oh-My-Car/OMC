@@ -40,7 +40,6 @@ export const ProductReviewScoreArea = styled.div`
       width: 150px;
       height: 100%;
       .scoreBarBackground {
-        position: relative;
         flex-grow: 1;
         height: 5px;
         background-color: #dddcdc;

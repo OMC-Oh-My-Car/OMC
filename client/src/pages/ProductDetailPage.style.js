@@ -7,6 +7,7 @@ export const Container = styled.div`
   width: 100%;
 `;
 export const MainContainer = styled.main`
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
