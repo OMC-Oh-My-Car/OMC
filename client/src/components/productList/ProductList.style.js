@@ -42,7 +42,7 @@ export const ProductListArea = styled.main`
     gap: 25px;
     grid-template-columns: repeat(6, 1fr);
     /* vw 길이 - padding 길이 - gap 길이* + 텍스트 길이 */
-    grid-auto-rows: calc((100vw - 200px - 125px) / 6 + 88px);
+    grid-auto-rows: minmax(auto, 354px);
   }
   @media (max-width: 1880px) {
     .productList {
