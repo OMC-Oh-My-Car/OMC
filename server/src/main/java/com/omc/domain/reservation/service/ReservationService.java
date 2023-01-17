@@ -13,6 +13,7 @@ import com.omc.domain.reservation.repository.ReservationRepository;
 import com.omc.global.error.ErrorCode;
 import com.omc.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final ProductService productService;
@@ -47,14 +49,26 @@ public class ReservationService {
             // 상품 존재하지 않아서 예외처리
             throw new BusinessException(ErrorCode.PRODUCT_NOT_FOUND);
         }
+        LocalDateTime resCheckIn = LocalDateTime.of(LocalDate.parse(request.getStartDate()), LocalTime.parse(product.getCheckIn()));
+        LocalDateTime resCheckOut = LocalDateTime.of(LocalDate.parse(request.getEndDate()), LocalTime.parse(product.getCheckOut()));
+
+        // 현재보다 과거는 불가능
+//        if (LocalDateTime.now().isBefore(resCheckIn)) {
+//            throw new BusinessException(ErrorCode.NOT_YET_CHECKIN);
+//        }
+
+        long countRes = reservationRepository.countByCheckInBetween(request.getProductId(), resCheckIn);
+        if (countRes > 0) {
+            throw new BusinessException(ErrorCode.CANT_RESERVATION);
+        }
 
         Reservation reservation = Reservation.builder()
                 .member(member)
                 //회원정보, 결제상태 추가해야함
                 .product(product)
 //                .seller(product.getSeller())
-                .checkIn(LocalDateTime.of(LocalDate.parse(request.getStartDate()), LocalTime.parse(product.getCheckIn())))
-                .checkOut(LocalDateTime.of(LocalDate.parse(request.getEndDate()), LocalTime.parse(product.getCheckOut())))
+                .checkIn(resCheckIn)
+                .checkOut(resCheckOut)
                 .phoneNumber(request.getPhoneNumber())
 //                .startDate(LocalDate.parse(request.getStartDate()))
 //                .endDate(LocalDate.parse(request.getEndDate()))
@@ -74,10 +88,10 @@ public class ReservationService {
         return responseDto;
     }
 
-    public Page<Reservation> getReservationPages(ReservationDto.PageRequest pageRequest) {
-        Pageable pageable = PageRequest.of(Math.toIntExact(pageRequest.getPage() - 1),
-                Math.toIntExact(pageRequest.getSize()),
-                Sort.by(pageRequest.getSort()).descending());
+    public Page<Reservation> getReservationPages(ReservationDto.Search search) {
+        Pageable pageable = PageRequest.of(Math.toIntExact(search.getPage() - 1),
+                Math.toIntExact(search.getSize()),
+                Sort.by("id").descending());
         Page<Reservation> reservationPage = reservationRepository.findAllByOrderByIdDesc(pageable);
 
         return reservationPage;
@@ -123,11 +137,11 @@ public class ReservationService {
         reservationRepository.save(reservation);
     }
 
-    public Page<Reservation> getProductsReservationList(long productId, ReservationDto.PageRequest pageRequest) {
-        Pageable pageable = PageRequest.of(Math.toIntExact(pageRequest.getPage() - 1),
-                Math.toIntExact(pageRequest.getSize()),
-                Sort.by(pageRequest.getSort()).descending());
-        Page<Reservation> reservationPage = reservationRepository.findAllByProductIdOrderByIdDesc(productId, pageable);
+    public Page<Reservation> getProductsReservationList(long productId, ReservationDto.Search search) {
+        Pageable pageable = PageRequest.of(Math.toIntExact(search.getPage() - 1),
+                Math.toIntExact(search.getSize()),
+                Sort.by(search.getSort()).descending());
+        Page<Reservation> reservationPage = reservationRepository.findAllByProductId(productId, pageable);
 
         return reservationPage;
     }

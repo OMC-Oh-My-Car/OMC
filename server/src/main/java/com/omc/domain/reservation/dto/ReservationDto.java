@@ -1,5 +1,6 @@
 package com.omc.domain.reservation.dto;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ public class ReservationDto {
     @Getter
     @Builder
     public static class Request {
+        @NotBlank
         private long productId;
         @NotBlank
         private String phoneNumber;
@@ -35,13 +37,13 @@ public class ReservationDto {
     }
 
     @Getter
-    @NoArgsConstructor
-    public static class PageRequest {
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class Search {
         private Long page;
         private Long size;
         private String sort;
 
-        PageRequest(@RequestParam(value = "page", required = false) Long page, @RequestParam(value = "sort", required = false) String sort){
+        public Search(@RequestParam(value = "page", required = false) Long page, @RequestParam(value = "sort", required = false) String sort){
 //            if (page == null || page <= 0) {
 //                this.page = 1L;
 //            }

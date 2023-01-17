@@ -1,6 +1,7 @@
 package com.omc.domain.review.service;
 
 import com.omc.domain.reservation.entity.Reservation;
+import com.omc.domain.reservation.repository.ReservationRepository;
 import com.omc.domain.reservation.service.ReservationService;
 import com.omc.domain.review.dto.ReviewDto;
 import com.omc.domain.review.entity.Review;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.DecimalFormat;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,12 +26,23 @@ import java.util.stream.Collectors;
 public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final ReservationService reservationService;
+    private final ReservationRepository reservationRepository;
 
     DecimalFormat decimalFormat = new DecimalFormat("0.0"); // 소수 1자리 변환
 
     @Transactional
     public void createReview(ReviewDto.Request request, long reservationId) {
         Reservation reservation = reservationService.findById(reservationId);
+
+        if (reservation.getIsCancel() == 1) {
+            throw new BusinessException(ErrorCode.CANCEL_CANT_WRITE);
+        }
+
+        // 체크인 이후부터 작성 가능
+        if (LocalDateTime.now().isBefore(reservation.getCheckIn())) {
+            throw new BusinessException(ErrorCode.NOT_YET_CHECKIN);
+        }
+
         // 해당 예약에 이미 리뷰가 있는지 중복 확인
         if (reservation.getReview() != null) {
             throw new BusinessException(ErrorCode.REVIEW_ALREADY_EXIST);
@@ -37,6 +50,7 @@ public class ReviewService {
 
         Review review = Review.builder()
                 .reservation(reservation)
+                .product(reservation.getProduct())
                 .content(request.getContent())
                 .totalStar(toStarPoint(request.getTotalStar()))
                 .starCleanliness(toStarPoint(request.getStarCleanliness()))
@@ -97,14 +111,15 @@ public class ReviewService {
         if (review == null) {
             throw new BusinessException(ErrorCode.REVIEW_NOT_FOUND);
         }
+        review.getReservation().deleteReview();
         reviewRepository.delete(review);
     }
 
-    public Page<Review> getProductReviews(long productId, ReviewDto.PageRequest pageRequest) {
-        Pageable pageable = PageRequest.of(Math.toIntExact(pageRequest.getPage() - 1),
-                Math.toIntExact(pageRequest.getSize()),
-                Sort.by(pageRequest.getSort()).descending());
-        Page<Review> reviewPage = reviewRepository.findAllByproductId(productId, pageable);
+    public Page<Review> getProductReviews(long productId, ReviewDto.Search search) {
+        Pageable pageable = PageRequest.of(Math.toIntExact(search.getPage() - 1),
+                Math.toIntExact(search.getSize()),
+                Sort.by("id").descending());
+        Page<Review> reviewPage = reviewRepository.findAllByProductId(productId, pageable);
 
         return reviewPage;
 

@@ -8,6 +8,8 @@ import com.omc.global.common.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.text.DecimalFormat;
@@ -19,33 +21,24 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class Reservation extends BaseEntity {
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Product product;
-
-
     private String uniqueId;
-
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
-
-//    @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL)
+    //    @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL)
 //    private Seller seller;
     private String phoneNumber;
-
     private LocalDateTime checkIn; // 체크인
     private LocalDateTime checkOut; // 체크아웃
 
-//    private LocalDate startDate; // 입실 날짜
+    //    private LocalDate startDate; // 입실 날짜
 //    private LocalDate endDate; // 퇴실 날짜
-
     private String status; // 결제상태
-
     private int isCancel; // 취소 여부
-
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "review_id")
     private Review review;
-
     @OneToOne
     @JoinColumn(name = "cancel_id")
     private Cancel cancel;
@@ -73,12 +66,16 @@ public class Reservation extends BaseEntity {
         this.review = review;
     }
 
+    public void deleteReview() {
+        this.review = null;
+    }
+
     public void setIsCancelOn(Cancel cancel) {
         this.isCancel = 1;
         this.cancel = cancel;
     }
 
-    public String makeUniqueId(){
+    public String makeUniqueId() {
         DecimalFormat decimalFormat1 = new DecimalFormat("0000");
         DecimalFormat decimalFormat2 = new DecimalFormat("00");
 

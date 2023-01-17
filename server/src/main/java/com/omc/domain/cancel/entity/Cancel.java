@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToOne;
 import java.time.LocalDateTime;
 
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 public class Cancel extends BaseEntity {
-    @OneToOne(mappedBy = "cancel", cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "cancel", cascade = CascadeType.ALL)
     private Reservation reservation;
 
     private String reason;

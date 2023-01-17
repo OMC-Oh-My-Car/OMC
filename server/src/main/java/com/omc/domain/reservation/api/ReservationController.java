@@ -51,8 +51,8 @@ public class ReservationController {
 
     // @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "")
-    public ResponseEntity<?> getReservationList(@ModelAttribute ReservationDto.PageRequest pageRequest) {
-        Page<Reservation> reservationPage = reservationService.getReservationPages(pageRequest);
+    public ResponseEntity<?> getReservationList(@ModelAttribute ReservationDto.Search search) {
+        Page<Reservation> reservationPage = reservationService.getReservationPages(search);
         List<ReservationDto.Response> responseList = reservationService.pageToResponseList(reservationPage.getContent());
 
         return new ResponseEntity<>(new MultiResponse<>(responseList, reservationPage), HttpStatus.OK);
@@ -62,8 +62,8 @@ public class ReservationController {
     // @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/p/{productId}")
     public ResponseEntity<?> getProductsReservationList(@PathVariable long productId,
-                                                        @ModelAttribute ReservationDto.PageRequest pageRequest) {
-        Page<Reservation> reservationPage = reservationService.getProductsReservationList(productId, pageRequest);
+                                                        @ModelAttribute ReservationDto.Search search) {
+        Page<Reservation> reservationPage = reservationService.getProductsReservationList(productId, search);
         List<ReservationDto.Response> responseList = reservationService.pageToResponseList(reservationPage.getContent());
 
         return new ResponseEntity<>(new MultiResponse<>(responseList, reservationPage), HttpStatus.OK);

@@ -1,5 +1,6 @@
 package com.omc.domain.review.entity;
 
+import com.omc.domain.product.entity.Product;
 import com.omc.domain.reservation.entity.Reservation;
 import com.omc.global.common.BaseEntity;
 import lombok.Builder;
@@ -7,10 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -20,8 +18,10 @@ import javax.validation.constraints.NotNull;
 @DynamicInsert
 public class Review extends BaseEntity {
 
-    @OneToOne(mappedBy = "review", cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "review")
     private Reservation reservation;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Product product;
 
     @Column(columnDefinition = "TEXT", nullable = false)
     @NotBlank
@@ -43,9 +43,10 @@ public class Review extends BaseEntity {
     private Double starCostEffective; // 가격 대비 만족도, 소수 1자리까지
 
     @Builder
-    public Review(Reservation reservation, String content, Double totalStar,
+    public Review(Reservation reservation, Product product, String content, Double totalStar,
                   Double starCleanliness, Double starAccuracy, Double starLocation, Double starCostEffective) {
         this.reservation = reservation;
+        this.product = product;
         this.content = content;
         this.totalStar = totalStar;
         this.starCleanliness = starCleanliness;

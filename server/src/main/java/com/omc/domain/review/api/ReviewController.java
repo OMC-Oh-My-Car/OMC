@@ -1,7 +1,5 @@
 package com.omc.domain.review.api;
 
-import com.omc.domain.reservation.dto.ReservationDto;
-import com.omc.domain.reservation.entity.Reservation;
 import com.omc.domain.review.dto.ReviewDto;
 import com.omc.domain.review.entity.Review;
 import com.omc.domain.review.service.ReviewService;
@@ -39,20 +37,19 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @GetMapping(value = "/{productId}")
-    public ResponseEntity<?> getReviews(@PathVariable long productId,
-                                        @ModelAttribute ReviewDto.PageRequest pageRequest) {
-        Page<Review> reviewPage = reviewService.getProductReviews(productId, pageRequest);
-        List<ReviewDto.Response> responseList = reviewService.pageToResponseList(reviewPage.getContent());
-
-        return new ResponseEntity<>(new MultiResponse<>(responseList, reviewPage), HttpStatus.OK);
-    }
-
     // @PreAuthorize("isAuthenticated()")
     @DeleteMapping(value = "/{reviewId}")
     public ResponseEntity<?> deleteReview(@PathVariable long reviewId) {
         reviewService.deleteReview(reviewId);
-
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @GetMapping(value = "/{productId}")
+    public ResponseEntity<?> getReviews(@PathVariable long productId,
+                                        @ModelAttribute ReviewDto.Search search) {
+        Page<Review> reviewPage = reviewService.getProductReviews(productId, search);
+        List<ReviewDto.Response> responseList = reviewService.pageToResponseList(reviewPage.getContent());
+
+        return new ResponseEntity<>(new MultiResponse<>(responseList, reviewPage), HttpStatus.OK);
     }
 }
