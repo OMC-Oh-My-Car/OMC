@@ -1,4 +1,4 @@
-package com.omc.global.config.security;
+package com.omc.global.config.security.config;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;

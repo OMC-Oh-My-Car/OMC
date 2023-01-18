@@ -89,4 +89,13 @@ public class MemberController {
 
         return ResponseEntity.ok().build();
     }
+
+    // api 활용 필요
+    @PostMapping("/confirm/business-registration-number")
+    public ResponseEntity<?> confirmBusinessNumber(@RequestBody SingleParamDto phoneDto) {
+        String email = memberService.findByPhone(phoneDto.getParam());
+        SingleResponseDto singleResponseDto = new SingleResponseDto<>(email);
+
+        return ResponseEntity.ok(singleResponseDto);
+    }
 }

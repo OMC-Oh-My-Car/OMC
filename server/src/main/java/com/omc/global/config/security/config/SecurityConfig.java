@@ -1,13 +1,15 @@
-package com.omc.global.config.security;
+package com.omc.global.config.security.config;
 
 import com.omc.domain.member.repository.MemberRepository;
 import com.omc.domain.member.repository.RefreshTokenRepository;
+import com.omc.global.config.security.handler.OAuth2AuthenticationSuccessHandler;
+import com.omc.global.config.security.service.OAuth2UserService;
 import com.omc.global.jwt.JwtSecurityConfig;
-import com.omc.global.jwt.filter.JwtFilter;
 import com.omc.global.config.security.handler.MemberAuthenticationSuccessHandler;
 import com.omc.global.jwt.JwtAccessDeniedHandler;
 import com.omc.global.jwt.JwtAuthenticationEntryPoint;
 import com.omc.global.jwt.TokenProvider;
+import com.omc.global.jwt.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,10 +30,10 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final TokenProvider tokenProvider;
-    private final RefreshTokenRepository refreshTokenRepository;
-    private final MemberRepository memberRepository;
+    private final OAuth2UserService oAuth2UserService;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -51,6 +53,7 @@ public class SecurityConfig {
                         sessionManagement ->
                         sessionManagement.sessionCreationPolicy(STATELESS)
                 )
+//                .addFilter(new JwtAuthenticationFilter(tokenProvider, authenticationManager))
                 .authorizeRequests(
                         authorizeRequests -> authorizeRequests
                                 .antMatchers("/member/login", "/member", "/member/confirm/mail", "/member/find/id", "/seller")
@@ -58,7 +61,15 @@ public class SecurityConfig {
                                 .anyRequest()
                                 .authenticated() // 최소자격 : 로그인
                 )
+                .oauth2Login(
+                        oauth2Login -> oauth2Login
+                                .defaultSuccessUrl("/member/detail")
+                                .successHandler(oAuth2AuthenticationSuccessHandler)
+                                .userInfoEndpoint()
+                                .userService(oAuth2UserService)
+                )
                 .apply(new JwtSecurityConfig(tokenProvider))
+
 //                .and()
         ; // 세션 사용안함
                 // 없어도 된다.
