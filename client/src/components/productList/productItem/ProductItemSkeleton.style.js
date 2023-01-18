@@ -10,8 +10,6 @@ export const ProductItemSkeletonArea = styled.div`
     position: relative;
     width: 100%;
     height: calc(100% - 88px);
-    font-size: 30px;
-    color: rgba(255, 255, 255, 0.5);
     border-radius: 10px;
     background-color: #eee;
   }

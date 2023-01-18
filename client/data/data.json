@@ -180,5 +180,41 @@
       "like": 10,
       "isLike": false
     }
-  ]
+  ],
+  "reservation": [
+    {
+			"reservationId": "2022-1220-0874",
+			"phone": "010-1234-5678",
+			"checkIn": "2022-12-21 18:00:00",
+			"checkOut": "2022-12-22 12:00:00",
+			"startDate": "2022-12-21",
+			"endDate": "2022-12-22",
+			"isCancel": 1,
+			"cancelId": 1,
+			"status": "CANCEL",
+			"hasReview": true,
+			"hasCancelReason": true
+		},
+    {
+			"reservationId": "2022-1220-0874",
+			"phone": "010-1234-5678",
+			"checkIn": "2022-12-21 18:00:00",
+			"checkOut": "2022-12-22 12:00:00",
+			"startDate": "2022-12-21",
+			"endDate": "2022-12-22",
+			"isCancel": 1,
+			"cancelId": 1,
+			"status": "CANCEL",
+			"hasReview": true,
+			"hasCancelReason": true
+		},
+    {
+      "pageInfo": {
+        "page": 1,
+        "size": 20,
+        "totalElements": 2,
+        "totalPages": 1
+      }
+    }
+	]
 }
