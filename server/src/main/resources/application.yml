@@ -43,3 +43,6 @@ cloud:
       secret-key: ${AWS_SECRET_KEY}
     s3:
       bucket: ${AWS_S3_BUCKET}
+webhook:
+  discord:
+    url: ${DISCORD_WEBHOOK_URL}
