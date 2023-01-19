@@ -216,5 +216,45 @@
         "totalPages": 1
       }
     }
-	]
+	],
+  "productMy" : [
+    {
+      "productId": 1,
+      "subject": "상호명",
+      "description": "상품 설명",
+      "location": "지역",
+      "reportCount": 14,
+      "price": 100000,
+      "star": 3.52,
+      "img": [
+        {"value":"사과.png"},
+        {"value":"오렌지.png"}
+      ],
+      "likes": 10,
+      "isStop": 0,
+      "stopReason": "정지사유"
+    },
+    {
+      "productId": 2,
+      "subject": "상호명2",
+      "description": "상품 설명2",
+      "location": "지역2",
+      "reportCount": 0,
+      "price": 80000,
+      "star": 3.00,
+      "img": [
+        {"value":"사과.png"},
+        {"value":"오렌지.png"}
+      ],
+      "likes": 10,
+      "isStop": 0,
+      "stopReason": "정지사유"
+    },
+    {
+      "page": 1,
+      "size": 20,
+      "totalElements": 2,
+      "totalPages": 1
+    }
+  ]
 }
