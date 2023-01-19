@@ -5,7 +5,8 @@ export const SellerReservationItemSkeletonArea = styled.div`
   width: 100%;
   margin-bottom: 20px;
   .image {
-    width: 200px;
+    width: 100%;
+    max-width: 220px;
     height: 170px;
     background-color: #eee;
     margin-right: 20px;
@@ -57,6 +58,18 @@ export const SellerReservationItemSkeletonArea = styled.div`
         border-radius: 5px;
         background-color: #eee;
       }
+    }
+  }
+  @media (max-width: 550px) {
+    flex-direction: column;
+    .image {
+      width: 100%;
+      min-height: 50vw;
+      max-width: none;
+      margin-bottom: 10px;
+    }
+    .reservationInfo {
+      margin-bottom: 20px;
     }
   }
 `;

@@ -5,7 +5,9 @@ const SellerReservationItemSkeleton = () => {
   return (
     <>
       <SellerReservationItemSkeletonArea>
-        <div className="image"></div>
+        <div className="image">
+          <div className="dummy"></div>
+        </div>
         <div className="flexRight">
           <div className="reservationInfo">
             <span className="reservationNumber"></span>
