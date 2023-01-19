@@ -5,6 +5,7 @@ import Header from '../components/header/Header';
 import Pagination from '../components/pagination/Pagination';
 import SellerReservationList from '../components/sellerReservation/SellerReservationList';
 import { getSellerReservationList } from '../modules/sellerReservation/sellerReservation';
+// import SellerReservationListEmpty from '../components/sellerReservation/SellerReservationListEmpty';
 const SellerReservationPage = () => {
   const [page, setpage] = useState(1);
   const [filter, setFilter] = useState(0);
@@ -30,6 +31,7 @@ const SellerReservationPage = () => {
             filter={filter}
             setFilter={setFilter}
           />
+          {/* <SellerReservationListEmpty /> */}
           <Pagination itemChange={itemChange} />
         </MainContainer>
       </Container>
