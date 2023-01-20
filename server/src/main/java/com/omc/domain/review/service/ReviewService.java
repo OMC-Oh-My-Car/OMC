@@ -1,7 +1,6 @@
 package com.omc.domain.review.service;
 
 import com.omc.domain.reservation.entity.Reservation;
-import com.omc.domain.reservation.repository.ReservationRepository;
 import com.omc.domain.reservation.service.ReservationService;
 import com.omc.domain.review.dto.ReviewDto;
 import com.omc.domain.review.entity.Review;
@@ -26,7 +25,6 @@ import java.util.stream.Collectors;
 public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final ReservationService reservationService;
-    private final ReservationRepository reservationRepository;
 
     DecimalFormat decimalFormat = new DecimalFormat("0.0"); // 소수 1자리 변환
 
@@ -50,7 +48,7 @@ public class ReviewService {
 
         Review review = Review.builder()
                 .reservation(reservation)
-                .product(reservation.getProduct())
+//                .product(reservation.getProduct())
                 .content(request.getContent())
                 .totalStar(toStarPoint(request.getTotalStar()))
                 .starCleanliness(toStarPoint(request.getStarCleanliness()))
@@ -79,7 +77,7 @@ public class ReviewService {
             throw new BusinessException(ErrorCode.REVIEW_NOT_FOUND);
         }
 
-        review.of(request.getContent(), request.getTotalStar(), request.getStarCleanliness(), request.getStarAccuracy(),
+        review.modify(request.getContent(), request.getTotalStar(), request.getStarCleanliness(), request.getStarAccuracy(),
                 request.getStarLocation(), request.getStarCostEffective());
 
         reviewRepository.save(review);
@@ -119,18 +117,20 @@ public class ReviewService {
         Pageable pageable = PageRequest.of(Math.toIntExact(search.getPage() - 1),
                 Math.toIntExact(search.getSize()),
                 Sort.by("id").descending());
-        Page<Review> reviewPage = reviewRepository.findAllByProductId(productId, pageable);
+//        Page<Review> reviewPage = reviewRepository.findAllByProductId(productId, pageable);
+        Page<Review> reviewPage = reviewRepository.findAllByReservationProductId(productId, pageable);
 
         return reviewPage;
 
     }
 
     public List<ReviewDto.Response> pageToResponseList(List<Review> content) {
-        return content.stream().map(review -> toResponseDto(review)).collect(Collectors.toList());
+        return content.stream().map(this::toResponseDto).collect(Collectors.toList());
     }
 
     private ReviewDto.Response toResponseDto(Review review) {
-        ReviewDto.Response response = ReviewDto.Response.builder()
+
+        return ReviewDto.Response.builder()
                 .content(review.getContent())
                 .totalStar(review.getTotalStar())
                 .starCleanliness(review.getStarCleanliness())
@@ -139,7 +139,5 @@ public class ReviewService {
                 .starCostEffective(review.getStarCostEffective())
                 .createTime(review.getCreatedAt())
                 .build();
-
-        return response;
     }
 }
