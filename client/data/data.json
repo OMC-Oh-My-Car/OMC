@@ -216,5 +216,79 @@
         "totalPages": 1
       }
     }
-	]
+	],
+  "productMy" : [
+    {
+      "productId": 1,
+      "subject": "상호명",
+      "description": "상품 설명",
+      "location": "지역",
+      "reportCount": 14,
+      "price": 100000,
+      "star": 3.52,
+      "img": [
+        {"value":"사과.png"},
+        {"value":"오렌지.png"}
+      ],
+      "likes": 10,
+      "isStop": 0,
+      "stopReason": "정지사유"
+    },
+    {
+      "productId": 2,
+      "subject": "상호명2",
+      "description": "상품 설명2",
+      "location": "지역2",
+      "reportCount": 0,
+      "price": 80000,
+      "star": 3.00,
+      "img": [
+        {"value":"사과.png"},
+        {"value":"오렌지.png"}
+      ],
+      "likes": 10,
+      "isStop": 0,
+      "stopReason": "정지사유"
+    },
+    {
+      "page": 1,
+      "size": 20,
+      "totalElements": 2,
+      "totalPages": 1
+    }
+  ],
+  "reservationProduct" : [
+    {
+      "reservationId": "2022-1220-0874",
+      "phone": "010-1234-5678",
+      "checkIn": "2022-12-21 18:00:00",
+			"checkOut": "2022-12-22 12:00:00",
+      "startDate": "2022-12-21",
+      "endDate": "2022-12-22",
+      "isCancel": 1,
+      "cancelId": 1,
+      "status": "REFUND",
+      "hasReview": true,
+      "hasCancelReason": true
+    },
+    {
+      "reservationId": "2022-1220-0876",
+      "phone": "010-1234-5678",
+      "checkIn": "2022-12-21 18:00:00",
+			"checkOut": "2022-12-22 12:00:00",
+      "startDate": "2022-12-21",
+      "endDate": "2022-12-22",
+      "isCancel": 1,
+      "cancelId": 1,
+      "status": "REFUND",
+      "hasReview": true,
+      "hasCancelReason": true
+    },
+    {
+      "page": 1,
+      "size": 20,
+      "totalElements": 2,
+      "totalPages": 1
+    }
+  ]
 }
