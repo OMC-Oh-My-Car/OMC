@@ -1,6 +1,7 @@
 // import React from 'react';
 import OrangeButton from './signUpForm/OrangeButton';
 import SignUpInputBox from './signUpForm/SignUpInputBox';
+import SignUpInputLongBox from './signUpForm/SignUpInputLongBox';
 import { Template, SignUpForm, SignUpButton, SignInComment } from './SignUp.style';
 import { faFile } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -15,17 +16,16 @@ const SignUp = () => {
         <h1>회원 정보 입력</h1>
         <SignUpForm>
           <SignUpInputBox
-            width="100px"
             labelName="아이디"
-            inputId="id"
-            inputType="text"
-            name="id"
+            inputId="email"
+            inputType="email"
+            name="email"
             // onChangeInput={onChangeInput}
-            placeholder="아이디를 입력해주세요!"
+            placeholder="이메일을 입력해주세요!"
           />
-          <OrangeButton text="아이디 확인" width="120px" height="40px" />
+          <OrangeButton text="인증하기" width="120px" height="40px" />
         </SignUpForm>
-        <SignUpInputBox
+        <SignUpInputLongBox
           labelName="비밀번호"
           inputId="password"
           inputType="password"
@@ -33,7 +33,7 @@ const SignUp = () => {
           // onChangeInput={onChangeInput}
           placeholder="비밀번호를 입력해주세요!"
         />
-        <SignUpInputBox
+        <SignUpInputLongBox
           labelName="비밀번호 확인"
           inputId="passwordConfirm"
           inputType="password"
@@ -42,15 +42,24 @@ const SignUp = () => {
           placeholder="비밀번호를 다시 입력해주세요!"
         />
         <SignUpForm>
-          <SignUpInputBox
-            labelName="이메일"
-            inputId="email"
-            inputType="email"
-            name="email"
+          <SignUpInputLongBox
+            labelName="본명"
+            inputId="name"
+            inputType="name"
+            name="name"
             // onChangeInput={onChangeInput}
-            placeholder="이메일을 입력해주세요!"
+            placeholder="본명을 입력해주세요!"
           />
-          <OrangeButton text="인증하기" width="120px" height="40px" />
+        </SignUpForm>
+        <SignUpForm>
+          <SignUpInputLongBox
+            labelName="닉네임"
+            inputId="nickname"
+            inputType="nickname"
+            name="nickname"
+            // onChangeInput={onChangeInput}
+            placeholder="닉네임을 입력해주세요!"
+          />
         </SignUpForm>
         <SignUpButton>
           <OrangeButton text="회원가입" width="180px" height="40px" />
