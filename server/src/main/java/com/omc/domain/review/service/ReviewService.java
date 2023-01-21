@@ -59,7 +59,7 @@ public class ReviewService {
 
         reservation.setReview(review);
 
-        reviewRepository.save(review);
+//        reviewRepository.save(review);
     }
 
     private Double toStarPoint(Double num) {

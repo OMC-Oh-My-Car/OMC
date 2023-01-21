@@ -10,6 +10,8 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.Optional;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
+
+    @EntityGraph(attributePaths = {"reservation"})
     Optional<Review> findByReservationId(long reservationId);
 
 //    @EntityGraph(attributePaths = {"reservation"})
@@ -18,4 +20,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query("SELECT r FROM Review r JOIN r.reservation rv WHERE rv.product.id = :productId")
     @EntityGraph(attributePaths = {"reservation"})
     Page<Review> findAllByReservationProductId(long productId, Pageable pageable);
+    @EntityGraph(attributePaths = {"reservation"})
+    Optional<Review> findById(long reviewId);
 }
