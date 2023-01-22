@@ -4,6 +4,12 @@ export const Template = styled.div`
   border: solid 1px black;
   height: 100%;
   padding: 15px;
+  .success {
+    color: blue;
+  }
+  .error {
+    color: red;
+  }
   h1 {
     font-size: 27px;
     margin-bottom: 40px;
@@ -19,12 +25,13 @@ export const Template = styled.div`
 `;
 export const SignUpForm = styled.div`
   display: flex;
-  align-items: center;
 `;
 export const SignUpButton = styled.div`
   display: flex;
   justify-content: center;
+  margin-top: 30px;
   margin-bottom: 20px;
+  border: none;
 `;
 export const SignInComment = styled(SignUpButton)`
   .goLogin {
@@ -36,4 +43,8 @@ export const SignInComment = styled(SignUpButton)`
       color: darkgray;
     }
   }
+`;
+export const EmailButton = styled.div`
+  display: flex;
+  margin-top: 30px;
 `;
