@@ -5,6 +5,7 @@ import SellerProductAddImage from '../components/sellerProductAdd/SellerProductA
 import SellerProductAddTitle from '../components/sellerProductAdd/SellerProductAddTitle';
 import SellerProductAddContent from '../components/sellerProductAdd/SellerProductAddContent';
 import SellerProductAddPostCode from '../components/sellerProductAdd/SellerProductAddPostCode';
+import SellerProductAddPrice from '../components/sellerProductAdd/SellerProductAddPrice';
 
 const SellerProductAddPage = () => {
   return (
@@ -17,6 +18,7 @@ const SellerProductAddPage = () => {
           <SellerProductAddTitle />
           <SellerProductAddContent />
           <SellerProductAddPostCode />
+          <SellerProductAddPrice />
         </MainContainer>
       </Container>
     </>
