@@ -1,28 +1,24 @@
 package com.omc.global.config.security.config;
 
-import com.omc.domain.member.repository.MemberRepository;
-import com.omc.domain.member.repository.RefreshTokenRepository;
-import com.omc.global.config.security.handler.OAuth2AuthenticationSuccessHandler;
-import com.omc.global.config.security.service.OAuth2UserService;
-import com.omc.global.jwt.JwtSecurityConfig;
-import com.omc.global.config.security.handler.MemberAuthenticationSuccessHandler;
-import com.omc.global.jwt.JwtAccessDeniedHandler;
-import com.omc.global.jwt.JwtAuthenticationEntryPoint;
-import com.omc.global.jwt.TokenProvider;
-import com.omc.global.jwt.filter.JwtAuthenticationFilter;
-import lombok.RequiredArgsConstructor;
+import static org.springframework.security.config.http.SessionCreationPolicy.*;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+import com.omc.global.config.security.handler.OAuth2AuthenticationSuccessHandler;
+import com.omc.global.config.security.service.OAuth2UserService;
+import com.omc.global.jwt.JwtAccessDeniedHandler;
+import com.omc.global.jwt.JwtAuthenticationEntryPoint;
+import com.omc.global.jwt.JwtSecurityConfig;
+import com.omc.global.jwt.TokenProvider;
+
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity

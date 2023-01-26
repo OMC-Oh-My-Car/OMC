@@ -1,6 +1,7 @@
 package com.omc.domain.member.dto;
 
 import com.omc.domain.member.entity.Member;
+
 import lombok.Builder;
 import lombok.Getter;
 

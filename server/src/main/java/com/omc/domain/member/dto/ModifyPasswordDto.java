@@ -1,9 +1,9 @@
 package com.omc.domain.member.dto;
 
+import javax.validation.constraints.NotBlank;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
-import javax.validation.constraints.NotBlank;
 
 @Getter
 @RequiredArgsConstructor

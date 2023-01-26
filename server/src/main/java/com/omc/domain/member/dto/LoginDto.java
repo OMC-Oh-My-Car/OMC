@@ -1,9 +1,11 @@
 package com.omc.domain.member.dto;
 
-import lombok.*;
+import javax.validation.constraints.NotBlank;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
-import javax.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor

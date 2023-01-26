@@ -1,5 +1,14 @@
 package com.omc.domain.member.service;
 
+import java.nio.charset.Charset;
+import java.util.Optional;
+import java.util.Random;
+
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import com.omc.domain.member.dto.MemberModifyDto;
 import com.omc.domain.member.dto.ModifyPasswordDto;
 import com.omc.domain.member.dto.SingleParamDto;
@@ -7,17 +16,9 @@ import com.omc.domain.member.entity.Member;
 import com.omc.domain.member.exception.DuplicateEmail;
 import com.omc.domain.member.exception.MemberNotFoundException;
 import com.omc.domain.member.repository.MemberRepository;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import javax.validation.Valid;
-import java.nio.charset.Charset;
-import java.util.Optional;
-import java.util.Random;
 
 @Service
 @RequiredArgsConstructor

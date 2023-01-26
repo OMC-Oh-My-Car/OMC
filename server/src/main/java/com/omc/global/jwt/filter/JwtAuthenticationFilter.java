@@ -1,32 +1,28 @@
 package com.omc.global.jwt.filter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.omc.domain.member.dto.LoginDto;
-import com.omc.domain.member.dto.SignUpRequestDto;
-import com.omc.domain.member.dto.TokenDto;
-import com.omc.domain.member.entity.AuthMember;
-import com.omc.domain.member.entity.Member;
-import com.omc.domain.member.exception.DuplicateEmail;
-import com.omc.domain.member.repository.MemberRepository;
-import com.omc.global.jwt.TokenProvider;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseCookie;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.AuthenticationFilter;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import java.io.IOException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.security.Principal;
+
+import org.springframework.http.ResponseCookie;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.omc.domain.member.dto.LoginDto;
+import com.omc.domain.member.dto.TokenDto;
+import com.omc.domain.member.entity.AuthMember;
+import com.omc.global.jwt.TokenProvider;
+
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Slf4j

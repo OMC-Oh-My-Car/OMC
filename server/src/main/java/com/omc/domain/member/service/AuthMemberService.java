@@ -1,15 +1,7 @@
 package com.omc.domain.member.service;
 
-import com.omc.domain.member.dto.*;
-import com.omc.domain.member.entity.Member;
-import com.omc.domain.member.entity.RefreshToken;
-import com.omc.domain.member.exception.*;
-import com.omc.domain.member.repository.MemberRepository;
-import com.omc.domain.member.repository.RefreshTokenRepository;
-import com.omc.global.jwt.TokenProvider;
-import io.jsonwebtoken.Claims;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -17,9 +9,24 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
+import com.omc.domain.member.dto.LoginDto;
+import com.omc.domain.member.dto.MemberResponseDto;
+import com.omc.domain.member.dto.ReissueResponse;
+import com.omc.domain.member.dto.SignUpRequestDto;
+import com.omc.domain.member.dto.TokenDto;
+import com.omc.domain.member.entity.Member;
+import com.omc.domain.member.entity.RefreshToken;
+import com.omc.domain.member.exception.DuplicateEmail;
+import com.omc.domain.member.exception.DuplicateNickname;
+import com.omc.domain.member.exception.DuplicateUsername;
+import com.omc.domain.member.exception.MemberNotFoundException;
+import com.omc.domain.member.repository.MemberRepository;
+import com.omc.domain.member.repository.RefreshTokenRepository;
+import com.omc.global.jwt.TokenProvider;
+
+import io.jsonwebtoken.Claims;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor

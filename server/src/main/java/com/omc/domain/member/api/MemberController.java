@@ -1,22 +1,34 @@
 package com.omc.domain.member.api;
 
-import com.omc.domain.member.dto.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.omc.domain.member.dto.MemberModifyDto;
+import com.omc.domain.member.dto.MemberResponseDto;
+import com.omc.domain.member.dto.ModifyPasswordDto;
+import com.omc.domain.member.dto.ReissueResponse;
+import com.omc.domain.member.dto.SingleParamDto;
 import com.omc.domain.member.entity.Member;
 import com.omc.domain.member.exception.MemberNotFoundException;
 import com.omc.domain.member.service.AuthMemberService;
 import com.omc.domain.member.service.MemberService;
 import com.omc.global.common.dto.SingleResponseDto;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/member")

@@ -1,24 +1,11 @@
 package com.omc.global.config.security.service;
 
-import com.omc.domain.member.entity.Member;
-import com.omc.domain.member.entity.Social;
-import com.omc.domain.member.entity.UserRole;
-import com.omc.domain.member.exception.MemberNotFoundException;
-import com.omc.domain.member.repository.MemberRepository;
-import com.omc.domain.member.service.MemberService;
-import com.omc.global.error.exception.MemberAlreadyExist;
-import com.omc.global.error.exception.OAuthTypeMatchNotFoundException;
-import io.jsonwebtoken.Claims;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -26,12 +13,17 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import com.omc.domain.member.entity.Member;
+import com.omc.domain.member.entity.Social;
+import com.omc.domain.member.entity.UserRole;
+import com.omc.domain.member.exception.MemberNotFoundException;
+import com.omc.domain.member.repository.MemberRepository;
+import com.omc.global.error.exception.MemberAlreadyExist;
+import com.omc.global.error.exception.OAuthTypeMatchNotFoundException;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional(readOnly = true)

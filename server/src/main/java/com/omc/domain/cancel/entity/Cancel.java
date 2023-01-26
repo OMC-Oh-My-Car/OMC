@@ -1,18 +1,16 @@
 package com.omc.domain.cancel.entity;
 
-import com.omc.domain.member.entity.Member;
-import com.omc.domain.product.entity.Product;
-import com.omc.domain.reservation.entity.Reservation;
-import com.omc.global.common.BaseEntity;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToOne;
-import java.time.LocalDateTime;
+
+import com.omc.domain.reservation.entity.Reservation;
+import com.omc.global.common.BaseEntity;
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter

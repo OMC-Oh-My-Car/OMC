@@ -22,7 +22,7 @@ import com.omc.domain.product.dto.ProductDto;
 import com.omc.domain.product.dto.StopDto;
 import com.omc.domain.product.entity.Product;
 import com.omc.domain.product.service.ProductService;
-import com.omc.global.common.annotation.AuthMember;
+import com.omc.global.common.annotation.CurrentMember;
 import com.omc.global.common.dto.MultiResponse;
 import com.omc.global.common.dto.SingleResponseDto;
 import com.omc.global.error.ErrorCode;
@@ -118,7 +118,7 @@ public class ProductController {
 	 * @return 상품 정보
 	 */
 	@GetMapping(value = "/product/my")
-	public ResponseEntity<?> getMyProductList(@AuthMember Member member,
+	public ResponseEntity<?> getMyProductList(@CurrentMember Member member,
 											  @ModelAttribute ProductDto.Search search) {
 
 		Page<Product> resPage = productService.getMyProductList(member, search);
@@ -148,7 +148,7 @@ public class ProductController {
 	 */
 	@PostMapping(value = "/product/{productId}/like")
 	public ResponseEntity<?> like(@PathVariable Long productId,
-								  @AuthMember Member member) {
+								  @CurrentMember Member member) {
 
 		productService.likeProduct(productId, member);
 
@@ -168,7 +168,7 @@ public class ProductController {
 	@PatchMapping(value = "/product/{productId}/stop")
 	public ResponseEntity<?> status(@PathVariable Long productId,
 									@RequestBody StopDto.Request req,
-									@AuthMember Member member) {
+									@CurrentMember Member member) {
 
 		StopDto.Response res = productService.setStatus(productId, req, member);
 

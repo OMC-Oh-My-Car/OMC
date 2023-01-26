@@ -1,13 +1,18 @@
 package com.omc.domain.member.dto;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import com.omc.domain.member.entity.Member;
 import com.omc.domain.member.entity.Social;
 import com.omc.domain.member.entity.UserRole;
-import lombok.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor

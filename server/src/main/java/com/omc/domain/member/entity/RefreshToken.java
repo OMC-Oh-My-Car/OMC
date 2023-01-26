@@ -1,13 +1,14 @@
 package com.omc.domain.member.entity;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+
 import com.omc.global.common.BaseEntity;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
 
 @Entity
 @Getter

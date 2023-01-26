@@ -1,22 +1,24 @@
 package com.omc.global.config.security.handler;
 
-import com.omc.domain.member.dto.TokenDto;
-import com.omc.domain.member.entity.AuthMember;
-import com.omc.domain.member.entity.Member;
-import com.omc.domain.member.repository.MemberRepository;
-import com.omc.global.jwt.TokenProvider;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.io.IOException;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Map;
+import com.omc.domain.member.dto.TokenDto;
+import com.omc.domain.member.entity.AuthMember;
+import com.omc.domain.member.entity.Member;
+import com.omc.domain.member.repository.MemberRepository;
+import com.omc.global.jwt.TokenProvider;
+
+import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor

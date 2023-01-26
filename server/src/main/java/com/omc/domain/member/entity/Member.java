@@ -1,14 +1,23 @@
 package com.omc.domain.member.entity;
 
-import javax.persistence.*;
+import java.util.Map;
+import java.util.Optional;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 import com.omc.domain.member.dto.MemberModifyDto;
 import com.omc.domain.member.dto.MemberResponseDto;
 import com.omc.global.common.BaseEntity;
 import com.omc.global.util.Util;
-import lombok.*;
 
-import java.util.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Getter
