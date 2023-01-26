@@ -149,6 +149,3 @@ gradle-app.setting
 
 # Cache of project
 .gradletasknamecache
-
-# ymlFile
-*.yml
