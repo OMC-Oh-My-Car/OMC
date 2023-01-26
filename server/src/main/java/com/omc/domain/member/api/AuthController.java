@@ -8,10 +8,12 @@ import com.omc.domain.member.exception.MemberNotFoundException;
 import com.omc.domain.member.service.AuthMemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletResponse;
@@ -21,11 +23,15 @@ import java.net.URI;
 @RequestMapping("/member")
 @RequiredArgsConstructor
 @Slf4j
+@CrossOrigin(origins = "*", allowedHeaders = "*", exposedHeaders = "Authorization, Set-Cookie")
 public class AuthController {
     private final AuthMemberService authService;
 
     @PostMapping()
-    public ResponseEntity<MemberResponseDto> join(@RequestBody SignUpRequestDto signUpRequestDto) {
+    public ResponseEntity<?> join(@RequestBody SignUpRequestDto signUpRequestDto) {
+        if (!signUpRequestDto.getPassword().equals(signUpRequestDto.getPasswordConfirm())) {
+             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not Match Password");// 패스워드 일치하지 않음 에러
+        }
         // RequestBody 를 객체화하여 MemberPostDto로 변경 후 회원가입 로직 진행
         MemberResponseDto newMember = authService.join(signUpRequestDto);
 
