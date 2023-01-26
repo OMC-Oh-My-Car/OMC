@@ -4,7 +4,7 @@ export const SellerProductAddContentArea = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
   h2 {
     width: 100%;
     max-width: 520px;

@@ -4,7 +4,7 @@ export const SellerProductAddPriceArea = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
   h2 {
     width: 100%;
     max-width: 520px;
@@ -19,9 +19,9 @@ export const SellerProductAddPriceArea = styled.div`
     max-width: 520px;
     span {
       position: absolute;
-      top: 7px;
+      top: 10px;
       left: 15px;
-      font-size: 30px;
+      font-size: 25px;
     }
     input {
       width: 100%;
