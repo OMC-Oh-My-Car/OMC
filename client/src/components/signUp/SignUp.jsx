@@ -2,26 +2,30 @@
 import OrangeButton from './signUpForm/OrangeButton';
 import SignUpInputBox from './signUpForm/SignUpInputBox';
 import SignUpInputLongBox from './signUpForm/SignUpInputLongBox';
-import { Template, SignUpForm, SignUpButton, SignInComment, EmailButton } from './SignUp.style';
+import { Template, SignUpForm, SignUpButton, SignInComment, EmailButton, GoLogin } from './SignUp.style';
 import { faFile } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useCallback, useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
-// import axios from 'axios';
-// import { SIGNUP_URL } from 'api';
+import { useCallback, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import SignUpSuccessModal from '../alert/SignUpSuccessModal';
+import ConfirmNumberModal from './signUpForm/ConfirmNumberModal';
 const SignUp = () => {
   const [idEmail, setIdEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [username, setUsername] = useState('');
   const [nickname, setNickname] = useState('');
+  const [phone, setPhone] = useState('');
+  const [confirmNumber, setConfirmNumber] = useState('');
 
   const [idEmailError, setIdEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [passwordConfirmError, setPasswordConfirmError] = useState('');
   const [usernameError, setUsernameError] = useState('');
   const [nicknameError, setNicknameError] = useState('');
-  const [setColor] = useState({ color: 'blue' });
+  const [phoneError, setPhoneError] = useState('');
+  // const [setColor] = useState({ color: 'blue' });
 
   //유효성 검사
   const [isIdEmail, setIsIdEmail] = useState(false);
@@ -29,18 +33,21 @@ const SignUp = () => {
   const [isPasswordConfirm, setIsPasswordConfirm] = useState(false);
   const [isUsername, setIsUsername] = useState(false);
   const [isNickname, setIsNickname] = useState(false);
-
-  // const navigate = useNavigate();
+  const [isPhone, setIsPhone] = useState(false);
+  const navigate = useNavigate();
 
   // const [isSubmit, setIsSubmit] = useState(false);
 
-  // const [alert, setAlert] = useState({
-  //   open: false,
-  //   title: '',
-  //   message: '',
-  //   callback: false,
-  // });
-
+  const [alert, setAlert] = useState({
+    open: false,
+    title: '',
+    message: '',
+    body: '',
+    callback: false,
+  });
+  const confirmNumberHandler = () => {
+    setConfirmNumber(true);
+  };
   const onChangeId = useCallback((e) => {
     setIdEmail(e.target.value);
     const emailRegex =
@@ -50,11 +57,9 @@ const SignUp = () => {
     if (!emailRegex.test(emailCurrent)) {
       setIdEmailError('이메일 형식이 틀렸어요! 다시 확인해주세요 ㅜ ㅜ');
       setIsIdEmail(false);
-      setColor({ color: 'red' });
     } else {
       setIdEmailError('올바른 이메일 형식이에요 : )');
       setIsIdEmail(true);
-      setColor({ color: 'blue' });
     }
   }, []);
 
@@ -67,11 +72,9 @@ const SignUp = () => {
     if (!passwordRegex.test(passwordCurrent)) {
       setPasswordError('숫자+영문자+특수문자 조합으로 8자리 이상 입력해주세요!');
       setIsPassword(false);
-      setColor({ color: 'red' });
     } else {
       setPasswordError('안전한 비밀번호에요 : )');
       setIsPassword(true);
-      setColor({ color: 'blue' });
     }
   }, []);
 
@@ -83,11 +86,9 @@ const SignUp = () => {
       if (password === passwordConfirmCurrent) {
         setPasswordConfirmError('비밀번호를 똑같이 입력했어요 : )');
         setIsPasswordConfirm(true);
-        setColor({ color: 'blue' });
       } else {
         setPasswordConfirmError('비밀번호가 틀려요. 다시 확인해주세요 ㅜ ㅜ');
         setIsPasswordConfirm(false);
-        setColor({ color: 'red' });
       }
     },
     [password],
@@ -112,43 +113,86 @@ const SignUp = () => {
       setIsNickname(true);
     }
   }, []);
-  // const submitHandle = async () => {
-  //   await axios
-  //     .post(SIGNUP_URL, {
-  //       idEmail: idEmail,
-  //       password: password,
-  //       passwordConfirm: passwordConfirm,
-  //       username: username,
-  //       nickname: nickname,
-  //     })
-  //     .then((res) => {
-  //       if (res.status === 201) {
-  //         console.log('회원가입 성공');
-  //         setAlert({
-  //           open: true,
-  //           title: '회원가입 완료',
-  //           message: '회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.',
-  //           callback: function () {
-  //             navigate('/member/login');
-  //           },
-  //         });
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       if (err.response.status === 401) {
-  //         console.log('401 에러');
-  //         console.log(err);
-  //       } else {
-  //         console.log(`${err.response.status} 에러`);
-  //         console.log(err);
-  //       }
-  //       setAlert({
-  //         open: true,
-  //         title: '회원가입 실패',
-  //         message: '회원가입에 실패했습니다. 관리자에게 문의해주세요.',
-  //       });
-  //     });
-  // };
+  const onChangePhone = useCallback((e) => {
+    setPhone(e.target.value);
+    if (e.target.value.length < 11) {
+      setPhoneError('11개의 숫자를 입력해주세요.');
+      setIsPhone(false);
+    } else {
+      setPhoneError('올바른 전화번호 형식입니다 :)');
+      setIsPhone(true);
+    }
+  }, []);
+  const submitHandle = async () => {
+    await axios
+      .post('https://ffa0-49-142-61-236.jp.ngrok.io/member', {
+        email: idEmail,
+        password: password,
+        passwordConfirm: passwordConfirm,
+        username: username,
+        nickname: nickname,
+        phone: phone,
+      })
+      .then((res) => {
+        if (res.status === 201) {
+          console.log('회원가입 성공');
+          setAlert({
+            open: true,
+            title: '회원가입 완료',
+            message: '회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.',
+            body: '로그인 후 서비스를 모두 이용하실 수 있습니다.',
+            callback: function () {
+              navigate('/member/login');
+            },
+          });
+        }
+      })
+      .catch((err) => {
+        if (err.response.status === 401) {
+          console.log('401 에러');
+          console.log(err);
+        } else {
+          console.log(`${err.response.status} 에러`);
+          console.log(err);
+        }
+        setAlert({
+          open: true,
+          title: '회원가입 실패!!!',
+          message: '회원가입에 실패했습니다. 관리자에게 문의해주세요.',
+          body: '로그인 후 서비스를 모두 이용하실 수 있습니다.',
+          callback: function () {
+            navigate('/member/login');
+          },
+        });
+      });
+  };
+  const sendNumberHandler = async () => {
+    await axios
+      .post('/member/confirm/mail', {
+        email: idEmail,
+      })
+      .then((res) => {
+        if (res.status === 201) {
+          console.log('메일함에서 인증번호를 확인해주세요!');
+        }
+      })
+      .catch((err) => {
+        if (err.response.status === 401) {
+          console.log('401에러');
+          console.log(err);
+        } else {
+          console.log(`${err.response.status} 에러`);
+          console.log(err);
+        }
+      });
+  };
+  useEffect(() => {
+    setAlert({
+      title: '!회원가입!',
+      message: 'OMC에 오신것을 환영합니다!',
+      body: '회원가입 후 서비스를 모두 이용하실 수 있습니다 !!!!!!!!!!!!!!!!!!',
+    });
+  }, []);
   return (
     <>
       <Template>
@@ -167,7 +211,16 @@ const SignUp = () => {
             placeholder="이메일을 입력해주세요!"
           />
           <EmailButton>
-            <OrangeButton text="인증하기" width="120px" height="40px" />
+            <OrangeButton
+              text="인증하기"
+              width="120px"
+              height="40px"
+              onClick={() => {
+                confirmNumberHandler();
+                sendNumberHandler();
+              }}
+            />
+            {confirmNumber && <ConfirmNumberModal setConfirmNumber={setConfirmNumber} />}
           </EmailButton>
         </SignUpForm>
         {idEmail.length > 0 && <span className={`message ${isIdEmail ? 'success' : 'error'}`}>{idEmailError}</span>}
@@ -217,13 +270,33 @@ const SignUp = () => {
           />
         </SignUpForm>
         {nickname.length > 0 && <span className={`message ${isNickname ? 'success' : 'error'}`}>{nicknameError}</span>}
+        <SignUpForm>
+          <SignUpInputLongBox
+            labelName="전화번호"
+            inputId="phone"
+            inputType="phone"
+            name="phone"
+            onChangeInput={onChangePhone}
+            placeholder="전화번호를 입력해주세요!"
+          />
+        </SignUpForm>
+        {phone.length > 0 && <span className={`message ${isPhone ? 'success' : 'error'}`}>{phoneError}</span>}
         <SignUpButton>
-          <OrangeButton text="회원가입" width="180px" height="40px" />
-          {/* <OrangeButton text="회원가입" width="180px" height="40px" onClick={submitHandle}/> */}
+          {/* <OrangeButton text="회원가입" width="180px" height="40px" /> */}
+          <OrangeButton text="회원가입" width="180px" height="40px" onClick={submitHandle} />
+          {alert && (
+            <SignUpSuccessModal
+              setAlert={setAlert}
+              message={alert.message}
+              title={alert.title}
+              callback={alert.callback}
+              body={alert.body}
+            />
+          )}
         </SignUpButton>
         <SignInComment>
           이미 가입하셨나요?
-          <div className="goLogin">로그인 하러가기</div>
+          <GoLogin href={'/member/login'}>로그인 하러가기</GoLogin>
         </SignInComment>
       </Template>
     </>
