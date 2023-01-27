@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const InfoChangeContainer = styled.div`
-  width: 470px;
+  width: 480px;
   padding: 10px;
   border-radius: 15px;
   border: solid 2px;

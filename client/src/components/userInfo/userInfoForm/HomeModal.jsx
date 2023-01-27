@@ -74,7 +74,7 @@ const HomeModal = ({ setHome }) => {
               // onChangeInput={onChangeInput}
               placeholder="예) 202동 1205호"
             />
-            <BlackButton width="470px" height="45px" text="저장" />
+            <BlackButton width="480px" height="45px" text="저장" />
           </div>
         </ContainerDiv>
       </ModalBackground>

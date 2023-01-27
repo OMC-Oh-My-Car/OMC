@@ -9,7 +9,7 @@ export const ModalBackground = styled.div`
   background: rgba(0, 0, 0, 0.5);
 `;
 export const ContainerDiv = styled.div`
-  width: 500px;
+  width: 520px;
   height: 200px;
   border: 1px solid white;
   border-radius: 10px;

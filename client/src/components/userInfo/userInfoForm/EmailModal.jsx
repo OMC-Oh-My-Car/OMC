@@ -50,7 +50,7 @@ const EmailModal = ({ setMail }) => {
               // onChangeInput={onChangeInput}
               placeholder="새로운 이메일을 입력해주세요!"
             />
-            <BlackButton width="470px" height="45px" text="저장" />
+            <BlackButton width="480px" height="45px" text="저장" />
           </div>
         </ContainerDiv>
       </ModalBackground>
