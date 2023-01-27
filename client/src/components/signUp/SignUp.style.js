@@ -34,17 +34,18 @@ export const SignUpButton = styled.div`
   border: none;
 `;
 export const SignInComment = styled(SignUpButton)`
-  .goLogin {
-    padding-left: 20px;
-    cursor: pointer;
-    color: blue;
-    text-decoration: underline;
-    &:hover {
-      color: darkgray;
-    }
   }
 `;
 export const EmailButton = styled.div`
   display: flex;
   margin-top: 30px;
+`;
+export const GoLogin = styled.a`
+  padding-left: 20px;
+  cursor: pointer;
+  color: blue;
+  text-decoration: underline;
+  &:hover {
+    color: lightskyblue;
+  }
 `;
