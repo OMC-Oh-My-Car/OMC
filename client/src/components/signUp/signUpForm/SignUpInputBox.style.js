@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const InputContainer = styled.div`
   width: 350px;
   height: 80px;
+  margin-bottom: 10px;
   .inputLabel {
     height: 30px;
     display: flex;
