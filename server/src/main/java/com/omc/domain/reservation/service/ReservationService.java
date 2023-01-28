@@ -139,7 +139,7 @@ public class ReservationService {
         }
 
         // 취소 사유 생성
-        reservation.setIsCancelOn(cancelService.createCancel(request, reservation));
+        reservation.setIsCancelOn(cancelService.createCancel(request, reservation, member));
         reservationRepository.save(reservation);
     }
 

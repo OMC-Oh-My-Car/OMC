@@ -1,5 +1,6 @@
 package com.omc.domain.cancel.service;
 
+import com.omc.domain.member.entity.Member;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,10 +21,11 @@ public class CancelService {
     }
 
     @Transactional
-    public Cancel createCancel(CancelDto.Request request, Reservation reservation) {
+    public Cancel createCancel(CancelDto.Request request, Reservation reservation, Member member) {
         Cancel cancel = Cancel.builder()
                 .reservation(reservation)
                 .reason(request.getCancelReason())
+                .member(member)
                 .build();
 
         cancelRepository.save(cancel);
