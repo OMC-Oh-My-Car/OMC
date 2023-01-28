@@ -1,26 +1,7 @@
-import { useState } from 'react';
 import { SellerProductAddImageArea } from './SellerProductAddImage.style';
 import upload from '../../assets/images/imageUpload.png';
 
-const SellerProductAddImage = () => {
-  const [showImages, setShowImages] = useState([]);
-
-  const handleAddImages = (event) => {
-    const imageLists = event.target.files;
-    let imageUrlLists = [...showImages];
-
-    for (let i = 0; i < imageLists.length; i++) {
-      const currentImageUrl = URL.createObjectURL(imageLists[i]);
-      imageUrlLists.push(currentImageUrl);
-    }
-
-    if (imageUrlLists.length > 10) {
-      imageUrlLists = imageUrlLists.slice(0, 10);
-    }
-    console.log(imageUrlLists);
-    setShowImages(imageUrlLists);
-  };
-
+const SellerProductAddImage = ({ showImages, handleAddImages }) => {
   return (
     <>
       <SellerProductAddImageArea>
