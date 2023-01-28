@@ -97,8 +97,9 @@ public class ReservationController {
     // @PreAuthorize("isAuthenticated()")
     @PatchMapping(value = "/cancel/{reservationId}", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> cancelReservation(@PathVariable long reservationId,
-                                               @RequestBody CancelDto.Request request) {
-        reservationService.cancelReservation(reservationId, request);
+                                               @RequestBody CancelDto.Request request,
+                                               @CurrentMember Member member) {
+        reservationService.cancelReservation(reservationId, request, member);
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }

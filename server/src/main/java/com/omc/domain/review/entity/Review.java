@@ -1,12 +1,11 @@
 package com.omc.domain.review.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import com.omc.domain.member.entity.Member;
+import com.omc.domain.member.service.MemberService;
 import org.hibernate.annotations.DynamicInsert;
 
 import com.omc.domain.reservation.entity.Reservation;
@@ -26,7 +25,8 @@ public class Review extends BaseEntity {
     private Reservation reservation;
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    private Product product;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member member;
     @Column(columnDefinition = "TEXT", nullable = false)
     @NotBlank
     private String content;
@@ -49,9 +49,10 @@ public class Review extends BaseEntity {
     @Builder
     public Review(Reservation reservation,
 //                  Product product,
-                  String content, Double totalStar,
+                  Member member, String content, Double totalStar,
                   Double starCleanliness, Double starAccuracy, Double starLocation, Double starCostEffective) {
         this.reservation = reservation;
+        this.member = member;
 //        this.product = product;
         this.content = content;
         this.totalStar = totalStar;

@@ -2,6 +2,8 @@ package com.omc.domain.review.api;
 
 import java.util.List;
 
+import com.omc.domain.member.entity.Member;
+import com.omc.global.common.annotation.CurrentMember;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,24 +35,26 @@ public class ReviewController {
 
     // @PreAuthorize("isAuthenticated()")
     @PostMapping(value = "/{reservationId}", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> createReview(@RequestBody ReviewDto.Request request, @PathVariable long reservationId) {
-        reviewService.createReview(request, reservationId);
+    public ResponseEntity<?> createReview(@RequestBody ReviewDto.Request request, @PathVariable long reservationId,
+                                          @CurrentMember Member member) {
+        reviewService.createReview(request, reservationId, member);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     // @PreAuthorize("isAuthenticated()")
     @PatchMapping(value = "/{reviewId}", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> modifyReview(@RequestBody ReviewDto.Request request, @PathVariable long reviewId) {
-        reviewService.modifyReview(request, reviewId);
+    public ResponseEntity<?> modifyReview(@RequestBody ReviewDto.Request request, @PathVariable long reviewId,
+                                          @CurrentMember Member member) {
+        reviewService.modifyReview(request, reviewId, member);
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     // @PreAuthorize("isAuthenticated()")
     @DeleteMapping(value = "/{reviewId}")
-    public ResponseEntity<?> deleteReview(@PathVariable long reviewId) {
-        reviewService.deleteReview(reviewId);
+    public ResponseEntity<?> deleteReview(@PathVariable long reviewId, @CurrentMember Member member) {
+        reviewService.deleteReview(reviewId, member);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

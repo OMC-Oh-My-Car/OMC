@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.omc.domain.member.entity.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,7 +32,7 @@ public class ReviewService {
     DecimalFormat decimalFormat = new DecimalFormat("0.0"); // 소수 1자리 변환
 
     @Transactional
-    public void createReview(ReviewDto.Request request, long reservationId) {
+    public void createReview(ReviewDto.Request request, long reservationId, Member member) {
         Reservation reservation = reservationService.findById(reservationId);
 
         if (reservation.getIsCancel() == 1) {
@@ -50,6 +51,7 @@ public class ReviewService {
 
         Review review = Review.builder()
                 .reservation(reservation)
+                .member(member)
 //                .product(reservation.getProduct())
                 .content(request.getContent())
                 .totalStar(toStarPoint(request.getTotalStar()))
@@ -69,14 +71,17 @@ public class ReviewService {
     }
 
     @Transactional
-    public void modifyReview(ReviewDto.Request request, long reviewId) {
+    public void modifyReview(ReviewDto.Request request, long reviewId, Member member) {
         // 리뷰 있는지 조회
-        // 요청자와 작성자 동일한지 확인 필요
-
         Review review = findById(reviewId);
 
         if (review == null) {
             throw new BusinessException(ErrorCode.REVIEW_NOT_FOUND);
+        }
+
+        // 작성자 동일한지 조회
+        if (review.getMember().getId() != member.getId()) {
+            throw new BusinessException(ErrorCode.NO_PERMISSION);
         }
 
         review.modify(request.getContent(), request.getTotalStar(), request.getStarCleanliness(), request.getStarAccuracy(),
@@ -106,11 +111,17 @@ public class ReviewService {
     }
 
     @Transactional
-    public void deleteReview(long reviewId) {
+    public void deleteReview(long reviewId, Member member) {
         Review review = reviewRepository.findById(reviewId).orElse(null);
         if (review == null) {
             throw new BusinessException(ErrorCode.REVIEW_NOT_FOUND);
         }
+
+        // 작성자 동일한지 조회
+        if (review.getMember().getId() != member.getId()) {
+            throw new BusinessException(ErrorCode.NO_PERMISSION);
+        }
+
         review.getReservation().deleteReview();
         reviewRepository.delete(review);
     }

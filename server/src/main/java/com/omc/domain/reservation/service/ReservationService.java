@@ -6,6 +6,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.omc.domain.member.service.MemberService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ReservationService {
     private final ReservationRepository reservationRepository;
-    private final ProductService productService;
+    private final MemberService memberService;
     private final CancelService cancelService;
     private final ProductRepository productRepository;
 
@@ -66,9 +67,7 @@ public class ReservationService {
 
         Reservation reservation = Reservation.builder()
                 .member(member)
-                //회원정보, 결제상태 추가해야함
                 .product(product)
-//                .seller(product.getSeller())
                 .checkIn(resCheckIn)
                 .checkOut(resCheckOut)
                 .phoneNumber(request.getPhoneNumber())
@@ -129,11 +128,16 @@ public class ReservationService {
     }
 
     @Transactional
-    public void cancelReservation(long reservationId, CancelDto.Request request) {
+    public void cancelReservation(long reservationId, CancelDto.Request request, Member member) {
         Reservation reservation = findById(reservationId);
         if (reservation == null) {
             throw new BusinessException(ErrorCode.RESERVATION_NOT_FOUND);
         }
+
+        if (reservation.getMember().getId() != member.getId()){
+            throw new BusinessException(ErrorCode.NO_PERMISSION);
+        }
+
         // 취소 사유 생성
         reservation.setIsCancelOn(cancelService.createCancel(request, reservation));
         reservationRepository.save(reservation);
