@@ -104,6 +104,10 @@ const SellerProductAddPage = () => {
           <SellerProductAddPostCode address={address} zipCode={zipCode} postCodeHandler={postCodeHandler} />
           <SellerProductAddPrice price={price} handlePrice={handlePrice} />
           <SellerProductAddTag tags={tags} addTags={addTags} removeTags={removeTags} />
+          <div className="button">
+            <button className="red">취소하기</button>
+            <button>등록하기</button>
+          </div>
         </MainContainer>
       </Container>
     </>
