@@ -8,14 +8,36 @@ import UserReservationPage from '../pages/UserReservationPage';
 import SellerProductListPage from '../pages/SellerProductListPage';
 import SellerReservationPage from '../pages/SellerReservationPage';
 import SellerProductAddPage from '../pages/SellerProductAddPage';
+import Modal from '../components/modal/Modal';
+import { useSelector, useDispatch } from 'react-redux';
+import { openModal, closeModal } from '../redux/slice/ModalSlice';
 
-export default function Router() {
+const Router = () => {
+  const onModal = useSelector((state) => state.modal.onModal);
+  console.log(onModal);
+  const dispatch = useDispatch();
+
+  const closeModalController = () => {
+    dispatch(closeModal());
+  };
+  const openModalController = (type) => {
+    dispatch(openModal(type));
+  };
+
   return (
     <>
       <BrowserRouter>
         <Routes>
           <Route index element={<ProductListPage />} />
-          <Route path="/product/:id" element={<ProductDetailPage />} />
+          <Route
+            path="/product/:id"
+            element={
+              <ProductDetailPage
+                closeModalController={closeModalController}
+                openModalController={openModalController}
+              />
+            }
+          />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/user/:id/reservation" element={<UserReservationPage />} />
           <Route path="/seller/:id/product" element={<SellerProductListPage />} />
@@ -23,7 +45,10 @@ export default function Router() {
           <Route path="/seller/:id/product/:id/edit" element={<SellerProductListPage />} />
           <Route path="/seller/:id/product/:id/reservation" element={<SellerReservationPage />} />
         </Routes>
+        {onModal && <Modal />}
       </BrowserRouter>
     </>
   );
-}
+};
+
+export default Router;
