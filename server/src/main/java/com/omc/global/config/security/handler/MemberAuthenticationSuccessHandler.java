@@ -30,7 +30,7 @@ public class MemberAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         // RefreshToken 저장
         RefreshToken refresh = RefreshToken.builder()
-                .key(authMember.getEmail())
+                .key(authMember.getMember().getEmail())
                 .value(refreshToken)
                 .build();
 

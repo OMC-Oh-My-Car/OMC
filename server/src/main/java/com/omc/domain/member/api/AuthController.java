@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/member")
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin(origins = "*", allowedHeaders = "*", exposedHeaders = "Authorization, Set-Cookie")
+@CrossOrigin(origins = "*", allowedHeaders = "*", exposedHeaders = "*")
 public class AuthController {
     private final AuthMemberService authService;
 
@@ -55,10 +55,10 @@ public class AuthController {
 //        return ResponseEntity.status(HttpStatus.CREATED).body(newMember);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<TokenDto> login(@RequestBody LoginDto loginDto, HttpServletResponse response) {
-        return ResponseEntity.ok(authService.login(loginDto, response));
-    }
+//    @PostMapping("/login")
+//    public ResponseEntity<TokenDto> login(@RequestBody LoginDto loginDto, HttpServletResponse response) {
+//        return ResponseEntity.ok(authService.login(loginDto, response));
+//    }
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@CookieValue(value = "refreshToken", required = false) String refreshToken, HttpServletResponse response) {

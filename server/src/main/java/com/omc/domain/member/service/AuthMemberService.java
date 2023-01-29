@@ -96,7 +96,7 @@ public class AuthMemberService {
         // 회원탈퇴 및 로그인 처리를 위해 사용.
         // cookie의 refreshToken값과 비교하여 없을 경우 로그아웃 및 회원탈퇴 처리에 이용
         response.setHeader("Set-Cookie", cookie.toString());
-
+//        response.setHeader("Set-Cookie", tokenDto.getRefreshToken());
         // TokenDto의 accessToken을 Header의 Authorization이름으로 넣어줌
         response.setHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
 

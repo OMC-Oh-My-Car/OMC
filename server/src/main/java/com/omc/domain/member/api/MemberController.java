@@ -4,6 +4,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import com.omc.domain.member.entity.AuthMember;
+import com.omc.global.common.annotation.CurrentMember;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -67,14 +69,12 @@ public class MemberController {
     }
 
     @GetMapping("/detail")
-    public ResponseEntity<MemberResponseDto> findMemberInfoByEmail() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null || authentication.getName() == null) {
+    public ResponseEntity<MemberResponseDto> findMemberInfoByEmail(@CurrentMember AuthMember member) {
+        if (member == null || member.getUsername() == null) {
             throw  new RuntimeException("Security Context 에 인증 정보가 없습니다.");
         }
 
-        return ResponseEntity.ok(memberService.findByEmail(authentication.getName()).map(MemberResponseDto::of).orElseThrow(() -> new RuntimeException("로그인 유저 정보 없음")));
+        return ResponseEntity.ok(memberService.findByEmail(member.getUsername()).map(MemberResponseDto::of).orElseThrow(() -> new RuntimeException("로그인 유저 정보 없음")));
     }
 
     @PostMapping("/confirm/mail")
