@@ -15,9 +15,10 @@ import javax.persistence.OneToMany;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
-import com.omc.domain.img.entity.Img;
+import com.omc.domain.img.entity.ProductImg;
 import com.omc.domain.member.entity.Member;
 import com.omc.domain.product.dto.ProductDto;
+import com.omc.domain.report.entity.Report;
 import com.omc.global.common.BaseEntity;
 
 import lombok.AllArgsConstructor;
@@ -73,7 +74,7 @@ public class Product extends BaseEntity {
 	private Long isStop;
 
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-	private List<Img> imgList = new ArrayList<>();
+	private List<ProductImg> productImgList = new ArrayList<>();
 
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Facilities> facilities = new ArrayList<>();
@@ -91,15 +92,18 @@ public class Product extends BaseEntity {
 	@OneToMany(mappedBy = "product")
 	private List<LikeHistory> likeHistories = new ArrayList<>();
 
+	@OneToMany(mappedBy = "product", orphanRemoval = true)
+	private List<Report> reports = new ArrayList<>();
+
 	@Builder
-	public Product(String subject, String description, List<Img> imgList, String address, String zipcode,
+	public Product(String subject, String description, List<ProductImg> productImgList, String address, String zipcode,
 				   Long reportCount, String telephone, Long count, Long price, Double star, String checkIn,
 				   String checkOut, Long likes, Long isStop, Member member) {
 		this.subject = subject;
 		this.description = description;
-		this.imgList = imgList;
-		for (Img img : imgList) {
-			img.setProduct(this);
+		this.productImgList = productImgList;
+		for (ProductImg productImg : productImgList) {
+			productImg.setProduct(this);
 		}
 		this.address = address;
 		this.zipcode = zipcode;
@@ -134,10 +138,10 @@ public class Product extends BaseEntity {
 				.ifPresent(checkOut -> this.checkOut = checkOut);
 	}
 
-	public void setImgList(List<Img> imgs) {
-		this.imgList = imgs;
-		for (Img img : imgs) {
-			img.setProduct(this);
+	public void setProductImgList(List<ProductImg> productImgs) {
+		this.productImgList = productImgs;
+		for (ProductImg productImg : productImgs) {
+			productImg.setProduct(this);
 		}
 	}
 

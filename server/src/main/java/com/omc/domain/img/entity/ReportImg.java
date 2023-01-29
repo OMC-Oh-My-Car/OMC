@@ -6,7 +6,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.omc.domain.product.entity.Product;
+import com.omc.domain.report.entity.Report;
 import com.omc.global.common.BaseEntity;
 
 import lombok.Builder;
@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @Entity
-public class Img extends BaseEntity {
+public class ReportImg extends BaseEntity {
 
 	@Column(nullable = false)
 	private String imgUrl;
@@ -26,16 +26,17 @@ public class Img extends BaseEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn
-	private Product product;
+	private Report report;
 
 	@Builder
-	public Img(String imgUrl, Product product, String imgName) {
+	public ReportImg(String imgUrl, Report report, String imgName) {
 		this.imgUrl = imgUrl;
-		this.product = product;
+		this.report = report;
 		this.imgName = imgName;
 	}
 
-	public void setProduct(Product product) {
-		this.product = product;
+	public void setReport(Report report) {
+		this.report = report;
 	}
+
 }

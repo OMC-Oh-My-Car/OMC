@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.omc.domain.img.dto.ImgDto;
-import com.omc.domain.img.entity.Img;
+import com.omc.domain.img.entity.ProductImg;
 import com.omc.domain.img.repository.ImgRepository;
 import com.omc.domain.member.entity.Member;
 import com.omc.domain.member.entity.UserRole;
@@ -70,12 +70,12 @@ public class ProductService {
 		log.info("multipartFile imgs={}", multipartFiles);
 		String address = req.getAddress();
 
-		List<Img> imgList = uploadImgAndImgDtoToEntity(multipartFiles);
+		List<ProductImg> productImgList = uploadImgAndImgDtoToEntity(multipartFiles);
 
 		Product product = Product.builder()
 								 .subject(req.getSubject())
 								 .description(req.getDescription())
-								 .imgList(imgList)
+								 .productImgList(productImgList)
 								 .address(address)
 								 .zipcode(req.getZipcode())
 								 .price(req.getPrice())
@@ -120,10 +120,10 @@ public class ProductService {
 		}
 
 		if (multipartFiles != null) {
-			findProduct.getImgList().stream().map(Img::getImgName).forEach(s3Service::deleteFile);
+			findProduct.getProductImgList().stream().map(ProductImg::getImgName).forEach(s3Service::deleteFile);
 			imgRepository.deleteByProductId(productId);
-			List<Img> imgs = uploadImgAndImgDtoToEntity(multipartFiles);
-			findProduct.setImgList(imgs);
+			List<ProductImg> productImgs = uploadImgAndImgDtoToEntity(multipartFiles);
+			findProduct.setProductImgList(productImgs);
 		}
 
 		productRepository.save(findProduct);
@@ -261,7 +261,7 @@ public class ProductService {
 	@Transactional
 	public void delete(Long productId) {
 		Product findProduct = ifExistReturnProduct(productId);
-		findProduct.getImgList().stream().map(Img::getImgName).forEach(s3Service::deleteFile);
+		findProduct.getProductImgList().stream().map(ProductImg::getImgName).forEach(s3Service::deleteFile);
 		productRepository.delete(findProduct);
 	}
 
@@ -346,7 +346,7 @@ public class ProductService {
 	 */
 	private List<String> getImgs(Long productId) {
 		return imgRepository.findAllByProductId(productId).stream()
-							.map(Img::getImgUrl)
+							.map(ProductImg::getImgUrl)
 							.map(s -> "value\":\"" + s)
 							.toList();
 	}
@@ -380,16 +380,16 @@ public class ProductService {
 	/**
 	 * ImgDto를 Img로 변환
 	 *
-	 * @param imgList    : Img 리스트
+	 * @param productImgList    : ProductImg 리스트
 	 * @param imgDtoList : ImgDto 리스트
 	 */
-	private static void imgDtoToImg(List<Img> imgList, List<ImgDto.Request> imgDtoList) {
+	private static void imgDtoToImg(List<ProductImg> productImgList, List<ImgDto.Request> imgDtoList) {
 		for (ImgDto.Request imgDto : imgDtoList) {
-			Img img = Img.builder()
-						 .imgName(imgDto.getImgName())
-						 .imgUrl(imgDto.getImgUrl())
-						 .build();
-			imgList.add(img);
+			ProductImg productImg = ProductImg.builder()
+											  .imgName(imgDto.getImgName())
+											  .imgUrl(imgDto.getImgUrl())
+											  .build();
+			productImgList.add(productImg);
 		}
 	}
 
@@ -399,17 +399,17 @@ public class ProductService {
 	 * @param multipartFiles : 상품 이미지
 	 * @return : 이미지 리스트
 	 */
-	private List<Img> uploadImgAndImgDtoToEntity(List<MultipartFile> multipartFiles) {
-		List<Img> imgList = new ArrayList<>();
+	private List<ProductImg> uploadImgAndImgDtoToEntity(List<MultipartFile> multipartFiles) {
+		List<ProductImg> productImgList = new ArrayList<>();
 		List<ImgDto.Request> imgDtoList = new ArrayList<>();
 
 		for (MultipartFile img : multipartFiles) {
 			ImgDto.Request imgDto = s3Service.uploadImage(img, "product");
 			imgDtoList.add(imgDto);
 		}
-		imgDtoToImg(imgList, imgDtoList);
+		imgDtoToImg(productImgList, imgDtoList);
 
-		return imgList;
+		return productImgList;
 	}
 
 	/**
@@ -476,7 +476,7 @@ public class ProductService {
 	 * @param productId : 상품 id
 	 * @return : 상품
 	 */
-	private Product ifExistReturnProduct(Long productId) {
+	public Product ifExistReturnProduct(Long productId) {
 		return productRepository.findById(productId)
 								.orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
 	}

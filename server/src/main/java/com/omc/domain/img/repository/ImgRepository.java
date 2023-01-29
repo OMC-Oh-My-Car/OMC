@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.omc.domain.img.entity.Img;
+import com.omc.domain.img.entity.ProductImg;
 
-public interface ImgRepository extends JpaRepository<Img, Long> {
+public interface ImgRepository extends JpaRepository<ProductImg, Long> {
 
 	void deleteByProductId(Long productId);
 
-	List<Img> findAllByProductId(Long productId);
+	List<ProductImg> findAllByProductId(Long productId);
 }
