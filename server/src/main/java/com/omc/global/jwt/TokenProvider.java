@@ -69,7 +69,7 @@ public class TokenProvider {
         Date refreshTokenExpiresIn = getTokenExpiration(REFRESH_TOKEN_EXPIRE_TIME);
 
         String accessToken = Jwts.builder()
-                .setSubject(authMember.getMember().getEmail())
+                .setSubject(authMember.getEmail())
                 .setClaims(claims)
                 .setExpiration(accessTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS512)

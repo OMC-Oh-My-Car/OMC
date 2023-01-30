@@ -14,7 +14,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,28 +37,31 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
                                                 HttpServletResponse response) throws AuthenticationException {
-        log.debug("start AuthenticationFilter");
+        log.debug("AuthenticationFilter 시작");
         ObjectMapper om = new ObjectMapper();
-//        SignUpRequestDto signUpRequest = om.readValue(request.getInputStream(), SignUpRequestDto.class);
+
+        // Request의 Login 정보 가져옴
         LoginDto loginDto = om.readValue(request.getInputStream(), LoginDto.class);
         log.debug("Email : " + loginDto.getEmail() + ", Password : " + loginDto.getPassword());
 
+        // Authentication을 위한 Token 생성
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
-
         log.info("JwtAuthenticationFilter : authenticationToken 생성완료");
 
+        // Token을 사용하여 Authentication 사용
         Authentication authentication = authenticationManager.authenticate(authenticationToken);
 
+        // Authentication 되어있는 principal을 가져와 정보 확인
         AuthMember customUserDetails = (AuthMember) authentication.getPrincipal();
-        log.debug("Authentication : " + customUserDetails.getMember().getEmail());
+        log.debug("Authentication : " + customUserDetails.getEmail());
 
+        // Authentication 되었으면 Login
         if (authentication.isAuthenticated()) {
             log.debug("success");
         } else {
             log.debug("failed");
         }
-
 
         return authentication;
     }
@@ -70,7 +72,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
 
-        log.debug("response : " + response.getHeaderNames());
         log.debug("successfulAuthentication 실행");
         AuthMember authMember = (AuthMember) authResult.getPrincipal();
         log.debug("authMember : " + authMember.getUsername());
@@ -100,20 +101,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
         log.debug("AccessToken Header 설정");
 
-        log.debug("Authorization : " + response.getHeader("Authorization"));
-
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
+        log.debug("response : " + response.getHeaderNames());
 
         response.getWriter().write(
                 "{" +
-                        "\"email\":\"" + authMember.getMember().getEmail() + "\","
-                        +  "\"username\":\"" + authMember.getMember().getUsername() + "\","
-                        + "\"nickname\":\"" + authMember.getMember().getNickname() + "\"" +
+                        "\"email\":\"" + authMember.getEmail() + "\","
+                        +  "\"username\":\"" + authMember.getUsername() + "\","
+                        + "\"nickname\":\"" + authMember.getNickname() + "\"" +
                         "}"
         );
-        log.debug("getWriter 실행");
-
-        this.getSuccessHandler().onAuthenticationSuccess(request, response, authResult);
     }
 }

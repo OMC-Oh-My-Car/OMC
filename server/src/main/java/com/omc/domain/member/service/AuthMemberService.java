@@ -2,7 +2,9 @@ package com.omc.domain.member.service;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.omc.domain.member.entity.AuthMember;
 import org.springframework.http.ResponseCookie;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -27,6 +29,8 @@ import com.omc.global.jwt.TokenProvider;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
@@ -78,9 +82,11 @@ public class AuthMemberService {
         return memberRepository.save(member).toResponseDto();
     }
 
-    public TokenDto login(LoginDto loginDto, HttpServletResponse response) {
+    public TokenDto login(LoginDto loginDto, HttpServletResponse response) throws IOException {
         UsernamePasswordAuthenticationToken authenticationToken = loginDto.toAuthentication();
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        AuthMember authMember = (AuthMember) authentication.getPrincipal();
 
         TokenDto tokenDto = tokenProvider.generateTokenWithAuthentication(authentication);
 
@@ -99,6 +105,17 @@ public class AuthMemberService {
 //        response.setHeader("Set-Cookie", tokenDto.getRefreshToken());
         // TokenDto의 accessToken을 Header의 Authorization이름으로 넣어줌
         response.setHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
+
+        // *
+        // *
+        // example
+//        response.getWriter().write(
+//                "{" +
+//                        "\"email\":\"" + authMember.getMember().getEmail() + "\","
+//                        +  "\"username\":\"" + authMember.getMember().getUsername() + "\","
+//                        + "\"nickname\":\"" + authMember.getMember().getNickname() + "\"" +
+//                        "}"
+//        );
 
         RefreshToken refreshToken = RefreshToken.builder()
                 .key(loginDto.getEmail())

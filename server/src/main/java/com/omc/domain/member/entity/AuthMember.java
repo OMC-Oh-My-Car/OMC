@@ -15,25 +15,22 @@ import lombok.Getter;
 @Setter
 @AllArgsConstructor
 @Slf4j
-public class AuthMember implements UserDetails {
-    private Member member;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(() -> String.valueOf(member.getUserRole()));
-        log.debug("UserRole : " + member.getUserRole());
-        return authorities;
+public class AuthMember extends Member implements UserDetails {
+    public AuthMember(Member member) {
+        setUsername(member.getUsername());
+        setEmail(member.getEmail());
+        setPassword(member.getPassword());
+        setUserRole(member.getUserRole());
     }
 
     @Override
-    public String getPassword() {
-        return member.getPassword();
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
     }
 
     @Override
     public String getUsername() {
-        return member.getEmail();
+        return getEmail();
     }
 
     @Override

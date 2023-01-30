@@ -19,8 +19,8 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import com.omc.global.config.security.handler.OAuth2AuthenticationSuccessHandler;
 import com.omc.global.config.security.service.OAuth2UserService;
-import com.omc.global.jwt.JwtAccessDeniedHandler;
-import com.omc.global.jwt.JwtAuthenticationEntryPoint;
+import com.omc.global.jwt.handler.JwtAccessDeniedHandler;
+import com.omc.global.jwt.handler.JwtAuthenticationEntryPoint;
 import com.omc.global.jwt.TokenProvider;
 
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 @Configuration
@@ -52,7 +51,7 @@ public class SecurityConfig {
                 .csrf(
                         csrf -> csrf.disable()
                 )
-                .cors()
+                .cors().configurationSource(corsConfigurationSource())
                 .and()// 타 도메인 호출 가능
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
@@ -99,17 +98,16 @@ public class SecurityConfig {
     }
 
     @Bean
-    CorsConfigurationSource corsConfigurationSource() {
+    public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 //        configuration.addAllowedOrigin(FRONT_LOCAL);
 //        configuration.addAllowedOrigin(FRONT_REMOTE);
 //        configuration.addAllowedOrigin(FRONT_REMOTE_HTTPS);
 //        configuration.addAllowedOrigin(DOMAIN);
-        configuration.setAllowedOrigins(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("DELETE", "GET", "POST", "PUT"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
-        configuration.addExposedHeader("Authorization");
-        configuration.addExposedHeader("Set-Cookie");
+        configuration.addAllowedOrigin("*");
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Set-Cookie", "X-Requested-With", "Authorization", "Content-Type", "Content-Length", "Cache-Control"));
+        configuration.addAllowedMethod("*");
+        configuration.setExposedHeaders(Arrays.asList("Authorization", "Set-Cookie"));
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
