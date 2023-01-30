@@ -5,10 +5,12 @@ import java.util.Optional;
 import java.util.Random;
 
 import com.omc.domain.member.dto.*;
+import com.omc.domain.member.entity.AuthMember;
 import com.omc.domain.member.entity.RefreshToken;
 import com.omc.domain.member.exception.DuplicateNickname;
 import com.omc.domain.member.exception.DuplicateUsername;
 import com.omc.domain.member.repository.RefreshTokenRepository;
+import com.omc.global.common.annotation.CurrentMember;
 import com.omc.global.error.ErrorCode;
 import com.omc.global.error.exception.BusinessException;
 import com.omc.global.jwt.TokenProvider;
@@ -28,6 +30,7 @@ import com.omc.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Service
@@ -126,13 +129,14 @@ public class MemberService {
 //        return tokenDto;
 //    }
 
-    public ReissueResponse reissue(String accessToken, HttpServletResponse response) {
-        Authentication authentication = tokenProvider.getAuthentication(accessToken);
-        Claims claims = tokenProvider.getClaims(accessToken);
-//        log.debug("email : " + authentication.getName());
-
-        RefreshToken refreshToken = refreshTokenRepository.findByKey((String) claims.get("email"))
+    public ReissueResponse reissue(AuthMember member, HttpServletRequest request, HttpServletResponse response) {
+        RefreshToken refreshToken = refreshTokenRepository.findByKey(member.getEmail())
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXISTS_AUTHORIZATION));
+
+        // Request된 Header의 refreshtoken 값과 비교하여 분류
+        if (!request.getHeader("Set-Cookie").equals(refreshToken.getValue())) {
+            throw new BusinessException(ErrorCode.NOT_MATCH_REFRESH_TOKEN);
+        }
 
         String savedRefreshToken = refreshToken.getValue();
         log.debug("refreshToken : " + savedRefreshToken);
@@ -141,9 +145,7 @@ public class MemberService {
             throw new BusinessException(ErrorCode.NOT_MATCH_REFRESH_TOKEN);
         }
 
-        Member member = memberRepository.findByEmail(authentication.getName()).orElseThrow(MemberNotFoundException::new);
-
-        TokenDto tokenDto = tokenProvider.generateTokenWithAuthentication(authentication);
+        TokenDto tokenDto = tokenProvider.generateTokenWithAuthentication(member);
         String newRT = tokenDto.getRefreshToken();
         String newAT = tokenDto.getAccessToken();
 

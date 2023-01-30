@@ -76,7 +76,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         AuthMember authMember = (AuthMember) authResult.getPrincipal();
         log.debug("authMember : " + authMember.getUsername());
 
-        TokenDto tokenDto = tokenProvider.generateTokenWithAuthentication(authResult);
+        TokenDto tokenDto = tokenProvider.generateTokenWithAuthentication(authMember);
         log.debug("AccessToken : " + tokenDto.getAccessToken());
         log.debug("RefreshToken : " + tokenDto.getRefreshToken());
         String refreshToken = tokenDto.getRefreshToken();

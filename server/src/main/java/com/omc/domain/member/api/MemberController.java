@@ -43,7 +43,7 @@ public class MemberController {
         memberService.join(signUpRequestDto);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/login")
+                .path("/member/login")
                 .build()
                 .toUri();
 
@@ -73,16 +73,8 @@ public class MemberController {
     }
 
     @GetMapping("/reissue")
-    public ResponseEntity<ReissueResponse> reissue(HttpServletRequest request, HttpServletResponse response) {
-        String accessToken = request.getHeader("Authorization");
-
-        if (accessToken.startsWith("Bearer ")) {
-            accessToken = accessToken.substring(7);
-        }
-
-        log.debug("accessToken : " + accessToken);
-
-        ReissueResponse reissue = memberService.reissue(accessToken, response);
+    public ResponseEntity<ReissueResponse> reissue(@CurrentMember AuthMember authMember, HttpServletRequest request, HttpServletResponse response) {
+        ReissueResponse reissue = memberService.reissue(authMember, request, response);
         return new ResponseEntity<>(reissue, null, HttpStatus.CREATED);
     }
 
