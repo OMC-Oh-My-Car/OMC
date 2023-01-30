@@ -45,7 +45,7 @@ const Router = () => {
           <Route path="/seller/:id/product/:id/edit" element={<SellerProductListPage />} />
           <Route path="/seller/:id/product/:id/reservation" element={<SellerReservationPage />} />
         </Routes>
-        {onModal && <Modal />}
+        {onModal && <Modal closeModalController={closeModalController} />}
       </BrowserRouter>
     </>
   );

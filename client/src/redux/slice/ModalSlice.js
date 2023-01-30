@@ -2,8 +2,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  onModal: false,
-  type: '',
+  onModal: true,
+  type: 'content',
+  width: '700px',
+  height: '800px',
 };
 
 export const modalSlice = createSlice({
@@ -15,6 +17,8 @@ export const modalSlice = createSlice({
         ...state,
         onModal: true,
         type: payload.type,
+        width: payload.width,
+        height: payload.height,
       };
     },
     closeModal: (state) => {
@@ -22,6 +26,8 @@ export const modalSlice = createSlice({
         ...state,
         onModal: false,
         type: '',
+        width: '0px',
+        height: '0px',
       };
     },
   },
