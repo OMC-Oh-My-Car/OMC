@@ -18,10 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.omc.domain.member.dto.LoginDto;
 import com.omc.domain.member.dto.MemberResponseDto;
 import com.omc.domain.member.dto.SignUpRequestDto;
-import com.omc.domain.member.dto.TokenDto;
 import com.omc.domain.member.exception.MemberNotFoundException;
 import com.omc.domain.member.service.AuthMemberService;
 

@@ -108,7 +108,7 @@ public class SecurityConfig {
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Set-Cookie", "X-Requested-With", "Authorization", "Content-Type", "Content-Length", "Cache-Control"));
         configuration.addAllowedMethod("*");
         configuration.setExposedHeaders(Arrays.asList("Authorization", "Set-Cookie"));
-        configuration.setAllowCredentials(true);
+        configuration.setAllowCredentials(false);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
