@@ -177,7 +177,17 @@ public class MemberService {
     }
 
     public void delete(String email) {
+        // 회원 존재 파악
+        if (!memberRepository.existsByEmail(email)) {
+            throw new BusinessException(ErrorCode.MEMBER_NOT_EXISTS);
+        }
 
+        RefreshToken refreshToken = refreshTokenRepository.findByKey(email).orElse(null);
+
+        // refreshToken 존재 및 유효성 분류
+        if (refreshToken != null && !tokenProvider.validateToken(refreshToken.getValue())) {
+            throw new BusinessException(ErrorCode.NOT_VALID_TOKEN);
+        }
 
         memberRepository.deleteByEmail(email);
         refreshTokenRepository.deleteByKey(email);
