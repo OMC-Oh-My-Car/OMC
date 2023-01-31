@@ -3,7 +3,7 @@ import { ProductInfoArea } from './ProductInfo.style';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ProductReservation from './ProductReservation';
-const ProductInfo = () => {
+const ProductInfo = ({ openModalController }) => {
   return (
     <>
       <ProductInfoArea>
@@ -29,6 +29,9 @@ const ProductInfo = () => {
               모든시설물은 모든시설물은 모든시설물은 사용가능합니다 기타 주의사항 체크인ㅡ오후3시이며
               체크아웃ㅡ오전11시입니다 애완견 하셔야합니다~
             </span>
+            <button className="more" onClick={openModalController()}>
+              내용 더 보기
+            </button>
           </div>
           <div className="facilities">
             <h2>숙소 편의시설</h2>

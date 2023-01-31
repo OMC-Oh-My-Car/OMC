@@ -2,7 +2,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  onModal: true,
+  onModal: false,
   type: 'content',
   width: '700px',
   height: '800px',
@@ -16,9 +16,9 @@ export const modalSlice = createSlice({
       return {
         ...state,
         onModal: true,
-        type: payload.type,
-        width: payload.width,
-        height: payload.height,
+        type: payload.payload.type,
+        width: payload.payload.width,
+        height: payload.payload.height,
       };
     },
     closeModal: (state) => {

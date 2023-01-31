@@ -29,15 +29,7 @@ const Router = () => {
       <BrowserRouter>
         <Routes>
           <Route index element={<ProductListPage />} />
-          <Route
-            path="/product/:id"
-            element={
-              <ProductDetailPage
-                closeModalController={closeModalController}
-                openModalController={openModalController}
-              />
-            }
-          />
+          <Route path="/product/:id" element={<ProductDetailPage openModalController={openModalController} />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/user/:id/reservation" element={<UserReservationPage />} />
           <Route path="/seller/:id/product" element={<SellerProductListPage />} />

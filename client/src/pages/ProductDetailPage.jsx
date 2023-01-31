@@ -6,14 +6,16 @@ import ProductInfo from '../components/productDetail/ProductInfo';
 import ProductReview from '../components/productDetail/ProductReview';
 import ProductMap from '../components/productDetail/ProductMap';
 
-const ProductDetailPage = () => {
+const ProductDetailPage = ({ openModalController }) => {
   return (
     <>
       <Container>
         <Header type="short" />
         <MainContainer>
           <ProductImage />
-          <ProductInfo />
+          <ProductInfo
+            openModalController={() => openModalController({ type: 'content', width: '700px', height: '800px' })}
+          />
           <ProductReview />
           <ProductMap />
         </MainContainer>
