@@ -9,6 +9,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import com.omc.domain.img.entity.ReportImg;
 import com.omc.domain.member.entity.Member;
 import com.omc.domain.product.entity.Product;
@@ -27,6 +29,7 @@ public class Report extends BaseEntity {
 
 	private String content;
 
+	@ColumnDefault("0")
 	private Long status; // 0: 신고완료, 1: 처리완료
 
 	@OneToMany(mappedBy = "report", cascade = CascadeType.ALL)
