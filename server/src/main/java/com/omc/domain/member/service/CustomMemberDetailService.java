@@ -1,41 +1,44 @@
 package com.omc.domain.member.service;
 
-import java.util.Collections;
+import com.omc.domain.member.entity.AuthMember;
+import com.omc.domain.member.exception.MemberNotFoundException;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Component;
 
 import com.omc.domain.member.entity.Member;
 import com.omc.domain.member.repository.MemberRepository;
 
-import lombok.RequiredArgsConstructor;
 
-@Service
-@RequiredArgsConstructor
+@Component
+@AllArgsConstructor
+@Slf4j
 public class CustomMemberDetailService implements UserDetailsService {
     private final MemberRepository memberRepository;
 
     @Override
-    @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return memberRepository.findByEmail(username)
-                .map(this::createUserDetails)
-                .orElseThrow(() -> new UsernameNotFoundException("유저 정보가 없습니다."));
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        log.debug("CustomMemberDetailService 실행");
+        Member member = memberRepository.findByEmail(email).orElse(null);
+
+        if (member == null) {
+            throw new MemberNotFoundException();
+        }
+
+        return new AuthMember(member);
     }
 
-    private UserDetails createUserDetails(Member member) {
-        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(member.getUserRole().toString());
-
-        return new User(
-            member.getEmail(),
-            member.getPassword(),
-            Collections.singleton(grantedAuthority)
-        );
-    }
+//    private UserDetails createUserDetails(Member member) {
+//        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(member.getUserRole().toString());
+//
+//        return new User(
+//            member.getEmail(),
+//            member.getPassword(),
+//            Collections.singleton(grantedAuthority)
+//        );
+//    }
 }

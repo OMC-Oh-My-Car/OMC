@@ -70,7 +70,7 @@ public class JwtFilter extends OncePerRequestFilter {
             return bearerToken.substring(7);
         }
 
-        return null;
+        return bearerToken;
     }
 }
 //        String token = request.getHeader("Authentication");
