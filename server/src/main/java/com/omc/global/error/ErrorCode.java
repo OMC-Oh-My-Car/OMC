@@ -33,6 +33,10 @@ public enum ErrorCode {
 	NOT_YET_CHECKIN(HttpStatus.BAD_REQUEST, "R-003", "체크인 이후부터 리뷰를 작성할 수 있습니다."),
 	CANCEL_CANT_WRITE(HttpStatus.BAD_REQUEST, "R-004", "환불한 상품은 리뷰를 작성할 수 없습니다."),
 
+	// 신고
+	REPORT_NOT_FOUND(HttpStatus.BAD_REQUEST, "R-005", "해당 신고가 존재하지 않습니다."),
+
+
 	// 이미지
 	IMAGE_NOT_FOUND(HttpStatus.BAD_REQUEST, "I-001", "이미지 파일이 존재하지 않습니다."),
 	WRONG_INPUT_IMAGE(HttpStatus.BAD_REQUEST, "I-002", "이미지 파일이 아닙니다."),
