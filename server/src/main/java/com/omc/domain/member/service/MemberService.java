@@ -7,6 +7,7 @@ import java.util.Random;
 import com.omc.domain.member.dto.*;
 import com.omc.domain.member.entity.AuthMember;
 import com.omc.domain.member.entity.RefreshToken;
+import com.omc.domain.member.entity.UserRole;
 import com.omc.domain.member.repository.RefreshTokenRepository;
 import com.omc.global.error.ErrorCode;
 import com.omc.global.error.exception.BusinessException;
@@ -59,6 +60,10 @@ public class MemberService {
         // encoding된 password를 사용한 build
         Member member = signUpRequestDto.encodePasswordSignUp(passwordEncoder);
 
+        // 관리자 전용 테스트 아이디 생성
+        if (signUpRequestDto.getEmail().equals("admin@omc.com")) {
+            member.setUserRole(UserRole.ROLE_ADMIN);
+        }
         // 객체형태의 Response Body 생성
         return memberRepository.save(member).toResponseDto();
     }
@@ -245,7 +250,7 @@ public class MemberService {
             return member.getEmail();
     }
 
-    public void adaptPassword(ModifyPasswordDto modifyPasswordDto, Member member) {
+    public void adaptPassword(ModifyPasswordDto modifyPasswordDto, AuthMember member) {
         if (member == null) {
             throw new BusinessException(ErrorCode.MEMBER_NOT_EXISTS);
         }
