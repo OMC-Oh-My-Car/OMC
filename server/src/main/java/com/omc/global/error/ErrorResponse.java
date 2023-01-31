@@ -2,6 +2,7 @@ package com.omc.global.error;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
@@ -15,18 +16,19 @@ public class ErrorResponse {
 	private String errorCode;
 	private String errorMessage;
 
+
 	public static ErrorResponse of(String errorCode, String errorMessage) {
 		return ErrorResponse.builder()
-			.errorCode(errorCode)
-			.errorMessage(errorMessage)
-			.build();
+							.errorCode(errorCode)
+							.errorMessage(errorMessage)
+							.build();
 	}
 
 	public static ErrorResponse of(String errorCode, BindingResult bindingResult) {
 		return ErrorResponse.builder()
-			.errorCode(errorCode)
-			.errorMessage(createErrorMessage(bindingResult))
-			.build();
+							.errorCode(errorCode)
+							.errorMessage(createErrorMessage(bindingResult))
+							.build();
 	}
 
 	private static String createErrorMessage(BindingResult bindingResult) {
