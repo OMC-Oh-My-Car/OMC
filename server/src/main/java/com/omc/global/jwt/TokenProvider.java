@@ -88,13 +88,11 @@ public class TokenProvider {
                 .build();
     }
 
-    public TokenDto generateTokenWithAuthentication(Authentication authentication) {
+    public TokenDto generateTokenWithAuthentication(AuthMember authMember) {
         Date accessTokenExpiresIn = getTokenExpiration(ACCESS_TOKEN_EXPIRE_TIME);
         Date refreshTokenExpiresIn = getTokenExpiration(REFRESH_TOKEN_EXPIRE_TIME);
 
-        Object principal = authentication.getPrincipal();
-        UserDetails userDetails = (UserDetails) principal;
-        Member member = memberRepository.findByEmail(userDetails.getUsername()).get();
+        Member member = memberRepository.findByEmail(authMember.getEmail()).get();
 
         String accessToken = Jwts.builder()
                 .setSubject(member.getEmail())

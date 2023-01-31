@@ -1,4 +1,4 @@
-package com.omc.global.jwt;
+package com.omc.global.jwt.handler;
 
 import java.io.IOException;
 

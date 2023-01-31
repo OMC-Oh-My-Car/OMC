@@ -18,11 +18,15 @@ public enum ErrorCode {
 	REFRESH_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "A-006", "해당 refresh token은 만료됐습니다."),
 	NOT_ACCESS_TOKEN_TYPE(HttpStatus.UNAUTHORIZED, "A-007", "해당 토큰은 ACCESS TOKEN이 아닙니다."),
 	FORBIDDEN_ADMIN(HttpStatus.FORBIDDEN, "A-008", "관리자 Role이 아닙니다."),
+	NOT_MATCH_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "A-009", "해당 refresh token과 일치하지 않습니다."),
 
 	// 회원
 	INVALID_MEMBER_TYPE(HttpStatus.BAD_REQUEST, "M-001", "잘못된 회원 타입 입니다.(memberType : KAKAO)"),
 	ALREADY_REGISTERED_MEMBER(HttpStatus.BAD_REQUEST, "M-002", "이미 가입된 회원 입니다."),
 	MEMBER_NOT_EXISTS(HttpStatus.BAD_REQUEST, "M-003", "해당 회원은 존재하지 않습니다."),
+	DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "M-004", "이미 가입되어 있는 이메일 입니다."),
+	DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST, "M-006", "이미 가입되어 있는 닉네임 입니다."),
+	NOT_MATCH_PASSWORD(HttpStatus.BAD_REQUEST, "M-004", "비밀번호가 일치하지 않습니다."),
 
 	// 상품
 	PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "P-001", "해당 상품은 존재하지 않습니다."),
