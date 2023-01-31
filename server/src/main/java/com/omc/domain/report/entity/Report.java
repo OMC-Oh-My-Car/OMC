@@ -29,7 +29,6 @@ public class Report extends BaseEntity {
 
 	private String content;
 
-	@ColumnDefault("0")
 	private Long status; // 0: 신고완료, 1: 처리완료
 
 	@OneToMany(mappedBy = "report", cascade = CascadeType.ALL)

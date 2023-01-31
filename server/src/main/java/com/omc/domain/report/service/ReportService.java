@@ -13,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.omc.domain.img.dto.ImgDto;
 import com.omc.domain.img.entity.ReportImg;
 import com.omc.domain.member.entity.Member;
-import com.omc.domain.product.dto.ProductDto;
 import com.omc.domain.product.entity.Product;
 import com.omc.domain.product.service.ProductService;
 import com.omc.domain.report.dto.ReportDto;
@@ -37,7 +36,7 @@ public class ReportService {
 
 	private final S3Service s3Service;
 
-	public void create(ProductDto.Request req,
+	public void create(ReportDto.Request req,
 					   List<MultipartFile> multipartFiles,
 					   Long productId,
 					   Member member) {
@@ -46,8 +45,8 @@ public class ReportService {
 
 		Report report = Report.builder()
 							  .subject(req.getSubject())
-							  .content(req.getDescription())
-							  .status(1L)
+							  .content(req.getContent())
+							  .status(0L)
 							  .reportImgList(reportImgs)
 							  .member(member)
 							  .build();

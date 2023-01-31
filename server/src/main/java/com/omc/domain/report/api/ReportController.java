@@ -42,7 +42,7 @@ public class ReportController {
 
 	@PostMapping(value = "/report/{productId}",
 				 consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-	public ResponseEntity<?> create(@RequestPart(value = "report") ProductDto.Request req,
+	public ResponseEntity<?> create(@RequestPart(value = "report") ReportDto.Request req,
 									@RequestPart(value = "imgUrl") List<MultipartFile> multipartFiles,
 									@PathVariable Long productId,
 									@CurrentMember AuthMember member) {

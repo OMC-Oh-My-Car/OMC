@@ -2,14 +2,33 @@ package com.omc.domain.report.dto;
 
 import java.time.LocalDateTime;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 import org.springframework.web.bind.annotation.RequestParam;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 public class ReportDto {
+
+	@Getter
+	@Builder
+	@NoArgsConstructor(access = AccessLevel.PROTECTED)
+	@AllArgsConstructor(access = AccessLevel.PRIVATE)
+	public static class Request {
+
+		@NotBlank(message = "신고 제목을 입력해주세요.")
+		@Size(min = 1, max = 30, message = "신고 제목은 1자 이상 30자 이하로 입력해주세요.")
+		private String subject;
+
+		@NotBlank(message = "신고 내용을 입력해주세요.")
+		@Size(min = 1, max = 100, message = "신고 내용은 1자 이상 100자 이하로 입력해주세요.")
+		private String content;
+	}
 
 	@Getter
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)
