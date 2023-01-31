@@ -1,7 +1,5 @@
 package com.omc.domain.report.dto;
 
-
-
 import java.time.LocalDateTime;
 
 import org.springframework.web.bind.annotation.RequestParam;

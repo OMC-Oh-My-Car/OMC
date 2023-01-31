@@ -45,7 +45,6 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class ProductService {
 
-	private final MemberRepository memberRepository;
 	private final ProductRepository productRepository;
 	private final FacilitiesRepository facilitiesRepository;
 	private final LocationRepository locationRepository;
@@ -380,8 +379,8 @@ public class ProductService {
 	/**
 	 * ImgDto를 Img로 변환
 	 *
-	 * @param productImgList    : ProductImg 리스트
-	 * @param imgDtoList : ImgDto 리스트
+	 * @param productImgList : ProductImg 리스트
+	 * @param imgDtoList     : ImgDto 리스트
 	 */
 	private static void imgDtoToImg(List<ProductImg> productImgList, List<ImgDto.Request> imgDtoList) {
 		for (ImgDto.Request imgDto : imgDtoList) {
@@ -488,7 +487,9 @@ public class ProductService {
 	 * @return : 상품 목록 (ResponseDto)
 	 */
 	public List<ProductDto.Response> convertToResponse(List<Product> content) {
+
 		List<ProductDto.Response> responseList = new ArrayList<>();
+
 		for (Product product : content) {
 			responseList.add(ProductDto.Response.builder()
 												.id(product.getId())

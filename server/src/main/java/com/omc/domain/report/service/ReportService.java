@@ -13,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.omc.domain.img.dto.ImgDto;
 import com.omc.domain.img.entity.ReportImg;
 import com.omc.domain.member.entity.Member;
-import com.omc.domain.member.service.MemberService;
 import com.omc.domain.product.dto.ProductDto;
 import com.omc.domain.product.entity.Product;
 import com.omc.domain.product.service.ProductService;
@@ -91,9 +90,9 @@ public class ReportService {
 								 .reportId(findReport.getId())
 								 .reporter(findReport.getMember().getEmail())
 								 .productImg(findReport.getProduct()
-																			   .getProductImgList()
-																			   .get(0)
-																			   .getImgUrl())
+													   .getProductImgList()
+													   .get(0)
+													   .getImgUrl())
 								 .createTime(findReport.getCreatedAt())
 								 .subject(findReport.getSubject())
 								 .content(findReport.getContent())
@@ -119,17 +118,17 @@ public class ReportService {
 
 		for (Report report : content) {
 			ReportDto.Response response = ReportDto.Response.builder()
-															 .reportId(report.getId())
-															 .reporter(report.getMember().getEmail())
-															 .productImg(report.getProduct()
-																			   .getProductImgList()
-																			   .get(0)
-																			   .getImgUrl())
-															 .createTime(report.getCreatedAt())
-															 .subject(report.getSubject())
-															 .content(report.getContent())
-															 .status(report.getStatus())
-															 .build();
+															.reportId(report.getId())
+															.reporter(report.getMember().getEmail())
+															.productImg(report.getProduct()
+																			  .getProductImgList()
+																			  .get(0)
+																			  .getImgUrl())
+															.createTime(report.getCreatedAt())
+															.subject(report.getSubject())
+															.content(report.getContent())
+															.status(report.getStatus())
+															.build();
 			responseList.add(response);
 		}
 
