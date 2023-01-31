@@ -74,7 +74,12 @@ const ProductInfo = ({ openModalController }) => {
                 </div>
               </div>
             </div>
-            <button className="more">편의시설 모두 보기</button>
+            <button
+              className="more"
+              onClick={() => openModalController({ type: 'facility', width: '700px', height: '800px' })}
+            >
+              편의시설 모두 보기
+            </button>
           </div>
         </div>
         <div className="reservation">

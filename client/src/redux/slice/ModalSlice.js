@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   onModal: false,
-  type: 'content',
+  type: '',
   width: '700px',
   height: '800px',
 };

@@ -1,6 +1,5 @@
 // import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-// import LandingPage from '../pages/LandingPage';
 import ProductListPage from '../pages/ProductListPage';
 import ProductDetailPage from '../pages/ProductDetailPage';
 import SignIn from '../components/signIn/SignIn';
@@ -13,8 +12,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { openModal, closeModal } from '../redux/slice/ModalSlice';
 
 const Router = () => {
-  const onModal = useSelector((state) => state.modal.onModal);
-  console.log(onModal);
+  const isOpenModal = useSelector((state) => state.modal.onModal);
   const dispatch = useDispatch();
 
   const closeModalController = () => {
@@ -37,7 +35,7 @@ const Router = () => {
           <Route path="/seller/:id/product/:id/edit" element={<SellerProductListPage />} />
           <Route path="/seller/:id/product/:id/reservation" element={<SellerReservationPage />} />
         </Routes>
-        {onModal && <Modal closeModalController={closeModalController} />}
+        {isOpenModal && <Modal closeModalController={closeModalController} />}
       </BrowserRouter>
     </>
   );

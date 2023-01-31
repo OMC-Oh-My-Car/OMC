@@ -7,10 +7,10 @@ import theme from './style/Theme';
 import { useSelector } from 'react-redux';
 
 const App = () => {
-  const onModal = useSelector((state) => state.modal.onModal);
+  const isOpenModal = useSelector((state) => state.modal.onModal);
   return (
     <>
-      <Container onModal={onModal}>
+      <Container isOpenModal={isOpenModal}>
         <GlobalStyles />
         <ThemeProvider theme={theme}>
           <Router />
@@ -26,6 +26,6 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
-  height: ${(props) => (props.onModal ? '100vh' : 'fit-content')};
-  overflow: ${(props) => (props.onModal ? 'hidden' : 'auto')};
+  height: ${(props) => (props.isOpenModal ? '100vh' : 'fit-content')};
+  overflow: ${(props) => (props.isOpenModal ? 'hidden' : 'auto')};
 `;

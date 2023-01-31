@@ -13,9 +13,7 @@ const ProductDetailPage = ({ openModalController }) => {
         <Header type="short" />
         <MainContainer>
           <ProductImage />
-          <ProductInfo
-            openModalController={() => openModalController({ type: 'content', width: '700px', height: '800px' })}
-          />
+          <ProductInfo openModalController={openModalController} />
           <ProductReview />
           <ProductMap />
         </MainContainer>

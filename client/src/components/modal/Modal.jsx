@@ -10,6 +10,7 @@ const Modal = ({ closeModalController }) => {
   const type = useSelector((state) => state.modal.type);
   const width = useSelector((state) => state.modal.width);
   const height = useSelector((state) => state.modal.height);
+  console.log(type);
   const SetContent = () => {
     if (type === 'content') return <ContentModal />;
     else if (type === 'facility') return <FacilityModal />;
