@@ -8,12 +8,14 @@ import com.omc.domain.member.dto.*;
 import com.omc.domain.member.entity.AuthMember;
 import com.omc.domain.member.entity.RefreshToken;
 import com.omc.domain.member.repository.RefreshTokenRepository;
+import com.omc.global.common.annotation.CurrentMember;
 import com.omc.global.error.ErrorCode;
 import com.omc.global.error.exception.BusinessException;
 import com.omc.global.jwt.TokenProvider;
 import org.springframework.http.ResponseCookie;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -127,11 +129,6 @@ public class MemberService {
         RefreshToken refreshToken = refreshTokenRepository.findByKey(member.getEmail())
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXISTS_AUTHORIZATION));
 
-        // Request된 Header의 refreshtoken 값과 비교하여 분류
-        if (!request.getHeader("Set-Cookie").equals(refreshToken.getValue())) {
-            throw new BusinessException(ErrorCode.NOT_MATCH_REFRESH_TOKEN);
-        }
-
         String savedRefreshToken = refreshToken.getValue();
         log.debug("refreshToken : " + savedRefreshToken);
 
@@ -164,18 +161,24 @@ public class MemberService {
         return ReissueResponse.toResponse(member);
     }
 
-    public void logout(String email) {
-        Member member = memberRepository.findByEmail(email).orElse(null);
+    public void signOut(String email) {
+        RefreshToken refreshToken = refreshTokenRepository.findByKey(email).orElse(null);
 
-        if (member == null) {
-            throw new BusinessException(ErrorCode.NOT_EXISTS_AUTHORIZATION);
+        // refreshToken 존재 및 유효성 분류
+        if (refreshToken != null && !tokenProvider.validateToken(refreshToken.getValue())) {
+            throw new BusinessException(ErrorCode.NOT_VALID_TOKEN);
         }
+
+        if (!memberRepository.existsByEmail(email)) {
+            throw new BusinessException(ErrorCode.MEMBER_NOT_EXISTS);
+        }
+
         refreshTokenRepository.deleteByKey(email);
     }
 
     public void delete(String email) {
-        // member verifi
-        // refreshtoken veri
+
+
         memberRepository.deleteByEmail(email);
         refreshTokenRepository.deleteByKey(email);
     }

@@ -146,6 +146,7 @@ public class TokenProvider {
     }
 
     public boolean validateToken(String token) {
+        log.debug("ValidateToken 실행");
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;

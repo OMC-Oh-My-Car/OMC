@@ -61,8 +61,9 @@ public class MemberController {
 //    }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(@CurrentMember AuthMember member) {
-        memberService.logout(member.getEmail());
+    public ResponseEntity<?> signOut(@CurrentMember AuthMember member) {
+        // 현재 로그인된 회원의 Email을 통해 로그아웃
+        memberService.signOut(member.getEmail());
 
         return ResponseEntity.ok().build();
     }
