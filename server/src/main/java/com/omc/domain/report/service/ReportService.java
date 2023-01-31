@@ -3,6 +3,10 @@ package com.omc.domain.report.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,8 +17,11 @@ import com.omc.domain.member.service.MemberService;
 import com.omc.domain.product.dto.ProductDto;
 import com.omc.domain.product.entity.Product;
 import com.omc.domain.product.service.ProductService;
+import com.omc.domain.report.dto.ReportDto;
 import com.omc.domain.report.entity.Report;
 import com.omc.domain.report.repository.ReportRepository;
+import com.omc.global.error.ErrorCode;
+import com.omc.global.error.exception.BusinessException;
 import com.omc.global.util.S3Service;
 
 import lombok.RequiredArgsConstructor;
@@ -73,5 +80,59 @@ public class ReportService {
 											.build();
 			productImgList.add(productImg);
 		}
+	}
+
+	public ReportDto.Response getReport(Long reportId) {
+
+		Report findReport = reportRepository.findById(reportId)
+											.orElseThrow(() -> new BusinessException(ErrorCode.REPORT_NOT_FOUND));
+
+		return ReportDto.Response.builder()
+								 .reportId(findReport.getId())
+								 .reporter(findReport.getMember().getEmail())
+								 .productImg(findReport.getProduct()
+																			   .getProductImgList()
+																			   .get(0)
+																			   .getImgUrl())
+								 .createTime(findReport.getCreatedAt())
+								 .subject(findReport.getSubject())
+								 .content(findReport.getContent())
+								 .status(findReport.getStatus())
+								 .build();
+	}
+
+	public Page<Report> getReportList(ReportDto.Page request) {
+		Pageable pageable = PageRequest.of(Math.toIntExact(request.getPage() - 1),
+										   Math.toIntExact(request.getSize()),
+										   Sort.by(request.getSort()).descending());
+
+		if (request.getFilter() == null) {
+			return reportRepository.findAll(pageable);
+		} else {
+			return reportRepository.findAllByStatus(request.getFilter(), pageable);
+		}
+	}
+
+	public List<ReportDto.Response> convertToResponse(List<Report> content) {
+
+		List<ReportDto.Response> responseList = new ArrayList<>();
+
+		for (Report report : content) {
+			ReportDto.Response response = ReportDto.Response.builder()
+															 .reportId(report.getId())
+															 .reporter(report.getMember().getEmail())
+															 .productImg(report.getProduct()
+																			   .getProductImgList()
+																			   .get(0)
+																			   .getImgUrl())
+															 .createTime(report.getCreatedAt())
+															 .subject(report.getSubject())
+															 .content(report.getContent())
+															 .status(report.getStatus())
+															 .build();
+			responseList.add(response);
+		}
+
+		return responseList;
 	}
 }
