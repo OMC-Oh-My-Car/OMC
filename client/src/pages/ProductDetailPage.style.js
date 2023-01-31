@@ -12,7 +12,7 @@ export const MainContainer = styled.main`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  width: 100%;
+  height: fit-content;
   max-width: 1320px;
   padding: 50px 80px;
   @media (max-width: 1128px) {
