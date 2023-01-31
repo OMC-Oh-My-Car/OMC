@@ -206,11 +206,22 @@ public class MemberService {
 
     public void confirmMail(SingleParamDto emailDto) {
         SimpleMailMessage message = new SimpleMailMessage();
-//        message.setFrom("OMC@OMC.com");
+        message.setFrom("OMC@OMC.com");
         message.setTo(emailDto.getParam());
-        byte[] array = new byte[7];
-        new Random().nextBytes(array);
-        String confirmText = new String(array, Charset.forName("UTF-8"));
+
+        // *
+        // 랜덤 문자열 + 숫자 지정
+        int leftLimit = 48; // 숫자형
+        int rightLimit = 122; // 문자형
+        int targetStringLength = 10; // 자리수 지정
+        Random random = new Random();
+
+        confirmText = random.ints(leftLimit,rightLimit + 1)
+                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                .limit(targetStringLength)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
+        // *
         String text = "이메일 인증 번호 : " + confirmText;
         log.debug(text);
         message.setSubject("OMC 이메일 인증입니다.");
