@@ -226,6 +226,10 @@ public class MemberService {
     }
 
     public void adaptPassword(ModifyPasswordDto modifyPasswordDto, Member member) {
+        if (member == null) {
+            throw new BusinessException(ErrorCode.MEMBER_NOT_EXISTS);
+        }
+
         if (!passwordEncoder.matches(modifyPasswordDto.getOldPassword(), member.getPassword())) {
             throw new BusinessException(ErrorCode.NOT_MATCH_PASSWORD);
         }
