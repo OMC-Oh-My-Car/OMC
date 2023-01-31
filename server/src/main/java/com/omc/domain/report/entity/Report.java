@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import com.omc.domain.img.entity.ProductImg;
 import com.omc.domain.img.entity.ReportImg;
+import com.omc.domain.member.entity.Member;
 import com.omc.domain.product.entity.Product;
 import com.omc.global.common.BaseEntity;
 
@@ -24,13 +23,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Report extends BaseEntity {
 
-	@Column
 	private String subject;
 
-	@Column
 	private String content;
 
-	@Column
 	private Long status; // 0: 신고완료, 1: 처리완료
 
 	@OneToMany(mappedBy = "report", cascade = CascadeType.ALL)
@@ -40,8 +36,16 @@ public class Report extends BaseEntity {
 	@JoinColumn(name = "product_id")
 	private Product product;
 
+	@ManyToOne
+	@JoinColumn(name = "member_id")
+	private Member member;
+
 	@Builder
-	public Report(String subject, String content, Long status, List<ReportImg> reportImgList) {
+	public Report(String subject,
+				  String content,
+				  Long status,
+				  List<ReportImg> reportImgList,
+				  Member member) {
 		this.subject = subject;
 		this.content = content;
 		this.status = status;
@@ -49,6 +53,7 @@ public class Report extends BaseEntity {
 		for (ReportImg reportImg : reportImgList) {
 			reportImg.setReport(this);
 		}
+		this.member = member;
 	}
 
 	public void setProduct(Product product) {

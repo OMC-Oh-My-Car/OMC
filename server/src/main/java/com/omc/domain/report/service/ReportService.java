@@ -7,8 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.omc.domain.img.dto.ImgDto;
-import com.omc.domain.img.entity.ProductImg;
 import com.omc.domain.img.entity.ReportImg;
+import com.omc.domain.member.entity.Member;
+import com.omc.domain.member.service.MemberService;
 import com.omc.domain.product.dto.ProductDto;
 import com.omc.domain.product.entity.Product;
 import com.omc.domain.product.service.ProductService;
@@ -25,13 +26,15 @@ import lombok.extern.slf4j.Slf4j;
 public class ReportService {
 
 	private final ReportRepository reportRepository;
+
 	private final ProductService productService;
 
 	private final S3Service s3Service;
 
 	public void create(ProductDto.Request req,
 					   List<MultipartFile> multipartFiles,
-					   Long productId) {
+					   Long productId,
+					   Member member) {
 
 		List<ReportImg> reportImgs = uploadImgAndImgDtoToEntity(multipartFiles);
 
@@ -40,6 +43,7 @@ public class ReportService {
 							  .content(req.getDescription())
 							  .status(1L)
 							  .reportImgList(reportImgs)
+							  .member(member)
 							  .build();
 
 		Product findProduct = productService.ifExistReturnProduct(productId);
