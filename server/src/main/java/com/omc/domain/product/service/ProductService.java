@@ -64,7 +64,8 @@ public class ProductService {
 	@SneakyThrows
 	@Transactional
 	public void create(ProductDto.Request req,
-					   List<MultipartFile> multipartFiles) {
+					   List<MultipartFile> multipartFiles,
+					   Member member) {
 
 		log.info("multipartFile imgs={}", multipartFiles);
 		String address = req.getAddress();
@@ -85,6 +86,7 @@ public class ProductService {
 								 .star(0.0)
 								 .reportCount(0L)
 								 .count(0L)
+								 .member(member)
 								 .build();
 
 		saveLocation(product, req);
@@ -104,9 +106,16 @@ public class ProductService {
 	@Transactional
 	public void update(ProductDto.Request req,
 					   List<MultipartFile> multipartFiles,
-					   Long productId) {
+					   Long productId,
+					   Member member) {
 
 		Product findProduct = ifExistReturnProduct(productId);
+
+		if (!findProduct.getMember().getId().equals(member.getId()) || !member.getUserRole()
+																			  .equals(UserRole.ROLE_ADMIN)) {
+			throw new BusinessException(ErrorCode.NOT_PRODUCT_WRITER);
+		}
+
 		findProduct.editProduct(req);
 
 		if (req.getFacilities() != null) {
@@ -135,9 +144,16 @@ public class ProductService {
 	 * @return 상품 정보
 	 */
 	@Transactional
-	public ProductDto.Response getProduct(Long productId) {
+	public ProductDto.Response getProduct(Long productId, Optional<Member> member) {
 		Product findProduct = productRepository.findById(productId)
 											   .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
+
+		Optional<LikeHistory> likeHistory = Optional.empty();
+
+		if (member.isPresent()) {
+			likeHistory = likeHistoryRepository.findByMemberIdAndProductId(member.get().getId(),
+																		   findProduct.getId());
+		}
 
 		return ProductDto.Response.builder()
 								  .subject(findProduct.getSubject())
@@ -154,7 +170,7 @@ public class ProductService {
 								  .checkOut(findProduct.getCheckOut())
 								  .img(getImgs(productId))
 								  .likes(findProduct.getLikes())
-								  // .isLike() todo : Member 적용 후 수정, 추천 여부, 회원일 경우 추천 여부 확인해서 넣어줘야함
+								  .isLike(likeHistory.isPresent())
 								  .build();
 	}
 
@@ -235,7 +251,7 @@ public class ProductService {
 	public Page<Product> getMyProductList(Member member, ProductDto.Search search) {
 
 		if (member.getUserRole() == UserRole.ROLE_USER) {
-			throw new BusinessException(ErrorCode.TEST); // todo : member 적용 후 에러코드 수정
+			throw new BusinessException(ErrorCode.NOT_PRODUCT_WRITER);
 		}
 
 		String sortBy = switch (search.getSort()) { // 최신순, 인기순, 조회순, 추천순
@@ -248,7 +264,6 @@ public class ProductService {
 		Pageable pageable = PageRequest.of(Math.toIntExact(search.getPage() - 1),
 										   Math.toIntExact(search.getSize()),
 										   Sort.by(sortBy).descending());
-		// return productRepository.findAllBySellerId(member.getId(), pageable);
 		return productRepository.findAllByMemberId(member.getId(), pageable);
 	}
 
@@ -258,9 +273,16 @@ public class ProductService {
 	 * @param productId : 상품 id
 	 */
 	@Transactional
-	public void delete(Long productId) {
+	public void delete(Long productId, Member member) {
 		Product findProduct = ifExistReturnProduct(productId);
 		findProduct.getProductImgList().stream().map(ProductImg::getImgName).forEach(s3Service::deleteFile);
+
+		if (!findProduct.getMember().getId().equals(member.getId()) || !member.getUserRole()
+																			  .equals(UserRole.ROLE_ADMIN)) {
+			throw new BusinessException(ErrorCode.NOT_PRODUCT_WRITER);
+		}
+
+		findProduct.getImgList().stream().map(Img::getImgName).forEach(s3Service::deleteFile);
 		productRepository.delete(findProduct);
 	}
 
@@ -273,7 +295,7 @@ public class ProductService {
 	@Transactional
 	public void likeProduct(Long productId, Member member) {
 		Product product = ifExistReturnProduct(productId);
-		// todo 존재하는 회원인지, 일반 유저인지 확인하는 메서드 추가
+
 		Optional<LikeHistory> likeHistory = likeHistoryRepository.findByMemberIdAndProductId(member.getId(),
 																							 product.getId());
 		if (likeHistory.isPresent()) {
@@ -304,11 +326,11 @@ public class ProductService {
 		UserRole userRole = member.getUserRole();
 
 		if (!product.getMember().getId().equals(member.getId()) || userRole != UserRole.ROLE_ADMIN) {
-			throw new BusinessException(ErrorCode.TEST); // todo member 추가 후 수정
+			throw new BusinessException(ErrorCode.NOT_PRODUCT_WRITER);
 		}
 
 		if (product.getIsStop() == 2) {
-			throw new BusinessException(ErrorCode.TEST); // todo 관리자만 블라인드 해제 가능
+			throw new BusinessException(ErrorCode.FORBIDDEN_ADMIN);
 		}
 
 		ArrayList<StopHistory> stopHistories = new ArrayList<>();

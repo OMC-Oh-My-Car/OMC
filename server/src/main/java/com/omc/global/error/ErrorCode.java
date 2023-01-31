@@ -26,6 +26,7 @@ public enum ErrorCode {
 
 	// 상품
 	PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "P-001", "해당 상품은 존재하지 않습니다."),
+	NOT_PRODUCT_WRITER(HttpStatus.BAD_REQUEST, "P-002", "상품 작성자가 아닙니다."),
 
 	// 리뷰
 	REVIEW_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "R-001", "리뷰가 이미 존재합니다."),
