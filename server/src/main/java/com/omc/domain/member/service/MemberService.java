@@ -8,14 +8,12 @@ import com.omc.domain.member.dto.*;
 import com.omc.domain.member.entity.AuthMember;
 import com.omc.domain.member.entity.RefreshToken;
 import com.omc.domain.member.repository.RefreshTokenRepository;
-import com.omc.global.common.annotation.CurrentMember;
 import com.omc.global.error.ErrorCode;
 import com.omc.global.error.exception.BusinessException;
 import com.omc.global.jwt.TokenProvider;
 import org.springframework.http.ResponseCookie;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +36,8 @@ public class MemberService {
     private final JavaMailSender emailSender;
     private final RefreshTokenRepository refreshTokenRepository;
     private final TokenProvider tokenProvider;
+
+    String confirmText = "";
 
     public Optional<Member> findByEmail(String email) {
         return memberRepository.findByEmail(email);
@@ -212,9 +212,18 @@ public class MemberService {
         new Random().nextBytes(array);
         String confirmText = new String(array, Charset.forName("UTF-8"));
         String text = "이메일 인증 번호 : " + confirmText;
+        log.debug(text);
         message.setSubject("OMC 이메일 인증입니다.");
         message.setText(text);
         emailSender.send(message);
+    }
+
+    public boolean certificationMail(SingleParamDto certificationMail) {
+        if (!certificationMail.getParam().equals(confirmText)) {
+            return false;
+        }
+
+        return true;
     }
 
     public String findByPhone(String param) {

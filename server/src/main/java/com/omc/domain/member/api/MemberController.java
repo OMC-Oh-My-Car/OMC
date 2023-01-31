@@ -11,12 +11,9 @@ import com.omc.global.error.ErrorCode;
 import com.omc.global.error.exception.BusinessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import com.omc.domain.member.entity.Member;
-import com.omc.domain.member.exception.MemberNotFoundException;
 import com.omc.domain.member.service.MemberService;
 import com.omc.global.common.dto.SingleResponseDto;
 
@@ -104,9 +101,18 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/certification/mail")
+    public ResponseEntity<?> certificationEmail(@Valid @RequestBody SingleParamDto certificationNumDto) {
+        if (!memberService.certificationMail(certificationNumDto)) {
+            throw new BusinessException(ErrorCode.NOT_MATCH_CONFIRM_TEXT);
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/find/id")
-    public ResponseEntity<?> findEmail(@RequestBody SingleParamDto phoneDto) {
-        String email = memberService.findByPhone(phoneDto.getParam());
+    public ResponseEntity<?> findEmail(@RequestBody SingleParamDto mailDto) {
+        String email = memberService.findByPhone(mailDto.getParam());
         SingleResponseDto singleResponseDto = new SingleResponseDto<>(email);
 
         return ResponseEntity.ok(singleResponseDto);
