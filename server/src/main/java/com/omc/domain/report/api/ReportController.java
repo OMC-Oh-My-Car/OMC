@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.omc.domain.member.entity.AuthMember;
 import com.omc.domain.member.entity.Member;
 import com.omc.domain.member.service.MemberService;
 import com.omc.domain.product.dto.ProductDto;
@@ -44,21 +45,17 @@ public class ReportController {
 	public ResponseEntity<?> create(@RequestPart(value = "report") ProductDto.Request req,
 									@RequestPart(value = "imgUrl") List<MultipartFile> multipartFiles,
 									@PathVariable Long productId,
-									@CurrentMember Member member) {
+									@CurrentMember AuthMember member) {
+
+		Member findMember = memberService.findByEmail(member.getEmail())
+										 .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_EXISTS));
 
 		if (multipartFiles == null) {
 			log.error("multipartFiles is null");
 			throw new BusinessException(ErrorCode.IMAGE_NOT_FOUND);
 		}
 
-		Optional<Member> findMember = memberService.findByEmail(member.getEmail());
-
-		if (!findMember.isPresent()) {
-			log.error("member is not found");
-			throw new BusinessException(ErrorCode.MEMBER_NOT_EXISTS);
-		}
-
-		reportService.create(req, multipartFiles, productId, findMember.get());
+		reportService.create(req, multipartFiles, productId, findMember);
 
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
