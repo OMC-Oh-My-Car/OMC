@@ -27,5 +27,5 @@ const Container = styled.div`
   justify-content: center;
   width: 100%;
   height: ${(props) => (props.isOpenModal ? '100vh' : 'fit-content')};
-  overflow: ${(props) => (props.isOpenModal ? 'hidden' : 'auto')};
+  overflow: ${(props) => (props.isOpenModal ? 'hidden' : '')};
 `;
