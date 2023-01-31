@@ -42,14 +42,14 @@ public class MemberController {
         }
 
         // RequestBody 를 객체화하여 MemberPostDto로 변경 후 회원가입 로직 진행
-        memberService.join(signUpRequestDto);
+        MemberResponseDto memberResponseDto = memberService.signUp(signUpRequestDto);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/member/login")
                 .build()
                 .toUri();
 
-        return ResponseEntity.created(uri).build();
+        return ResponseEntity.created(uri).body(memberResponseDto);
 //        return new ResponseEntity<>(newMember, null, HttpStatus.CREATED);
 
 //        return ResponseEntity.status(HttpStatus.CREATED).body(newMember);

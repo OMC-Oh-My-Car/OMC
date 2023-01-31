@@ -45,7 +45,7 @@ public class MemberService {
         return memberRepository.findById(id);
     }
 
-    public MemberResponseDto join(SignUpRequestDto signUpRequestDto) {
+    public MemberResponseDto signUp(SignUpRequestDto signUpRequestDto) {
         if (memberRepository.existsByEmail(signUpRequestDto.getEmail())) {
             throw new BusinessException(ErrorCode.DUPLICATE_EMAIL);
         }
