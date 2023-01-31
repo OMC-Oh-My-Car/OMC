@@ -29,7 +29,10 @@ const ProductInfo = ({ openModalController }) => {
               모든시설물은 모든시설물은 모든시설물은 사용가능합니다 기타 주의사항 체크인ㅡ오후3시이며
               체크아웃ㅡ오전11시입니다 애완견 하셔야합니다~
             </span>
-            <button className="more" onClick={openModalController()}>
+            <button
+              className="more"
+              onClick={() => openModalController({ type: 'content', width: '700px', height: '800px' })}
+            >
               내용 더 보기
             </button>
           </div>

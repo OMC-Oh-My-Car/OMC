@@ -27,4 +27,12 @@ export const ModalArea = styled.div`
       margin-bottom: 30px;
     }
   }
+  @media (max-width: 744px) {
+    padding: 0px;
+    .modalInner {
+      max-width: 100vw;
+      max-height: 100vh;
+      border-radius: 0px;
+    }
+  }
 `;

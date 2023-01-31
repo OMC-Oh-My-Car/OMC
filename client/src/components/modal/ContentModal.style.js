@@ -17,4 +17,7 @@ export const ContentModalArea = styled.div`
     line-height: 24px;
     word-break: break-word;
   }
+  @media (max-width: 744px) {
+    padding: 0px;
+  }
 `;

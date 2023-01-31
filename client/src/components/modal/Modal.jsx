@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import ContentModal from './ContentModal';
+import FacilityModal from './FacilityModal';
 
 const Modal = ({ closeModalController }) => {
   const type = useSelector((state) => state.modal.type);
@@ -11,7 +12,7 @@ const Modal = ({ closeModalController }) => {
   const height = useSelector((state) => state.modal.height);
   const SetContent = () => {
     if (type === 'content') return <ContentModal />;
-    // else if (type === 'signUp') return <SignUp />;
+    else if (type === 'facility') return <FacilityModal />;
   };
 
   return (
