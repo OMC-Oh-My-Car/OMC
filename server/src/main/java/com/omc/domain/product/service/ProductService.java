@@ -282,7 +282,7 @@ public class ProductService {
 			throw new BusinessException(ErrorCode.NOT_PRODUCT_WRITER);
 		}
 
-		findProduct.getImgList().stream().map(Img::getImgName).forEach(s3Service::deleteFile);
+		findProduct.getProductImgList().stream().map(ProductImg::getImgName).forEach(s3Service::deleteFile);
 		productRepository.delete(findProduct);
 	}
 
