@@ -218,8 +218,10 @@ public class MemberService {
     }
 
     public String findByPhone(String param) {
-            Member member = memberRepository.findByPhone(param).orElseThrow(MemberNotFoundException::new);
-
+            Member member = memberRepository.findByPhone(param).orElse(null);
+            if (member == null) {
+                throw new BusinessException(ErrorCode.MEMBER_NOT_EXISTS);
+            }
             return member.getEmail();
     }
 
