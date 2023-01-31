@@ -35,10 +35,12 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping()
-    public ResponseEntity<?> join(@RequestBody SignUpRequestDto signUpRequestDto) {
+    public ResponseEntity<?> signUp(@Valid @RequestBody SignUpRequestDto signUpRequestDto) { // @Valid 어노테이션 사용하여 진행
+        // 비밀번호 확인 로직 구현
         if (!signUpRequestDto.getPassword().equals(signUpRequestDto.getPasswordConfirm())) {
-            throw new BusinessException(ErrorCode.NOT_MATCH_PASSWORD);// 패스워드 일치하지 않음 에러
+            throw new BusinessException(ErrorCode.NOT_MATCH_PASSWORD);
         }
+
         // RequestBody 를 객체화하여 MemberPostDto로 변경 후 회원가입 로직 진행
         memberService.join(signUpRequestDto);
 

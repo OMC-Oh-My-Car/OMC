@@ -7,23 +7,17 @@ import java.util.Random;
 import com.omc.domain.member.dto.*;
 import com.omc.domain.member.entity.AuthMember;
 import com.omc.domain.member.entity.RefreshToken;
-import com.omc.domain.member.exception.DuplicateNickname;
-import com.omc.domain.member.exception.DuplicateUsername;
 import com.omc.domain.member.repository.RefreshTokenRepository;
-import com.omc.global.common.annotation.CurrentMember;
 import com.omc.global.error.ErrorCode;
 import com.omc.global.error.exception.BusinessException;
 import com.omc.global.jwt.TokenProvider;
-import io.jsonwebtoken.Claims;
 import org.springframework.http.ResponseCookie;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.omc.domain.member.entity.Member;
-import com.omc.domain.member.exception.DuplicateEmail;
 import com.omc.domain.member.exception.MemberNotFoundException;
 import com.omc.domain.member.repository.MemberRepository;
 
