@@ -6,6 +6,7 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import ContentModal from './ContentModal';
 import FacilityModal from './FacilityModal';
 import ReviewModal from './ReviewModal';
+import ImageModal from './ImageModal';
 
 const Modal = ({ closeModalController }) => {
   const type = useSelector((state) => state.modal.type);
@@ -16,11 +17,12 @@ const Modal = ({ closeModalController }) => {
     if (type === 'content') return <ContentModal />;
     else if (type === 'facility') return <FacilityModal />;
     else if (type === 'review') return <ReviewModal />;
+    else if (type === 'image') return <ImageModal />;
   };
 
   return (
     <>
-      <ModalArea width={width} height={height}>
+      <ModalArea type={type} width={width} height={height}>
         <div className="modalInner">
           <FontAwesomeIcon className="closeIcon" icon={faXmark} onClick={closeModalController} />
           <SetContent />
