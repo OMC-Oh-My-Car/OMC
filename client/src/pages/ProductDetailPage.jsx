@@ -14,7 +14,7 @@ const ProductDetailPage = ({ openModalController }) => {
         <MainContainer>
           <ProductImage />
           <ProductInfo openModalController={openModalController} />
-          <ProductReview />
+          <ProductReview openModalController={openModalController} />
           <ProductMap />
         </MainContainer>
       </Container>

@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import ContentModal from './ContentModal';
 import FacilityModal from './FacilityModal';
+import ReviewModal from './ReviewModal';
 
 const Modal = ({ closeModalController }) => {
   const type = useSelector((state) => state.modal.type);
@@ -14,6 +15,7 @@ const Modal = ({ closeModalController }) => {
   const SetContent = () => {
     if (type === 'content') return <ContentModal />;
     else if (type === 'facility') return <FacilityModal />;
+    else if (type === 'review') return <ReviewModal />;
   };
 
   return (
