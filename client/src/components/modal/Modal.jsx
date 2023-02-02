@@ -10,6 +10,8 @@ import ImageModal from './ImageModal';
 import ReservationInfoModal from './ReservationInfoModal';
 import ReservationReviewAddModal from './ReservationReviewAddModal';
 import ReservationReviewModal from './ReservationReviewModal';
+import ReservationCancelModal from './ReservationCancelModal';
+import ReservationCancelAddModal from './ReservationCancelAddModal';
 
 const Modal = ({ closeModalController }) => {
   const type = useSelector((state) => state.modal.type);
@@ -24,6 +26,8 @@ const Modal = ({ closeModalController }) => {
     else if (type === 'reservationInfo') return <ReservationInfoModal />;
     else if (type === 'reservationReviewAdd') return <ReservationReviewAddModal />;
     else if (type === 'reservationReview') return <ReservationReviewModal />;
+    else if (type === 'reservationCancel') return <ReservationCancelModal />;
+    else if (type === 'reservationCancelAdd') return <ReservationCancelAddModal />;
   };
 
   return (

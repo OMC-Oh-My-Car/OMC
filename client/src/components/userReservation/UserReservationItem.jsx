@@ -23,10 +23,16 @@ const UserReservationItem = ({ openModalController }) => {
           </button>
           <button
             className="button buttonYellow"
+            onClick={() => openModalController({ type: 'reservationCancelAdd', width: '600px', height: '800px' })}
+          >
+            예약 취소
+          </button>
+          {/* <button
+            className="button buttonYellow"
             onClick={() => openModalController({ type: 'reservationCancel', width: '600px', height: '800px' })}
           >
             취소된 예약
-          </button>
+          </button> */}
           {/* <button
             className="button buttonYellow"
             onClick={() => openModalController({ type: 'reservationReviewAdd', width: '600px', height: '800px' })}
