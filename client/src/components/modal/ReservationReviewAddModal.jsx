@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { ReviewAddModalArea } from './ReviewAddModal.style';
+import { ReservationReviewAddModalArea } from './ReservationReviewAddModal.style';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-const ReviewAddModal = () => {
+const ReservationReviewAddModal = () => {
   const array = [1, 2, 3, 4, 5];
   const [totalGrade, setTotalGrade] = useState(5);
   const [cleanGrade, setCleanGrade] = useState(5);
@@ -11,7 +11,7 @@ const ReviewAddModal = () => {
   const [satisfactionWithPrice, setSatisfactionWithPrice] = useState(5);
   return (
     <>
-      <ReviewAddModalArea>
+      <ReservationReviewAddModalArea>
         <h2>리뷰 작성</h2>
         <span className="reviewText">이번 여행에 대한 후기를 작성하세요</span>
         <textarea type="text" rows="10" cols="15" />
@@ -80,9 +80,9 @@ const ReviewAddModal = () => {
             />
           );
         })}
-      </ReviewAddModalArea>
+      </ReservationReviewAddModalArea>
     </>
   );
 };
 
-export default ReviewAddModal;
+export default ReservationReviewAddModal;

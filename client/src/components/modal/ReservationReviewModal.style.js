@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const ReviewAddModalArea = styled.div`
+export const ReservationReviewModalArea = styled.div`
   width: 100%;
   height: 90%;
   overflow-y: scroll;
@@ -11,30 +11,12 @@ export const ReviewAddModalArea = styled.div`
     font-weight: 700;
     margin-bottom: 20px;
   }
-  .reviewText {
+  .review {
     width: 100%;
     display: inline-block;
     font-weight: 300;
-    margin-bottom: 10px;
-    font-size: 20px;
-  }
-  textarea {
-    width: 100%;
-    padding: 5px;
-    font-size: 17px;
-    border: 1px solid ${(props) => props.theme.gray};
-    outline: none;
-    margin-bottom: 10px;
-  }
-  .count {
-    width: 100%;
-    max-width: 520px;
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 20px;
-    span {
-      color: ${(props) => props.theme.gray};
-    }
+    line-height: 24px;
+    margin-bottom: 30px;
   }
   .gradeText {
     width: 100%;
@@ -54,7 +36,6 @@ export const ReviewAddModalArea = styled.div`
     color: ${(props) => props.theme.gray};
     margin-right: 3px;
     margin-bottom: 30px;
-    cursor: pointer;
   }
   .active {
     color: ${(props) => props.theme.yellow};

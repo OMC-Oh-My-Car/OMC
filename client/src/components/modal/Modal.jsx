@@ -8,20 +8,22 @@ import FacilityModal from './FacilityModal';
 import ReviewModal from './ReviewModal';
 import ImageModal from './ImageModal';
 import ReservationInfoModal from './ReservationInfoModal';
-import ReviewAddModal from './ReviewAddModal';
+import ReservationReviewAddModal from './ReservationReviewAddModal';
+import ReservationReviewModal from './ReservationReviewModal';
 
 const Modal = ({ closeModalController }) => {
   const type = useSelector((state) => state.modal.type);
   const width = useSelector((state) => state.modal.width);
   const height = useSelector((state) => state.modal.height);
-  console.log(type);
+
   const SetContent = () => {
     if (type === 'content') return <ContentModal />;
     else if (type === 'facility') return <FacilityModal />;
     else if (type === 'review') return <ReviewModal />;
     else if (type === 'image') return <ImageModal />;
     else if (type === 'reservationInfo') return <ReservationInfoModal />;
-    else if (type === 'reviewAdd') return <ReviewAddModal />;
+    else if (type === 'reservationReviewAdd') return <ReservationReviewAddModal />;
+    else if (type === 'reservationReview') return <ReservationReviewModal />;
   };
 
   return (
