@@ -17,7 +17,7 @@ export const ModalArea = styled.div`
     width: 100%;
     height: 100%;
     border-radius: ${(props) => (props.type === 'image' ? '0px' : '15px')};
-    padding: 25px 0px 25px 25px;
+    padding: 25px 0px 0px 25px;
     max-width: ${(props) => (props.width ? `${props.width}` : 'auto')};
     max-height: ${(props) => (props.height ? `${props.height}` : 'auto')};
     background-color: white;

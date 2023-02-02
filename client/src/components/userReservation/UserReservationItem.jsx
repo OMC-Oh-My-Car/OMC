@@ -21,7 +21,13 @@ const UserReservationItem = ({ openModalController }) => {
           >
             예약 정보
           </button>
-          <button className="button buttonYellow">예약 취소</button>
+          {/* <button className="button buttonYellow">예약 취소</button> */}
+          <button
+            className="button buttonYellow"
+            onClick={() => openModalController({ type: 'reviewAdd', width: '600px', height: '800px' })}
+          >
+            리뷰 작성
+          </button>
         </div>
       </UserReservationItemArea>
     </>
