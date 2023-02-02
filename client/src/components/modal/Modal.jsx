@@ -7,6 +7,7 @@ import ContentModal from './ContentModal';
 import FacilityModal from './FacilityModal';
 import ReviewModal from './ReviewModal';
 import ImageModal from './ImageModal';
+import ReservationInfoModal from './ReservationInfoModal';
 
 const Modal = ({ closeModalController }) => {
   const type = useSelector((state) => state.modal.type);
@@ -18,6 +19,7 @@ const Modal = ({ closeModalController }) => {
     else if (type === 'facility') return <FacilityModal />;
     else if (type === 'review') return <ReviewModal />;
     else if (type === 'image') return <ImageModal />;
+    else if (type === 'reservationInfo') return <ReservationInfoModal />;
   };
 
   return (

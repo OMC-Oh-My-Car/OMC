@@ -6,7 +6,7 @@ import Header from '../components/header/Header';
 import UserReservationList from '../components/userReservation/UserReservationList';
 import { getUserReservation } from '../modules/userReservation/userReservation';
 import Pagination from '../components/pagination/Pagination';
-const ReservationUserPage = () => {
+const ReservationUserPage = ({ openModalController }) => {
   const [page, setpage] = useState(1);
 
   const itemChange = (page) => {
@@ -22,7 +22,12 @@ const ReservationUserPage = () => {
         <Header type="short" />
         <MainContainer>
           {/* <UserReservationEmpty /> */}
-          <UserReservationList data={data} isLoading={isLoading} isError={isError} />
+          <UserReservationList
+            data={data}
+            isLoading={isLoading}
+            isError={isError}
+            openModalController={openModalController}
+          />
           <Pagination itemChange={itemChange} />
         </MainContainer>
       </Container>
