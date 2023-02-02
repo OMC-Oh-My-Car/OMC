@@ -21,7 +21,7 @@ const ReservationReviewModal = () => {
           소품들 모두 너무 완벽했습니다!! 청소도 정말 잘 청소도 정말 잘
         </span>
         <span className="gradeText">전체적 만족도</span>
-        <span className="explain">이번 여행의 전체적인 평점을 입력해주세요.</span>
+        <span className="explain">이번 여행은 얼마나 만족스러우셨나요?</span>
         {array.map((el, index) => {
           return <FontAwesomeIcon key={index} className={`starIcon ${totalGrade >= el && 'active'}`} icon={faStar} />;
         })}

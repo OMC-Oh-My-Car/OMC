@@ -19,9 +19,8 @@ const ReservationReviewAddModal = () => {
           <span>남은 글자 수 : 300글자</span>
         </div>
         <span className="reviewText">여행이 어땠나요?</span>
-
         <span className="gradeText">전체적 만족도</span>
-        <span className="explain">이번 여행의 전체적인 평점을 입력해주세요.</span>
+        <span className="explain">이번 여행은 얼마나 만족스러우셨나요?</span>
         {array.map((el, index) => {
           return (
             <FontAwesomeIcon
