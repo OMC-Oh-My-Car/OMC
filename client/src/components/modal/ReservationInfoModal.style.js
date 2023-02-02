@@ -33,6 +33,7 @@ export const ReservationInfoModalArea = styled.div`
       width: 100%;
       height: 80px;
       border: 1px solid black;
+      border-bottom: none;
     }
     .reservationCheckInArea {
       position: relative;
@@ -50,6 +51,8 @@ export const ReservationInfoModalArea = styled.div`
       width: 50%;
       height: 80px;
       border: 1px solid black;
+      border-bottom: none;
+      border-right: none;
     }
     .reservationCheckOutArea {
       position: relative;
@@ -67,6 +70,7 @@ export const ReservationInfoModalArea = styled.div`
       width: 50%;
       height: 80px;
       border: 1px solid black;
+      border-bottom: none;
     }
     .reservationUserNameArea {
       position: relative;
@@ -84,6 +88,7 @@ export const ReservationInfoModalArea = styled.div`
       width: 100%;
       height: 80px;
       border: 1px solid black;
+      border-bottom: none;
     }
     .reservationUserEmailArea {
       position: relative;
