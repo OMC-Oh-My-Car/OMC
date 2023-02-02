@@ -59,4 +59,29 @@ export const ReservationReviewAddModalArea = styled.div`
   .active {
     color: ${(props) => props.theme.yellow};
   }
+  .btnArea {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  .more {
+    width: 100%;
+    padding: 10px 35px;
+    font-size: 19px;
+    font-weight: 600;
+    outline: none;
+    border-radius: 5px;
+    transition: all 0.2s;
+    font-family: sans-serif;
+    background-color: ${(props) => props.theme.yellow};
+    border: 1px solid ${(props) => props.theme.yellow};
+    color: white;
+    cursor: pointer;
+    margin: 20px 0px 10px;
+  }
+  .more:hover {
+    border: 1px solid ${(props) => props.theme.yellow};
+    color: ${(props) => props.theme.yellow};
+    background-color: white;
+  }
 `;

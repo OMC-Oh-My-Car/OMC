@@ -12,7 +12,7 @@ export const ReservationCancelModalAddArea = styled.div`
     width: 100%;
     font-size: 24px;
     font-weight: 700;
-    margin-bottom: 13px;
+    margin-bottom: 10px;
   }
   textarea {
     width: 100%;
@@ -20,7 +20,7 @@ export const ReservationCancelModalAddArea = styled.div`
     font-size: 17px;
     border: 1px solid ${(props) => props.theme.gray};
     outline: none;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
   }
   .explain {
     width: 100%;
@@ -28,10 +28,11 @@ export const ReservationCancelModalAddArea = styled.div`
     width: 100%;
     display: inline-block;
     color: ${(props) => props.theme.red};
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     font-size: 19px;
   }
   .more {
+    width: 100%;
     padding: 10px 25px;
     font-size: 19px;
     font-weight: 600;

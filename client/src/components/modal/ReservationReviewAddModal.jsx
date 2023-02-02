@@ -79,6 +79,9 @@ const ReservationReviewAddModal = () => {
             />
           );
         })}
+        <div className="btnArea">
+          <button className="more">제출하기</button>
+        </div>
       </ReservationReviewAddModalArea>
     </>
   );
