@@ -18,13 +18,13 @@ export const ProductImageArea = styled.div`
   }
   .image1 {
     grid-area: a;
-    border-radius: 15px 0px 0px 15px;
+    border-radius: 5px 0px 0px 5px;
   }
   .image3 {
-    border-radius: 0px 15px 0px 0px;
+    border-radius: 0px 5px 0px 0px;
   }
   .image5 {
-    border-radius: 0px 0px 15px 0px;
+    border-radius: 0px 0px 5px 0px;
   }
   @media (max-width: 1320px) {
     height: 38vw;
@@ -39,6 +39,28 @@ export const ProductImageArea = styled.div`
     }
     .image5 {
       border-radius: 0px 0px 10px 0px;
+    }
+  }
+  @media (max-width: 744px) {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-areas:
+      'a a'
+      'a a';
+    height: auto;
+    .image1 {
+      border-radius: 0px;
+    }
+    .image2 {
+      display: none;
+    }
+    .image3 {
+      display: none;
+    }
+    .image4 {
+      display: none;
+    }
+    .image5 {
+      display: none;
     }
   }
 `;
