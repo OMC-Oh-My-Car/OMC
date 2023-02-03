@@ -18,5 +18,9 @@ export const NavArea = styled.nav`
   }
   @media (max-width: 744px) {
     padding: ${(props) => (props.type === 'short' ? '10px 25px' : '10px 25px')};
+    gap: 15px;
+  }
+  @media (max-width: 540px) {
+    gap: 0px;
   }
 `;
