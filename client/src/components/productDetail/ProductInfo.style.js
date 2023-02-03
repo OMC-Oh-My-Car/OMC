@@ -64,7 +64,6 @@ export const ProductInfoArea = styled.div`
         display: flex;
         flex-wrap: wrap;
         width: 100%;
-        margin-bottom: 20px;
         .facilityLeft {
           width: 50%;
         }
@@ -80,24 +79,6 @@ export const ProductInfoArea = styled.div`
           min-height: 40px;
         }
       }
-      .more {
-        padding: 10px 20px;
-        font-size: 18px;
-        font-weight: 600;
-        outline: none;
-        border-radius: 5px;
-        transition: all 0.2s;
-        font-family: sans-serif;
-        background-color: ${(props) => props.theme.yellow};
-        border: 1px solid ${(props) => props.theme.yellow};
-        color: white;
-        cursor: pointer;
-      }
-      .more:hover {
-        border: 1px solid ${(props) => props.theme.yellow};
-        color: ${(props) => props.theme.yellow};
-        background-color: white;
-      }
     }
   }
   .reservation {
@@ -105,7 +86,7 @@ export const ProductInfoArea = styled.div`
     width: 30%;
     height: fit-content;
     position: sticky !important;
-    top: var(--navigation-bar-offset, 200px) !important;
+    top: 200px !important;
     border-radius: 10px;
     box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.1), 0 1px 4px hsla(0, 0%, 0%, 0.1), 0 2px 8px hsla(0, 0%, 0%, 0.1);
   }
@@ -119,5 +100,24 @@ export const ProductInfoArea = styled.div`
     .facilityRight {
       display: none;
     }
+  }
+  .more {
+    padding: 10px 20px;
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: 600;
+    outline: none;
+    border-radius: 5px;
+    transition: all 0.2s;
+    font-family: sans-serif;
+    background-color: ${(props) => props.theme.yellow};
+    border: 1px solid ${(props) => props.theme.yellow};
+    color: white;
+    cursor: pointer;
+  }
+  .more:hover {
+    border: 1px solid ${(props) => props.theme.yellow};
+    color: ${(props) => props.theme.yellow};
+    background-color: white;
   }
 `;

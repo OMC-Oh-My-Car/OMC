@@ -2,7 +2,7 @@
 import { UserReservationListArea } from './UserReservationList.style';
 import UserReservationItem from './UserReservationItem';
 import UserReservationItemSkeleton from './UserReservationItemSkeleton';
-const userReservationList = ({ data, isLoading, isError }) => {
+const userReservationList = ({ data, isLoading, isError, openModalController }) => {
   const skeletonMapArr = Array.from({ length: 8 }, (v, i) => i);
 
   if (isLoading) {
@@ -37,7 +37,7 @@ const userReservationList = ({ data, isLoading, isError }) => {
             data.data
               .filter((el) => el.reservationId)
               .map((item) => {
-                return <UserReservationItem key={item.reservationId} />;
+                return <UserReservationItem key={item.reservationId} openModalController={openModalController} />;
               })}
         </div>
       </UserReservationListArea>
