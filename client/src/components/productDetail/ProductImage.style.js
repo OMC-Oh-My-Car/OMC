@@ -5,7 +5,7 @@ export const ProductImageArea = styled.div`
   display: grid;
   width: 100%;
   height: 500px;
-  gap: 15px;
+  gap: 10px;
   grid-template-columns: repeat(4, 1fr);
   grid-template-areas:
     'a a b c'
@@ -29,17 +29,8 @@ export const ProductImageArea = styled.div`
   @media (max-width: 1320px) {
     height: 38vw;
   }
-  @media (max-width: 1128px) {
-    .image1 {
-      grid-area: a;
-      border-radius: 10px 0px 0px 10px;
-    }
-    .image3 {
-      border-radius: 0px 10px 0px 0px;
-    }
-    .image5 {
-      border-radius: 0px 0px 10px 0px;
-    }
+  @media (max-width: 1028px) {
+    gap: 8px;
   }
   @media (max-width: 744px) {
     grid-template-columns: repeat(2, 1fr);
