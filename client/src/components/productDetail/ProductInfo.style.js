@@ -106,6 +106,14 @@ export const ProductInfoArea = styled.div`
       }
     }
   }
+  @media (max-width: 744px) {
+    .reservation {
+      display: none;
+    }
+    .productInfo {
+      width: 100%;
+    }
+  }
   .more {
     padding: 10px 20px;
     margin-top: 20px;
