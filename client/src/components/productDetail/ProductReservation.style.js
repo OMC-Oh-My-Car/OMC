@@ -36,7 +36,7 @@ export const ProductReservationArea = styled.div`
     position: relative;
     display: flex;
     width: 100%;
-    height: 50px;
+    height: 53px;
     border: 1px solid ${(props) => props.theme.gray};
     border-radius: 5px;
     font-size: 10px;
@@ -47,7 +47,7 @@ export const ProductReservationArea = styled.div`
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 9px 10px;
+      padding: 12px 10px;
       border-right: 1px solid ${(props) => props.theme.gray};
       cursor: pointer;
     }
@@ -55,14 +55,16 @@ export const ProductReservationArea = styled.div`
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 9px 10px;
+      padding: 12px 10px;
       width: 50%;
       cursor: pointer;
     }
     .checkDate {
       font-size: 13px;
       margin-top: 5px;
-      font-weight: 700;
+      font-weight: 300;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
     }
   }
   .reserveButton {

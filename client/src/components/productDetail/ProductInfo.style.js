@@ -66,6 +66,7 @@ export const ProductInfoArea = styled.div`
         width: 100%;
         .facilityLeft {
           width: 50%;
+          flex-grow: 1;
         }
         .facilityRight {
           width: 50%;
@@ -91,14 +92,26 @@ export const ProductInfoArea = styled.div`
     box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.1), 0 1px 4px hsla(0, 0%, 0%, 0.1), 0 2px 8px hsla(0, 0%, 0%, 0.1);
   }
   @media (max-width: 1128px) {
-    .facilityList {
-      flex-direction: column;
+    .facilities {
+      .facilityList {
+        .facilityLeft {
+          width: 100%;
+        }
+        .facilityRight {
+          display: none;
+        }
+        .facilityItem {
+          width: 100%;
+        }
+      }
     }
-    .facilityLeft {
-      width: 100%;
-    }
-    .facilityRight {
+  }
+  @media (max-width: 744px) {
+    .reservation {
       display: none;
+    }
+    .productInfo {
+      width: 100%;
     }
   }
   .more {

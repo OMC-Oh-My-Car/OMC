@@ -8,7 +8,6 @@ export const SearchInputArea = styled.div`
   flex-grow: 1;
   max-width: ${(props) => (props.type === 'short' ? '520px' : '670px')};
   height: 100%;
-  padding: 3px 0px;
   /* border: 1px solid black; */
   input {
     width: 100%;
@@ -40,5 +39,8 @@ export const SearchInputArea = styled.div`
       color: white;
       cursor: pointer;
     }
+  }
+  @media (max-width: 540px) {
+    margin-right: 10px;
   }
 `;

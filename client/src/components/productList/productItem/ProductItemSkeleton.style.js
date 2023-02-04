@@ -20,7 +20,7 @@ export const ProductItemSkeletonArea = styled.div`
     justify-content: space-between;
     font-size: 15px;
     width: 100%;
-    height: 88px;
+    height: 73px;
     padding-top: 10px;
     /* border: 1px solid black; */
     font-family: sans-serif;

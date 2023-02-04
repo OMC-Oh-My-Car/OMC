@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const SellerReservationItemArea = styled.div`
   display: flex;
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   .image {
     width: 100%;
     max-width: 220px;

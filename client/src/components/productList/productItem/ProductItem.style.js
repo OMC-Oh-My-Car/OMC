@@ -58,7 +58,7 @@ export const ProductItemArea = styled.div`
     justify-content: space-between;
     font-size: 15px;
     width: 100%;
-    height: 88px;
+    height: 73px;
     padding-top: 10px;
     /* border: 1px solid black; */
     font-family: sans-serif;
@@ -70,8 +70,8 @@ export const ProductItemArea = styled.div`
       color: ${(props) => props.theme.gray};
     }
     .productPrice {
-      font-weight: 700;
       .colorGray {
+        font-weight: 700;
         color: ${(props) => props.theme.gray};
       }
     }

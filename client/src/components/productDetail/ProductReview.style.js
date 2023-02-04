@@ -85,7 +85,7 @@ export const ProductReviewListArea = styled.div`
     display: flex;
     flex-direction: column;
     width: 50%;
-    height: 200px;
+    margin-bottom: 40px;
     /* border: 1px solid black; */
     padding-right: 80px;
     .user {
@@ -152,12 +152,9 @@ export const ProductReviewListArea = styled.div`
   }
   @media (max-width: 1128px) {
     .reviewListItem {
-      padding-right: 40px;
-    }
-  }
-  @media (max-width: 744px) {
-    .reviewListItem {
-      padding-right: 20px;
+      padding-right: 0px;
+      width: 100%;
+      height: auto;
     }
   }
 `;
