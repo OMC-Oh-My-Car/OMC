@@ -1,7 +1,9 @@
 import { SellerProductAddImageArea } from './SellerProductAddImage.style';
 import upload from '../../assets/images/imageUpload.png';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
-const SellerProductAddImage = ({ showImages, handleAddImages }) => {
+const SellerProductAddImage = ({ showImages, handleAddImages, handleDeleteImage }) => {
   return (
     <>
       <SellerProductAddImageArea>
@@ -16,7 +18,14 @@ const SellerProductAddImage = ({ showImages, handleAddImages }) => {
           <>
             <div className="imageSlice">
               {showImages.map((el, index) => {
-                return <img key={index} src={el} alt="" />;
+                return (
+                  <>
+                    <div className="imageArea">
+                      <FontAwesomeIcon onClick={() => handleDeleteImage(index)} className="closeIcon" icon={faXmark} />
+                      <img key={index} src={el} alt="" />
+                    </div>
+                  </>
+                );
               })}
             </div>
           </>

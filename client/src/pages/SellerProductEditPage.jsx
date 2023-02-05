@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Container, MainContainer } from './SellerProductAddPage.style';
+import { Container, MainContainer } from './SellerProductEditPage.style';
 import Header from '../components/header/Header';
 import SellerProductAddImage from '../components/sellerProductAdd/SellerProductAddImage';
 import SellerProductAddTitle from '../components/sellerProductAdd/SellerProductAddTitle';
@@ -9,7 +9,7 @@ import SellerProductAddPrice from '../components/sellerProductAdd/SellerProductA
 import SellerProductAddTag from '../components/sellerProductAdd/SellerProductAddTag';
 import { useDaumPostcodePopup } from 'react-daum-postcode';
 
-const SellerProductAddPage = () => {
+const SellerProductEditPage = () => {
   const [showImages, setShowImages] = useState([]);
   const [image, setImage] = useState([]);
   const [title, setTitle] = useState('');
@@ -118,11 +118,11 @@ const SellerProductAddPage = () => {
           <SellerProductAddTag tags={tags} addTags={addTags} removeTags={removeTags} />
           <div className="button">
             <button className="red">취소하기</button>
-            <button>등록하기</button>
+            <button>수정하기</button>
           </div>
         </MainContainer>
       </Container>
     </>
   );
 };
-export default SellerProductAddPage;
+export default SellerProductEditPage;

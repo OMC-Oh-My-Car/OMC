@@ -35,10 +35,40 @@ export const SellerProductAddImageArea = styled.div`
     width: 100%;
     max-width: 520px;
     overflow-x: scroll;
-    img {
-      width: 100px;
-      height: 100px;
-      border: 1px solid ${(props) => props.theme.gray};
+    overflow-y: hidden;
+    /* width */
+    ::-webkit-scrollbar {
+      height: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+      background: #efdcdc;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+      background: ${(props) => props.theme.red};
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+    .imageArea {
+      position: relative;
+      .closeIcon {
+        position: absolute;
+        top: 7px;
+        left: 7px;
+        font-size: 20px;
+        color: white;
+      }
+      img {
+        width: 170px;
+        height: 170px;
+        border: 1px solid ${(props) => props.theme.gray};
+      }
     }
   }
   .imageUpload {
