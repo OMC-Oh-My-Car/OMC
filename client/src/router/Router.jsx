@@ -7,6 +7,7 @@ import UserReservationPage from '../pages/UserReservationPage';
 import SellerProductListPage from '../pages/SellerProductListPage';
 import SellerReservationPage from '../pages/SellerReservationPage';
 import SellerProductAddPage from '../pages/SellerProductAddPage';
+import SellerProductEditPage from '../pages/SellerProductEditPage';
 import Modal from '../components/modal/Modal';
 import { useSelector, useDispatch } from 'react-redux';
 import { openModal, closeModal } from '../redux/slice/ModalSlice';
@@ -35,7 +36,7 @@ const Router = () => {
           />
           <Route path="/seller/:id/product" element={<SellerProductListPage />} />
           <Route path="/seller/:id/product/add" element={<SellerProductAddPage />} />
-          <Route path="/seller/:id/product/:id/edit" element={<SellerProductListPage />} />
+          <Route path="/seller/:id/product/:id/edit" element={<SellerProductEditPage />} />
           <Route path="/seller/:id/product/:id/reservation" element={<SellerReservationPage />} />
         </Routes>
         {isOpenModal && <Modal closeModalController={closeModalController} />}
