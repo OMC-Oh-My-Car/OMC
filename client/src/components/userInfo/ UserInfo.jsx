@@ -5,35 +5,63 @@ import { Template, UserInfoForm, ChangeButton } from './ UserInfo.style';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import ChangeButton from './userInfoForm/ChangeButton';
-import { useState } from 'react';
-import NameModal from './userInfoForm/NameModal';
-import EmailModal from './userInfoForm/EmailModal';
-import PhoneModal from './userInfoForm/PhoneModal';
-import HomeModal from './userInfoForm/HomeModal';
+import { useEffect, useState } from 'react';
+// import NameModal from './userInfoForm/NameModal';
+// import EmailModal from './userInfoForm/EmailModal';
+// import PhoneModal from './userInfoForm/PhoneModal';
+// import HomeModal from './userInfoForm/HomeModal';
+import ProfileImg from './userInfoForm/ProfileImg';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 const UserInfo = () => {
-  const [name, setName] = useState(false);
-  const [mail, setMail] = useState(false);
-  const [phone, setPhone] = useState(false);
-  const [home, setHome] = useState(false);
-  const nameHandler = () => {
-    setName(true);
+  // const [name, setName] = useState(false);
+  // const [mail, setMail] = useState(false);
+  // const [phone, setPhone] = useState(false);
+  const [user, setUser] = useState({
+    email: '',
+    username: '',
+    profileImg: '',
+    phone: '',
+  });
+  // const [home, setHome] = useState(false);
+  // const nameHandler = () => {
+  //   setName(true);
+  // };
+  // const mailHandler = () => {
+  //   setMail(true);
+  // };
+  // const phoneHandler = () => {
+  //   setPhone(true);
+  // };
+  // const homeHandler = () => {
+  //   setHome(true);
+  // };
+
+  const getUserData = async () => {
+    const res = await axios.get('https://5a26-49-142-61-236.jp.ngrok.io/member/detail', {
+      headers: {
+        Authorization: localStorage.getItem('Authorization'),
+      },
+    });
+    setUser({
+      email: res.email,
+      username: res.username,
+      profileImg: res.profileImg,
+      phone: res.phone,
+    });
+    return res.data;
   };
-  const mailHandler = () => {
-    setMail(true);
-  };
-  const phoneHandler = () => {
-    setPhone(true);
-  };
-  const homeHandler = () => {
-    setHome(true);
-  };
+  useEffect(() => {
+    getUserData();
+  }, []);
   return (
     <>
-      <Template>
+      <Template key={user.id}>
         <div className="userInfoHead">
           <FontAwesomeIcon className="userInfoIcon" icon={faInfoCircle} size="2x" />
           <h1>개인정보</h1>
         </div>
+        <ProfileImg />
         <UserInfoForm>
           <div className="inputHead">
             <UserInfoInputBox
@@ -42,12 +70,13 @@ const UserInfo = () => {
               inputType="text"
               name="id"
               // onChangeInput={onChangeInput}
-              text="나호연"
+              text={user.username}
+              value={user.username}
             />
-            <div className="changeButtonStyle">
+            {/* <div className="changeButtonStyle">
               <ChangeButton onClick={nameHandler}>수정</ChangeButton>
               {name && <NameModal setName={setName} />}
-            </div>
+            </div> */}
           </div>
         </UserInfoForm>
         <UserInfoForm>
@@ -58,12 +87,13 @@ const UserInfo = () => {
               inputType="email"
               name="email"
               // onChangeInput={onChangeInput}
-              text="nahy0107@naver.com"
+              text={user.email}
+              value={user.email}
             />
-            <div className="changeButtonStyle">
+            {/* <div className="changeButtonStyle">
               <ChangeButton onClick={mailHandler}>수정</ChangeButton>
               {mail && <EmailModal setMail={setMail} />}
-            </div>
+            </div> */}
           </div>
         </UserInfoForm>
         <UserInfoForm>
@@ -74,15 +104,16 @@ const UserInfo = () => {
               inputType="tel"
               name="tel"
               // onChangeInput={onChangeInput}
-              text="010-9775-7034"
+              text={user.phone}
+              value={user.phone}
             />
-            <div className="changeButtonStyle">
+            {/* <div className="changeButtonStyle">
               <ChangeButton onClick={phoneHandler}>수정</ChangeButton>
               {phone && <PhoneModal setPhone={setPhone} />}
-            </div>
+            </div> */}
           </div>
         </UserInfoForm>
-        <UserInfoForm>
+        {/* <UserInfoForm>
           <div className="inputHead">
             <UserInfoInputBox
               labelName="주소"
@@ -97,7 +128,10 @@ const UserInfo = () => {
               {home && <HomeModal setHome={setHome} />}
             </div>
           </div>
-        </UserInfoForm>
+        </UserInfoForm> */}
+        <Link to={'/user/edit'}>
+          <ChangeButton>수정하기</ChangeButton>
+        </Link>
       </Template>
     </>
   );

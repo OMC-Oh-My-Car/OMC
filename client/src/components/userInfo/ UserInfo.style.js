@@ -8,7 +8,7 @@ export const Template = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 50%;
+  width: 35%;
   h1 {
     font-size: 27px;
     margin-bottom: 40px;
@@ -25,23 +25,18 @@ export const Template = styled.div`
 export const UserInfoForm = styled.div`
   .inputHead {
     display: flex;
-    justify-content: space-between;
-  }
-  .changeButtonStyle {
-    margin-top: 65px;
-    margin-left: 30px;
   }
 `;
 export const ChangeButton = styled.button`
-  width: 45px;
+  margin-top: 25px;
+  width: 370px;
   height: 40px;
-  border: solid 1px black;
   border-radius: 12px;
-  text-decoration: underline;
-  background-color: black;
+  background-color: #0095f6;
   cursor: pointer;
+  font-size: 20px;
   color: white;
   :hover {
-    background-color: darkgray;
+    background-color: orange;
   }
 `;
