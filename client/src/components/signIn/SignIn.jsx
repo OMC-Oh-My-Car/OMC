@@ -8,15 +8,13 @@ import CheckBox from './checkBox/CheckBox';
 import GoogleButton from './social/Google';
 import KakaoButton from './social/Kakao';
 import { useState, useEffect } from 'react';
-// import { LOGIN_URL } from 'api';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-// import AlertAlarm from '../alert/AlertAlarm';
+import { useNavigate, Link } from 'react-router-dom';
+import axiosInstance from '../../modules';
 import SignUpSuccessModal from '../alert/SignUpSuccessModal';
 const SignIn = () => {
   const [idEmail, setIdEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  const AccessToken = localStorage.getItem('Authorization') || '';
   const [alert, setAlert] = useState({
     open: false,
     title: '',
@@ -32,39 +30,32 @@ const SignIn = () => {
   const handlePassword = (e) => {
     setPassword(e.target.value);
   };
-  const handleLogout = () => {
-    axios
-      .post('https://ffa0-49-142-61-236.jp.ngrok.io/member/logout', {
-        headers: {
-          authorization: localStorage.getItem('Authorization'),
-        },
-      })
+  const handleLogout = async () => {
+    axiosInstance
+      .post('/member/logout')
       .then(() => {
         console.log('로그아웃되었습니다.');
         localStorage.clear();
         navigate('/');
       })
       .catch((err) => {
-        console.log(localStorage.getItem('Authorization'));
+        console.log(`${AccessToken}`);
         console.log(`${err.response.status} 에러`);
         console.log('로그아웃 실패!');
       });
   };
   const submitHandler = () => {
     console.log(`${idEmail}, ${password}`);
-    axios
-      .post('https://ffa0-49-142-61-236.jp.ngrok.io/member/login', {
+    axiosInstance
+      .post('/member/login', {
         email: idEmail,
         password: password,
       })
       .then((res) => {
         let accessToken = res.headers.get('Authorization');
-        let refreshToken = res.headers.get('Set-Cookie');
-
-        localStorage.setItem('Authorization', accessToken);
-        localStorage.setItem('Set-Cookie', refreshToken);
+        localStorage.setItem('Authorization', JSON.stringify(accessToken));
         console.log(res);
-        navigate('/login');
+        navigate('/signin');
       })
       .catch((err) => {
         console.log(`${err.response.status} 에러`);
@@ -110,7 +101,9 @@ const SignIn = () => {
           placeholder="비밀번호를 입력해주세요!"
         />
         <SignInButton>
-          <OrangeButton text="로그인" width="197px" height="40px" onClick={submitHandler} />
+          <Link to={'/signin'}>
+            <OrangeButton text="로그인" width="197px" height="40px" onClick={submitHandler} />
+          </Link>
           <OrangeButton text="로그아웃" width="197px" height="40px" onClick={handleLogout} />
           {alert && (
             <SignUpSuccessModal
