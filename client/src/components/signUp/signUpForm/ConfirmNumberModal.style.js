@@ -9,7 +9,11 @@ export const ModalBackground = styled.div`
   background: rgba(0, 0, 0, 0.5);
 `;
 export const ContainerDiv = styled.div`
-  width: 520px;
+  input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  width: 510px;
   height: 200px;
   border: 1px solid white;
   border-radius: 10px;
@@ -35,5 +39,5 @@ export const HeaderDiv = styled.div`
   height: 10%;
   min-height: 15px;
   padding: 5px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 `;

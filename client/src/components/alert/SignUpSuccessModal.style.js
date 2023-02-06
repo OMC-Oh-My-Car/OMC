@@ -9,31 +9,56 @@ export const ModalBackground = styled.div`
   background: rgba(0, 0, 0, 0.5);
 `;
 export const ContainerDiv = styled.div`
-  width: 520px;
-  height: 200px;
+  width: 500px;
+  height: 450px;
   border: 1px solid white;
   border-radius: 10px;
-  padding: 1%;
-  z-index: 1;
+  padding: 3%;
+  z-index: 1050;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: #fff;
+  .userIconTemplate {
+    display: flex;
+    justify-content: center;
+    font-size: 100px;
+    margin-bottom: 20px;
+  }
   .inputTitle {
     border: solid 1px green;
   }
   .modalInputBox {
   }
-  .closeIcon {
+  .handIcon {
     cursor: pointer;
+  }
+  .signupTitle {
+    display: flex;
+    justify-content: center;
+    font-size: 23px;
+    margin-bottom: 20px;
+  }
+  .signupBody {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    margin-bottom: 30px;
+    color: darkgray;
   }
 `;
 export const HeaderDiv = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   height: 10%;
   min-height: 15px;
   padding: 5px;
   margin-bottom: 15px;
+`;
+export const ButtonTemplate = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;

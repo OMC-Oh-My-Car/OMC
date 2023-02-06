@@ -1,13 +1,25 @@
 // import React from "react";
-import { ModalBackground, ContainerDiv, HeaderDiv } from './HomeModal.style';
-import InfoChange from './InfoChange';
-import BlackButton from './BlackButton';
-import { useEffect, useRef } from 'react';
+import { ModalBackground, ContainerDiv, HeaderDiv } from './ConfirmNumberModal.style';
+import InfoChange from '../../userInfo/userInfoForm/InfoChange';
+import BlackButton from '../../userInfo/userInfoForm/BlackButton';
+import { useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
-const HomeModal = ({ setHome }) => {
-  const outside = useRef();
 
+const ConfirmNumberModal = ({ setConfirmNumber }) => {
+  const [number, setNumber] = useState('');
+  const [inputNumber, setInputNumber] = useState('');
+  const outside = useRef();
+  const sameNumber = (e) => {
+    setNumber(e.target.value);
+    setInputNumber(e.target.value);
+    if (number === inputNumber) {
+      alert('인증되었습니다!');
+      setConfirmNumber(false);
+    } else {
+      alert('인증번호가 틀립니다! 다시 입력해주세요!');
+    }
+  };
   useEffect(() => {
     //모달창 화면이 처음에 랜더링이 되었을때
     document.body.style.cssText = `  
@@ -31,54 +43,30 @@ const HomeModal = ({ setHome }) => {
       <ModalBackground
         ref={outside}
         onClick={(e) => {
-          if (e.target === outside.current) setHome(false);
+          if (e.target === outside.current) setConfirmNumber(false);
         }}
       >
         <ContainerDiv>
           <HeaderDiv>
-            <span className="titleSpan">주소</span>
+            <span className="titleSpan">인증번호</span>
             <span className="closeIconTemplate">
-              <FontAwesomeIcon className="closeIcon" icon={faClose} onClick={() => setHome(false)} />
+              <FontAwesomeIcon className="closeIcon" icon={faClose} onClick={() => setConfirmNumber(false)} />
             </span>
           </HeaderDiv>
           <div className="modalInputBox">
             <InfoChange
-              labelName="주/도"
+              labelName="인증번호"
               inputId="text"
               inputType="text"
               name="text"
               // onChangeInput={onChangeInput}
-              placeholder="예) 서울특별시"
+              placeholder="인증번호를 입력해주세요!"
             />
-            <InfoChange
-              labelName="시/군/구"
-              inputId="text"
-              inputType="text"
-              name="text"
-              // onChangeInput={onChangeInput}
-              placeholder="예) 강남구"
-            />
-            <InfoChange
-              labelName="도로명 주소"
-              inputId="text"
-              inputType="text"
-              name="text"
-              // onChangeInput={onChangeInput}
-              placeholder="예) 상사서로 17"
-            />
-            <InfoChange
-              labelName="동호수"
-              inputId="text"
-              inputType="text"
-              name="text"
-              // onChangeInput={onChangeInput}
-              placeholder="예) 202동 1205호"
-            />
-            <BlackButton width="480px" height="45px" text="저장" />
+            <BlackButton width="480px" height="45px" text="인증하기" onClick={sameNumber} />
           </div>
         </ContainerDiv>
       </ModalBackground>
     </>
   );
 };
-export default HomeModal;
+export default ConfirmNumberModal;

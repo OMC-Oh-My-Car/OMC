@@ -2,12 +2,13 @@
 import { ModalBackground, ContainerDiv, HeaderDiv } from './EmailModal.style';
 import InfoChange from './InfoChange';
 import BlackButton from './BlackButton';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
 const EmailModal = ({ setMail }) => {
   const outside = useRef();
-
+  const [emailModalData, setEmailModalData] = useState([]);
   useEffect(() => {
     //모달창 화면이 처음에 랜더링이 되었을때
     document.body.style.cssText = `  
@@ -20,6 +21,14 @@ const EmailModal = ({ setMail }) => {
       document.body.style.cssText = '';
       window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
     };
+  }, []);
+  const getUserData = async () => {
+    const res = await axios.get('/member/detail');
+    setEmailModalData(res.data);
+    return res.data;
+  };
+  useEffect(() => {
+    getUserData();
   }, []);
   //body 태그의 css를 position을 fixed로 변경하고,
   //top을 현재 스크롤 위치로 하고 overflow-y: scroll; width: 100%;을 추가
@@ -34,7 +43,7 @@ const EmailModal = ({ setMail }) => {
           if (e.target === outside.current) setMail(false);
         }}
       >
-        <ContainerDiv>
+        <ContainerDiv key={emailModalData.id}>
           <HeaderDiv>
             <span className="titleSpan">이메일</span>
             <span className="closeIconTemplate">
@@ -48,9 +57,10 @@ const EmailModal = ({ setMail }) => {
               inputType="email"
               name="email"
               // onChangeInput={onChangeInput}
+              value={emailModalData.email}
               placeholder="새로운 이메일을 입력해주세요!"
             />
-            <BlackButton width="470px" height="45px" text="저장" />
+            <BlackButton width="480px" height="45px" text="저장" />
           </div>
         </ContainerDiv>
       </ModalBackground>

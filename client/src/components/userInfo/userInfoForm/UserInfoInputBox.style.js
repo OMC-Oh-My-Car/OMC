@@ -10,7 +10,7 @@ export const InputContainer = styled.div`
     color: ${(props) => props.theme.gray};
   }
   .inputBox {
-    width: 42vw;
+    width: 25vw;
     border: none;
     border-bottom: 3px solid darkgray;
     padding-left: 3px;

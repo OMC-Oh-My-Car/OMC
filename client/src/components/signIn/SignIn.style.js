@@ -19,7 +19,7 @@ export const Template = styled.div`
   .idCheckBox {
     font-size: 15px;
     float: right;
-    margin-top: -25px;
+    margin-top: -15px;
     margin-right: 11px;
   }
 `;

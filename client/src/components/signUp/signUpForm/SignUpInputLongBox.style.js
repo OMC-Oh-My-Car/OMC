@@ -3,13 +3,14 @@ import styled from 'styled-components';
 export const InputContainer = styled.div`
   width: 350px;
   height: 80px;
-  margin-bottom: 10px;
+  margin-top: 15px;
   .inputLabel {
-    height: 30px;
+    height: 20px;
     display: flex;
+    margin-bottom: 10px;
   }
   .inputBox {
-    width: 340px;
+    width: 470px;
     height: 40px;
     border: none;
     border-bottom: 2px solid darkgray;
