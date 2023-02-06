@@ -2,12 +2,24 @@
 import { ModalBackground, ContainerDiv, HeaderDiv } from './ConfirmNumberModal.style';
 import InfoChange from '../../userInfo/userInfoForm/InfoChange';
 import BlackButton from '../../userInfo/userInfoForm/BlackButton';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
-const EmailModal = ({ setConfirmNumber }) => {
-  const outside = useRef();
 
+const ConfirmNumberModal = ({ setConfirmNumber }) => {
+  const [number, setNumber] = useState('');
+  const [inputNumber, setInputNumber] = useState('');
+  const outside = useRef();
+  const sameNumber = (e) => {
+    setNumber(e.target.value);
+    setInputNumber(e.target.value);
+    if (number === inputNumber) {
+      alert('인증되었습니다!');
+      setConfirmNumber(false);
+    } else {
+      alert('인증번호가 틀립니다! 다시 입력해주세요!');
+    }
+  };
   useEffect(() => {
     //모달창 화면이 처음에 랜더링이 되었을때
     document.body.style.cssText = `  
@@ -50,11 +62,11 @@ const EmailModal = ({ setConfirmNumber }) => {
               // onChangeInput={onChangeInput}
               placeholder="인증번호를 입력해주세요!"
             />
-            <BlackButton width="475px" height="45px" text="인증하기" />
+            <BlackButton width="480px" height="45px" text="인증하기" onClick={sameNumber} />
           </div>
         </ContainerDiv>
       </ModalBackground>
     </>
   );
 };
-export default EmailModal;
+export default ConfirmNumberModal;
