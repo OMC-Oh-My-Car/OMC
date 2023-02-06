@@ -2,11 +2,13 @@
 import { ModalBackground, ContainerDiv, HeaderDiv } from './NameModal.style';
 import InfoChange from './InfoChange';
 import BlackButton from './BlackButton';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
 const NameModal = ({ setName }) => {
   const outside = useRef();
+  const [nameModalData, setNameModalData] = useState([]);
 
   useEffect(() => {
     //모달창 화면이 처음에 랜더링이 되었을때
@@ -21,6 +23,14 @@ const NameModal = ({ setName }) => {
       window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
     };
   }, []);
+  const getUserData = async () => {
+    const res = await axios.get('/member/detail');
+    setNameModalData(res.data);
+    return res.data;
+  };
+  useEffect(() => {
+    getUserData();
+  }, []);
   //body 태그의 css를 position을 fixed로 변경하고,
   //top을 현재 스크롤 위치로 하고 overflow-y: scroll; width: 100%;을 추가
   //스크롤 방지
@@ -34,7 +44,7 @@ const NameModal = ({ setName }) => {
           if (e.target === outside.current) setName(false);
         }}
       >
-        <ContainerDiv>
+        <ContainerDiv key={nameModalData.id}>
           <HeaderDiv>
             <span className="titleSpan">실명</span>
             <span className="closeIconTemplate">
@@ -43,19 +53,11 @@ const NameModal = ({ setName }) => {
           </HeaderDiv>
           <div className="modalInputBox">
             <InfoChange
-              labelName="성"
-              inputId="text"
-              inputType="text"
-              name="text"
-              // onChangeInput={onChangeInput}
-              placeholder="새로운 성을 입력해주세요!"
-            />
-            <InfoChange
               labelName="이름"
               inputId="text"
               inputType="text"
               name="text"
-              // onChangeInput={onChangeInput}
+              value={nameModalData.username}
               placeholder="새로운 이름을 입력해주세요!"
             />
             <BlackButton width="480px" height="45px" text="저장" />
