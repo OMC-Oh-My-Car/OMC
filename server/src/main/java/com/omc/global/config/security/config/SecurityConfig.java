@@ -8,7 +8,6 @@ import com.omc.global.jwt.filter.JwtAuthenticationFilter;
 import com.omc.global.jwt.filter.JwtVerificationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,8 +28,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
-
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -43,6 +40,7 @@ public class SecurityConfig {
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final MemberRepository memberRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -70,7 +68,7 @@ public class SecurityConfig {
                 .authorizeRequests(
                         authorizeRequests -> authorizeRequests
                                 // .antMatchers("/**").hasAnyRole("ROLE_ADMIN")
-                                .antMatchers("/member/login", "/member", "/member/confirm/mail", "/member/find/id", "/seller", "/member/certification/mail").permitAll()
+                                .antMatchers( "/member/login", "/member", "/member/confirm/mail", "/member/find/id", "/seller", "/member/certification/mail").permitAll()
                                 .anyRequest()
                                 .authenticated() // 최소자격 : 로그인
                 )
@@ -105,11 +103,15 @@ public class SecurityConfig {
 //        configuration.addAllowedOrigin(FRONT_REMOTE);
 //        configuration.addAllowedOrigin(FRONT_REMOTE_HTTPS);
 //        configuration.addAllowedOrigin(DOMAIN);
-        configuration.addAllowedOrigin("*");
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Set-Cookie", "X-Requested-With", "Authorization", "Content-Type", "Content-Length", "Cache-Control"));
+        configuration.addAllowedOrigin("http://localhost:3000");
+        configuration.addAllowedOrigin("https://5a26-49-142-61-236.jp.ngrok.io");
+//        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Set-Cookie", "X-Requested-With", "Authorization", "Content-Type", "Content-Length", "Cache-Control"));
+        configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
-        configuration.setExposedHeaders(Arrays.asList("Authorization", "Set-Cookie"));
-        configuration.setAllowCredentials(false);
+        configuration.addExposedHeader("Authorization");
+        configuration.addExposedHeader("Set-Cookie");
+//        configuration.setExposedHeaders(Arrays.asList("Authorization", "Set-Cookie", "Content-Type"));
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

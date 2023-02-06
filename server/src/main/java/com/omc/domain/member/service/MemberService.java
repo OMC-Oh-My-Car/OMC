@@ -166,17 +166,28 @@ public class MemberService {
         return ReissueResponse.toResponse(member);
     }
 
-    public void signOut(String email) {
-        RefreshToken refreshToken = refreshTokenRepository.findByKey(email).orElse(null);
+    public void signOut(HttpServletResponse response, String email, String refreshToken) {
+        if (refreshToken == null) {
+            refreshToken = refreshTokenRepository.findByKey(email).orElse(null).getValue();
+        }
 
         // refreshToken 존재 및 유효성 분류
-        if (refreshToken != null && !tokenProvider.validateToken(refreshToken.getValue())) {
+        if (refreshToken != null && !tokenProvider.validateToken(refreshToken)) {
             throw new BusinessException(ErrorCode.NOT_VALID_TOKEN);
         }
 
         if (!memberRepository.existsByEmail(email)) {
             throw new BusinessException(ErrorCode.MEMBER_NOT_EXISTS);
         }
+
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
+                .maxAge(0)
+                .path("/")
+                .secure(true)
+                .sameSite("None")
+                .httpOnly(true)
+                .build();
+        response.setHeader("Set-Cookie", cookie.toString());
 
         refreshTokenRepository.deleteByKey(email);
     }
@@ -252,7 +263,7 @@ public class MemberService {
 
     public void adaptPassword(ModifyPasswordDto modifyPasswordDto, AuthMember member) {
         if (member == null) {
-            throw new BusinessException(ErrorCode.MEMBER_NOT_EXISTS);
+            throw new BusinessException(ErrorCode.NOT_EXISTS_AUTHORIZATION);
         }
 
         if (!passwordEncoder.matches(modifyPasswordDto.getOldPassword(), member.getPassword())) {
