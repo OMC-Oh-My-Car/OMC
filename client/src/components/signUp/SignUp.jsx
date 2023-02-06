@@ -25,7 +25,6 @@ const SignUp = () => {
   const [usernameError, setUsernameError] = useState('');
   const [nicknameError, setNicknameError] = useState('');
   const [phoneError, setPhoneError] = useState('');
-  // const [setColor] = useState({ color: 'blue' });
 
   //유효성 검사
   const [isIdEmail, setIsIdEmail] = useState(false);
@@ -35,8 +34,6 @@ const SignUp = () => {
   const [isNickname, setIsNickname] = useState(false);
   const [isPhone, setIsPhone] = useState(false);
   const navigate = useNavigate();
-
-  // const [isSubmit, setIsSubmit] = useState(false);
 
   const [alert, setAlert] = useState({
     open: false,
@@ -125,7 +122,7 @@ const SignUp = () => {
   }, []);
   const submitHandle = async () => {
     await axios
-      .post('https://ffa0-49-142-61-236.jp.ngrok.io/member', {
+      .post('/member', {
         email: idEmail,
         password: password,
         passwordConfirm: passwordConfirm,
@@ -282,7 +279,6 @@ const SignUp = () => {
         </SignUpForm>
         {phone.length > 0 && <span className={`message ${isPhone ? 'success' : 'error'}`}>{phoneError}</span>}
         <SignUpButton>
-          {/* <OrangeButton text="회원가입" width="180px" height="40px" /> */}
           <OrangeButton text="회원가입" width="180px" height="40px" onClick={submitHandle} />
           {alert && (
             <SignUpSuccessModal
