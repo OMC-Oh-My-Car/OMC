@@ -4,7 +4,7 @@ import { Container, MainContainer } from './UserReservationPage.style';
 import Header from '../components/header/Header';
 // import UserReservationEmpty from '../components/userReservation/UserReservationEmpty';
 import UserReservationList from '../components/userReservation/UserReservationList';
-import { getUserReservation } from '../modules/userReservation/userReservation';
+import { getUserReservationList } from '../modules/userReservation/userReservation';
 import Pagination from '../components/pagination/Pagination';
 const ReservationUserPage = ({ openModalController }) => {
   const [page, setpage] = useState(1);
@@ -13,7 +13,7 @@ const ReservationUserPage = ({ openModalController }) => {
     setpage(page.selected + 1);
   };
   const { isLoading, data, isError } = useQuery('productList', async () => {
-    const data = await getUserReservation(page);
+    const data = await getUserReservationList(page);
     return data;
   });
   return (

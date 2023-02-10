@@ -3,7 +3,7 @@ import { useQuery } from 'react-query';
 import { Container, MainContainer } from './ProductListPage.style';
 import Header from '../components/header/Header';
 import ProductList from '../components/productList/ProductList';
-import { getProductList } from '../modules/product/productList';
+import { getProductList } from '../modules/userProduct/userProductList';
 import Pagination from '../components/pagination/Pagination';
 
 const ProductListPage = () => {
