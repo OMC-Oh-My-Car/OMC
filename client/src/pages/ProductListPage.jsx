@@ -12,7 +12,7 @@ const ProductListPage = () => {
   const itemChange = (page) => {
     setpage(page.selected + 1);
   };
-  const { isLoading, data, isError } = useQuery(['productList', page, 'search'], async () => {
+  const { isLoading, data, isError } = useQuery(['productList', filter, page, 'search'], async () => {
     const data = await getProductList(filter, page, 'search');
     return data;
   });
