@@ -2,6 +2,11 @@
 import { ReservationInfoModalArea } from './ReservationInfoModal.style';
 
 const ReservationInfoModal = () => {
+  const url = window.location.origin + window.location.pathname;
+  console.log(url);
+  const params = new URLSearchParams(location.search);
+  let reservationId = params.get('reservation_id');
+  console.log(reservationId);
   return (
     <>
       <ReservationInfoModalArea>

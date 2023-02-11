@@ -10,15 +10,13 @@ import SellerProductAddPage from '../pages/SellerProductAddPage';
 import SellerProductEditPage from '../pages/SellerProductEditPage';
 import Modal from '../components/modal/Modal';
 import { useSelector, useDispatch } from 'react-redux';
-import { openModal, closeModal } from '../redux/slice/ModalSlice';
+import { openModal } from '../redux/slice/ModalSlice';
 
 const Router = () => {
-  const isOpenModal = useSelector((state) => state.modal.onModal);
   const dispatch = useDispatch();
 
-  const closeModalController = () => {
-    dispatch(closeModal());
-  };
+  const isOpenModal = useSelector((state) => state.modal.onModal);
+
   const openModalController = (type) => {
     dispatch(openModal(type));
   };
@@ -39,7 +37,7 @@ const Router = () => {
           <Route path="/seller/:id/product/:id/edit" element={<SellerProductEditPage />} />
           <Route path="/seller/:id/product/:id/reservation" element={<SellerReservationPage />} />
         </Routes>
-        {isOpenModal && <Modal closeModalController={closeModalController} />}
+        {isOpenModal && <Modal />}
       </BrowserRouter>
     </>
   );

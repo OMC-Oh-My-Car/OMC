@@ -9,9 +9,8 @@ import { useNavigate } from 'react-router-dom';
 const UserReservationItem = ({ openModalController }) => {
   const navigate = useNavigate();
 
-  const modalController = (type, width, height, url, id) => {
-    console.log(url);
-    navigate(`/user/123/reservation?modal=${url}&reservation_id=${id}`);
+  const modalController = (type, width, height, modal, id) => {
+    navigate(`/user/123/reservation?modal=${modal}&reservation_id=${id}`);
     openModalController({ type, width, height });
   };
   return (
@@ -25,7 +24,7 @@ const UserReservationItem = ({ openModalController }) => {
           <span className="reservationPeriod">2023년 1월 13일 - 2023년 1월 14일</span>
           <button
             className="button buttonRed"
-            onClick={() => modalController('reservationInfo', '500px', '550px', 'reservation_detail', 1)}
+            onClick={() => modalController('reservationInfo', '500px', '550px', 'reservation_info', 1)}
           >
             예약 정보
           </button>
