@@ -1,20 +1,34 @@
 // import React from 'react';
 import { Container, MainContainer } from './ProductDetailPage.style';
+import { useQuery } from 'react-query';
 import Header from '../components/header/Header';
 import ProductImage from '../components/productDetail/ProductImage';
 import ProductInfo from '../components/productDetail/ProductInfo';
 import ProductReview from '../components/productDetail/ProductReview';
 import ProductMap from '../components/productDetail/ProductMap';
-
+import { getProductDetail } from '../modules/userProduct/userProductDetail';
+import { useParams } from 'react-router-dom';
 const ProductDetailPage = ({ openModalController }) => {
+  const params = useParams();
+  let productId = params.productId;
+  const { isLoading, data, isError } = useQuery(['productDetail', productId], async () => {
+    const data = await getProductDetail(productId);
+    return data;
+  });
+
   return (
     <>
       <Container>
         <Header type="short" />
         <MainContainer>
-          <ProductImage openModalController={openModalController} />
-          <ProductInfo openModalController={openModalController} />
-          <ProductReview openModalController={openModalController} />
+          <ProductImage data={data} isLoading={isLoading} isError={isError} openModalController={openModalController} />
+          <ProductInfo data={data} isLoading={isLoading} isError={isError} openModalController={openModalController} />
+          <ProductReview
+            data={data}
+            isLoading={isLoading}
+            isError={isError}
+            openModalController={openModalController}
+          />
           <ProductMap />
         </MainContainer>
       </Container>

@@ -12,10 +12,19 @@ const ReservationUserPage = ({ openModalController }) => {
   const itemChange = (page) => {
     setpage(page.selected + 1);
   };
-  const { isLoading, data, isError } = useQuery('productList', async () => {
+  const { isLoading, data, isError } = useQuery(['productList', page], async () => {
     const data = await getUserReservationList(page);
     return data;
   });
+  // 예약 정보 상세 조회(모달 창에서)
+
+  // 리뷰 작성(모달 창에서)
+
+  // 리뷰 조회(모달 창에서)
+
+  // 예약 취소(모달 창에서)
+
+  // 취소 사유 조회(모달 창에서)
   return (
     <>
       <Container>
