@@ -1,8 +1,19 @@
 import { ReservationReviewModalArea } from './ReservationReviewModal.style';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useQuery } from 'react-query';
+import { getUserReview } from '../../modules/userReview/userReview';
 
 const ReservationReviewModal = () => {
+  const params = new URLSearchParams(location.search);
+  let reservationId = params.get('reservation_id');
+
+  const { data } = useQuery(['reservationReview', reservationId], async () => {
+    const data = await getUserReview(reservationId);
+    return data;
+  });
+  console.log(data);
+
   const array = [1, 2, 3, 4, 5];
   const totalGrade = 1;
   const cleanGrade = 2;

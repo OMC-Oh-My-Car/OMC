@@ -1,7 +1,18 @@
 // import React from 'react';
 import { ReservationCancelModalArea } from './ReservationCancelModal.style';
+import { useQuery } from 'react-query';
+import { getCancelUserReason } from '../../modules/userReservation/userReservation';
 
 const ReservationCancelModal = () => {
+  const params = new URLSearchParams(location.search);
+  let reservationId = params.get('reservation_id');
+
+  const { data } = useQuery(['reservationCancelReason', reservationId], async () => {
+    const data = await getCancelUserReason(reservationId);
+    return data;
+  });
+  console.log(data);
+
   return (
     <>
       <ReservationCancelModalArea>

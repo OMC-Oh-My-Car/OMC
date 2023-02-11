@@ -10,7 +10,7 @@ const UserReservationItem = ({ openModalController }) => {
   const navigate = useNavigate();
 
   const modalController = (type, width, height, modal, id) => {
-    navigate(`/user/123/reservation?modal=${modal}&reservation_id=${id}`);
+    navigate(`/user/123/reservation?reservation_id=${id}&modal=${modal}`);
     openModalController({ type, width, height });
   };
   return (
@@ -36,24 +36,24 @@ const UserReservationItem = ({ openModalController }) => {
           >
             예약 취소
           </button>
-          {/* <button
+          <button
             className="button buttonYellow"
             onClick={() => modalController('reservationCancel', '600px', '800px', 'reservation_cancel_reason', 1)}
           >
             취소된 예약
-          </button> */}
-          {/* <button
+          </button>
+          <button
             className="button buttonYellow"
             onClick={() => modalController('reservationReviewAdd', '600px', '800px', 'reservation_add_review', 1)}
           >
             리뷰 작성
-          </button> */}
-          {/* <button
+          </button>
+          <button
             className="button buttonYellow"
             onClick={() => modalController('reservationReview', '600px', '800px', 'reservation_review', 1)}
           >
             리뷰 확인
-          </button> */}
+          </button>
         </div>
       </UserReservationItemArea>
     </>

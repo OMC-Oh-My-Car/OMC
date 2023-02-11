@@ -1,14 +1,14 @@
 import axiosInstance from '..';
 
-export const getUserReview = (page) => {
+export const getUserReview = (reservationId) => {
   // 리뷰 정보 가져오기
   // 예약 아이디 필요
   let params = {
-    page,
+    reservationId,
   };
   console.log(params);
   console.log('리뷰 Loading');
-  return axiosInstance.get('/reservation');
+  return axiosInstance.get(`/reservation/${reservationId}/review`);
 };
 
 export const addUserReview = (page) => {
