@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { KakaoMapArea } from './KakaoMap.style';
 
-const KakaoMap = () => {
+const KakaoMap = ({ productId }) => {
+  console.log(productId);
   const mapContainer = useRef(null);
   const { kakao } = window;
   const position = new kakao.maps.LatLng(33.450701, 126.570667);

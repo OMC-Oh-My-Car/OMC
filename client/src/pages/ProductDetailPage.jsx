@@ -30,7 +30,7 @@ const ProductDetailPage = ({ openModalController }) => {
           <ProductImage data={data} isLoading={isLoading} isError={isError} modalController={modalController} />
           <ProductInfo data={data} isLoading={isLoading} isError={isError} modalController={modalController} />
           <ProductReview data={data} isLoading={isLoading} isError={isError} modalController={modalController} />
-          <ProductMap />
+          <ProductMap productId={productId} />
         </MainContainer>
       </Container>
     </>
