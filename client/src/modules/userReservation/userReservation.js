@@ -29,14 +29,14 @@ export const addUserReservation = (page) => {
   return axiosInstance.get('/reservation');
 };
 
-export const cancelUserReservation = (page) => {
-  // 취소 사유 가져와야 함
+export const cancelUserReservation = (content, reservationId) => {
+  console.log('유저 예약 취소');
   let params = {
-    page,
+    content,
+    reservationId,
   };
   console.log(params);
-  console.log('유저 예약 추가 Loading');
-  return axiosInstance.get('/reservation');
+  return axiosInstance.patch(`/reservation/cancel/${reservationId}`);
 };
 
 export const getCancelUserReason = (reservationId) => {
