@@ -11,13 +11,12 @@ export const getUserReview = (reservationId) => {
   return axiosInstance.get(`/reservation/${reservationId}/review`);
 };
 
-export const addUserReview = (page) => {
-  // 작성 리뷰 정보 가져오기
-  // 예약 아이디 필요
+export const addUserReview = (data, reservationId) => {
   let params = {
-    page,
+    data,
+    reservationId,
   };
   console.log(params);
   console.log('리뷰 추가');
-  return axiosInstance.get('/reservation');
+  return axiosInstance.post(`/review/${reservationId}`);
 };
