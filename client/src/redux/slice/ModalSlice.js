@@ -4,8 +4,9 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   onModal: false,
   type: '',
-  width: '700px',
-  height: '800px',
+  width: '',
+  height: '',
+  lastPath: '',
 };
 
 export const modalSlice = createSlice({
@@ -26,14 +27,21 @@ export const modalSlice = createSlice({
         ...state,
         onModal: false,
         type: '',
-        width: '0px',
-        height: '0px',
+        width: '',
+        height: '',
+        lastPath: '',
+      };
+    },
+    setLastPath: (state, payload) => {
+      return {
+        ...state,
+        lastPath: payload.payload.lastPath,
       };
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { openModal, closeModal } = modalSlice.actions;
+export const { openModal, closeModal, setLastPath } = modalSlice.actions;
 
 export default modalSlice.reducer;

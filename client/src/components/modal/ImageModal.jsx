@@ -1,15 +1,18 @@
 // import React from 'react';
 import { ImageModalArea } from './ImageModal.style';
+import { useSelector } from 'react-redux';
 import { getProductDetail } from '../../modules/userProduct/userProductDetail';
 import { useQuery } from 'react-query';
 
 const ImageModal = () => {
-  let productId = window.sessionStorage.getItem('lastPath').split('/')[2];
-  // eslint-disable-next-line no-unused-vars
-  const { data } = useQuery(['productDetail', productId], async () => {
-    const data = await getProductDetail(productId);
-    return data;
-  });
+  const productId = useSelector((state) => state.modal.lastPath).split('/')[2];
+
+  if (productId) {
+    const { data } = useQuery(['productDetail', productId], async () => {
+      const data = await getProductDetail(productId);
+      return data;
+    });
+  }
 
   return (
     <>

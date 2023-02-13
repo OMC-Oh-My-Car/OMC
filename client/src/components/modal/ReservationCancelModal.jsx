@@ -11,7 +11,6 @@ const ReservationCancelModal = () => {
     const data = await getCancelUserReason(reservationId);
     return data;
   });
-  console.log(data);
 
   return (
     <>

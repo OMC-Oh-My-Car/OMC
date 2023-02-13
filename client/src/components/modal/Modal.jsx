@@ -13,21 +13,22 @@ import ReservationReviewModal from './ReservationReviewModal';
 import ReservationCancelModal from './ReservationCancelModal';
 import ReservationCancelAddModal from './ReservationCancelAddModal';
 import { useNavigate } from 'react-router-dom';
-import { closeModal } from '../../redux/slice/ModalSlice';
+import { closeModal, setLastPath } from '../../redux/slice/ModalSlice';
 
 const Modal = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
-    window.sessionStorage.setItem('lastPath', window.location.pathname);
+    dispatch(setLastPath({ lastPath: window.location.pathname }));
   }, []);
 
   const closeModalController = () => {
-    navigate(window.sessionStorage.getItem('lastPath'));
+    navigate(lastPath);
     dispatch(closeModal());
   };
 
   const type = useSelector((state) => state.modal.type);
+  const lastPath = useSelector((state) => state.modal.lastPath);
   const width = useSelector((state) => state.modal.width);
   const height = useSelector((state) => state.modal.height);
 

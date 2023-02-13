@@ -6,7 +6,6 @@ import { cancelUserReservation } from '../../modules/userReservation/userReserva
 const ReservationCancelAddModal = () => {
   const params = new URLSearchParams(location.search);
   let reservationId = params.get('reservation_id');
-  console.log(reservationId);
 
   const [content, setContent] = useState('');
   // 컨텐츠 변경 함수
