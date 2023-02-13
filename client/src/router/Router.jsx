@@ -35,7 +35,10 @@ const Router = () => {
           <Route path="/seller/:id/product" element={<SellerProductListPage />} />
           <Route path="/seller/:id/product/add" element={<SellerProductAddPage />} />
           <Route path="/seller/:id/product/:productId/edit" element={<SellerProductEditPage />} />
-          <Route path="/seller/:id/product/:productId/reservation" element={<SellerReservationPage />} />
+          <Route
+            path="/seller/:id/product/:productId/reservation"
+            element={<SellerReservationPage openModalController={openModalController} />}
+          />
         </Routes>
         {isOpenModal && <Modal />}
       </BrowserRouter>

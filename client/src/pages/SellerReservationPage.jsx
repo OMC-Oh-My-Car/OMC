@@ -6,7 +6,13 @@ import Pagination from '../components/pagination/Pagination';
 import SellerReservationList from '../components/sellerReservation/SellerReservationList';
 import { getSellerReservationList } from '../modules/sellerReservation/sellerReservation';
 // import SellerReservationListEmpty from '../components/sellerReservation/SellerReservationListEmpty';
-const SellerReservationPage = () => {
+import { useNavigate, useParams } from 'react-router-dom';
+
+const SellerReservationPage = ({ openModalController }) => {
+  const navigate = useNavigate();
+  const params = useParams();
+
+  let productId = params.productId;
   const [page, setpage] = useState(1);
   const [filter, setFilter] = useState(0);
 
@@ -14,7 +20,13 @@ const SellerReservationPage = () => {
     setpage(page.selected + 1);
   };
 
-  const { isLoading, data, isError } = useQuery('sellerProductList', async () => {
+  const modalController = (type, width, height, modal, reservationId) => {
+    let userId = 12;
+    navigate(`/seller/${userId}/product/${productId}/reservation?modal=${modal}&reservation_id=${reservationId}`);
+    openModalController({ type, width, height });
+  };
+
+  const { isLoading, data, isError } = useQuery(['sellerProductList', filter, page], async () => {
     const data = await getSellerReservationList(filter, page);
     return data;
   });
@@ -30,6 +42,7 @@ const SellerReservationPage = () => {
             isError={isError}
             filter={filter}
             setFilter={setFilter}
+            modalController={modalController}
           />
           {/* <SellerReservationListEmpty /> */}
           <Pagination itemChange={itemChange} />

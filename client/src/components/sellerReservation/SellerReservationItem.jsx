@@ -1,7 +1,7 @@
 // import React from 'react';
 import { SellerReservationItemArea } from './SellerReservationItem.style';
 
-const SellerReservationItem = () => {
+const SellerReservationItem = ({ item, modalController }) => {
   return (
     <>
       <SellerReservationItemArea>
@@ -15,8 +15,36 @@ const SellerReservationItem = () => {
             <span className="userEmail">이메일: shinker1002@naver.com</span>
           </div>
           <div className="button">
-            <button className="buttonLeft">예약 정보</button>
-            <button className="buttonRight">예약 정보</button>
+            <button
+              onClick={() => modalController('reservationInfo', '500px', '550px', 'reservation_info', '2022-1222-0001')}
+              className="buttonLeft"
+            >
+              예약 정보
+            </button>
+            {/* <button
+              onClick={() =>
+                modalController('reservationCancel', '600px', '800px', 'reservation_cancel_reason', '2022-1222-0001')
+              }
+              className="buttonRight"
+            >
+              취소 사유
+            </button> */}
+            {/* <button
+              onClick={() =>
+                modalController('reservationReview', '600px', '800px', 'reservation_review', '2022-1222-0001')
+              }
+              className="buttonRight"
+            >
+              리뷰 조회
+            </button> */}
+            <button
+              onClick={() =>
+                modalController('reservationReviewAdd', '600px', '800px', 'reservation_add_review', '2022-1222-0001')
+              }
+              className="buttonRight"
+            >
+              예약 취소
+            </button>
           </div>
         </div>
       </SellerReservationItemArea>

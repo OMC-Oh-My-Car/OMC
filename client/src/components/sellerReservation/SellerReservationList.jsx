@@ -3,7 +3,7 @@ import { SellerReservationListArea } from './SellerReservationList.style';
 import SellerReservationItem from './SellerReservationItem';
 import SellerReservationItemSkeleton from './SellerReservationItemSkeleton';
 
-const SellerReservationList = ({ data, isLoading, isError, filter, setFilter }) => {
+const SellerReservationList = ({ data, isLoading, isError, filter, setFilter, modalController }) => {
   const skeletonMapArr = Array.from({ length: 8 }, (v, i) => i);
   if (isLoading) {
     return (
@@ -52,7 +52,7 @@ const SellerReservationList = ({ data, isLoading, isError, filter, setFilter }) 
             data.data
               .filter((el) => el.reservationId)
               .map((item) => {
-                return <SellerReservationItem key={item.reservationId} />;
+                return <SellerReservationItem key={item.reservationId} item={item} modalController={modalController} />;
               })}
         </div>
       </SellerReservationListArea>
