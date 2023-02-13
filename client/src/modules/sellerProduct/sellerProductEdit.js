@@ -16,5 +16,5 @@ export const getProductInfo = (productId) => {
   };
   console.log(params);
   console.log('판매자 상품 등록 정보 가져오기');
-  return axiosInstance.post(`/product/${productId}`);
+  return axiosInstance.get(`/product/${productId}`);
 };
