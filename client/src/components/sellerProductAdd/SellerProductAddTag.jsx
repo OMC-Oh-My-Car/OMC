@@ -1,6 +1,6 @@
 import { SellerProductAddTagArea, TagsInput } from './SellerProductAddTag.style';
 
-const SellerProductAddTag = ({ tags, addTags, removeTags }) => {
+const SellerProductAddTag = ({ tags, addTags, removeTags, tagContent, setTagContent }) => {
   return (
     <>
       <SellerProductAddTagArea>
@@ -19,6 +19,8 @@ const SellerProductAddTag = ({ tags, addTags, removeTags }) => {
           <input
             className="tag-input"
             type="text"
+            value={tagContent}
+            onChange={(e) => setTagContent(e.target.value)}
             onKeyUp={(event) => {
               event.key === 'Enter' && addTags(event);
             }}

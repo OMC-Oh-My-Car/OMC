@@ -8,8 +8,23 @@ import SellerProductAddPostCode from '../components/sellerProductAdd/SellerProdu
 import SellerProductAddPrice from '../components/sellerProductAdd/SellerProductAddPrice';
 import SellerProductAddTag from '../components/sellerProductAdd/SellerProductAddTag';
 import { useDaumPostcodePopup } from 'react-daum-postcode';
+import { useNavigate } from 'react-router-dom';
+import { useMutation } from 'react-query';
+import { createNewProduct } from '../modules/sellerProduct/sellerProductAdd';
 
 const SellerProductAddPage = () => {
+  const navigate = useNavigate();
+
+  const mutation = useMutation(() => createNewProduct(content), {
+    onMutate() {},
+    onSuccess(data) {
+      console.log(data);
+    },
+    onError(err) {
+      console.log(err);
+    },
+  });
+
   const [showImages, setShowImages] = useState([]);
   const [image, setImage] = useState([]);
   const [title, setTitle] = useState('');
@@ -18,6 +33,7 @@ const SellerProductAddPage = () => {
   const [zipCode, setZipCode] = useState('');
   const [price, setPrice] = useState('');
   const [tags, setTags] = useState([]);
+  const [tagContent, setTagContent] = useState('');
 
   // 이미지
   const handleAddImages = (event) => {
@@ -98,8 +114,20 @@ const SellerProductAddPage = () => {
     if (!(event.target.value === '') && !tags.includes(event.target.value)) {
       setTags([...tags, event.target.value]);
       event.target.value = '';
+      setTagContent('');
     }
   };
+
+  const navBack = () => {
+    navigate(`/seller/12/product`);
+  };
+
+  const addProduct = (item) => {
+    console.log(item);
+    mutation.mutate(item);
+    // navigate(`/seller/12/product`);
+  };
+
   return (
     <>
       <Container>
@@ -115,10 +143,34 @@ const SellerProductAddPage = () => {
           <SellerProductAddContent content={content} handleContent={handleContent} />
           <SellerProductAddPostCode address={address} zipCode={zipCode} postCodeHandler={postCodeHandler} />
           <SellerProductAddPrice price={price} handlePrice={handlePrice} />
-          <SellerProductAddTag tags={tags} addTags={addTags} removeTags={removeTags} />
+          <SellerProductAddTag
+            tags={tags}
+            addTags={addTags}
+            removeTags={removeTags}
+            tagContent={tagContent}
+            setTagContent={setTagContent}
+          />
           <div className="button">
-            <button className="red">취소하기</button>
-            <button>등록하기</button>
+            <button onClick={() => navBack()} className="red">
+              취소하기
+            </button>
+            <button
+              onClick={() =>
+                addProduct({
+                  subject: title,
+                  description: content,
+                  address: address,
+                  zipcode: zipCode,
+                  facilities: tags,
+                  telephone: '02-123-1234',
+                  price: price,
+                  checkIn: '13:00',
+                  checkOut: '11:00',
+                })
+              }
+            >
+              등록하기
+            </button>
           </div>
         </MainContainer>
       </Container>
