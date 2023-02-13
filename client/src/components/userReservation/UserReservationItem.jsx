@@ -36,7 +36,7 @@ const UserReservationItem = ({ openModalController }) => {
           >
             예약 취소
           </button>
-          <button
+          {/* <button
             className="button buttonYellow"
             onClick={() => modalController('reservationCancel', '600px', '800px', 'reservation_cancel_reason', 1)}
           >
@@ -53,7 +53,7 @@ const UserReservationItem = ({ openModalController }) => {
             onClick={() => modalController('reservationReview', '600px', '800px', 'reservation_review', 1)}
           >
             리뷰 확인
-          </button>
+          </button> */}
         </div>
       </UserReservationItemArea>
     </>

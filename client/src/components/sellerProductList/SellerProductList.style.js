@@ -5,12 +5,39 @@ export const SellerProductListArea = styled.div`
   flex-direction: column;
   width: 100%;
   padding: 10px 0px 30px;
-  h1 {
-    font-size: 27px;
-    font-weight: 700;
+  .flexBox {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
     border-bottom: 1px solid ${(props1) => props1.theme.gray};
-    padding-bottom: 30px;
     margin-bottom: 30px;
+    padding-bottom: 5px;
+    h1 {
+      font-size: 27px;
+      font-weight: 700;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: 700;
+      outline: none;
+      border-radius: 5px;
+      transition: all 0.2s;
+      font-family: sans-serif;
+      margin-bottom: 30px;
+      cursor: pointer;
+    }
+    .buttonRed {
+      background-color: ${(props) => props.theme.red};
+      border: 1px solid ${(props) => props.theme.red};
+      color: white;
+      margin-bottom: 5px;
+    }
+    .buttonRed:hover {
+      border: 1px solid ${(props) => props.theme.red};
+      color: ${(props) => props.theme.red};
+      background-color: white;
+    }
   }
   .productList {
     width: 100%;
