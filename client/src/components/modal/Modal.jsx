@@ -1,6 +1,6 @@
-// import React from 'react';
+import { useEffect } from 'react';
 import { ModalArea } from './Modal.style';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import ContentModal from './ContentModal';
@@ -12,9 +12,23 @@ import ReservationReviewAddModal from './ReservationReviewAddModal';
 import ReservationReviewModal from './ReservationReviewModal';
 import ReservationCancelModal from './ReservationCancelModal';
 import ReservationCancelAddModal from './ReservationCancelAddModal';
+import { useNavigate } from 'react-router-dom';
+import { closeModal, setLastPath } from '../../redux/slice/ModalSlice';
 
-const Modal = ({ closeModalController }) => {
+const Modal = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(setLastPath({ lastPath: window.location.pathname }));
+  }, []);
+
+  const closeModalController = () => {
+    navigate(lastPath);
+    dispatch(closeModal());
+  };
+
   const type = useSelector((state) => state.modal.type);
+  const lastPath = useSelector((state) => state.modal.lastPath);
   const width = useSelector((state) => state.modal.width);
   const height = useSelector((state) => state.modal.height);
 

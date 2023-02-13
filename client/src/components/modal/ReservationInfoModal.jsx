@@ -1,7 +1,17 @@
-// import React from 'react';
 import { ReservationInfoModalArea } from './ReservationInfoModal.style';
+import { useQuery } from 'react-query';
+import { getUserReservationDetail } from '../../modules/userReservation/userReservation';
 
 const ReservationInfoModal = () => {
+  const params = new URLSearchParams(location.search);
+  let reservationId = params.get('reservation_id');
+
+  if (reservationId) {
+    const { data } = useQuery(['reservationInfo', reservationId], async () => {
+      const data = await getUserReservationDetail(reservationId);
+      return data;
+    });
+  }
   return (
     <>
       <ReservationInfoModalArea>

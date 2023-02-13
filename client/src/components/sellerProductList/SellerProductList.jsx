@@ -2,8 +2,11 @@
 import { SellerProductListArea } from './SellerProductList.style';
 import SellerProductItem from './SellerProductItem';
 import SellerProductItemSkeleton from './SellerProductItemSkeleton';
+import { useNavigate } from 'react-router-dom';
 
 const SellerProductList = ({ data, isLoading, isError }) => {
+  const navigate = useNavigate();
+
   const skeletonMapArr = Array.from({ length: 8 }, (v, i) => i);
   if (isLoading) {
     return (
@@ -31,7 +34,12 @@ const SellerProductList = ({ data, isLoading, isError }) => {
   return (
     <>
       <SellerProductListArea>
-        <h1>등록 상품</h1>
+        <div className="flexBox">
+          <h1>등록 상품</h1>
+          <button onClick={() => navigate(`/seller/12/product/add`)} className="buttonRed">
+            상품 등록
+          </button>
+        </div>
         <div className="productList">
           {data &&
             data.data

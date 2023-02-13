@@ -1,7 +1,18 @@
 // import React from 'react';
 import { ContentModalArea } from './ContentModal.style';
+import { getProductDetail } from '../../modules/userProduct/userProductDetail';
+import { useQuery } from 'react-query';
+import { useSelector } from 'react-redux';
 
 const ContentModal = () => {
+  const productId = useSelector((state) => state.modal.lastPath).split('/')[2];
+
+  if (productId) {
+    const { data } = useQuery(['productDetail', productId], async () => {
+      const data = await getProductDetail(productId);
+      return data;
+    });
+  }
   return (
     <>
       <ContentModalArea>

@@ -2,8 +2,19 @@
 import { ReviewModalArea, ProductReviewScoreArea, ProductReviewListArea } from './ReviewModal.style';
 import { faStar, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { getProductDetail } from '../../modules/userProduct/userProductDetail';
+import { useQuery } from 'react-query';
+import { useSelector } from 'react-redux';
 
 const ReviewModal = () => {
+  const productId = useSelector((state) => state.modal.lastPath).split('/')[2];
+  if (productId) {
+    const { data } = useQuery(['productDetail', productId], async () => {
+      const data = await getProductDetail(productId);
+      return data;
+    });
+  }
+
   return (
     <>
       <ReviewModalArea>

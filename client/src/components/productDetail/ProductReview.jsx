@@ -3,7 +3,7 @@ import { ProductReviewArea, ProductReviewScoreArea, ProductReviewListArea } from
 import { faStar, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const ProductReview = ({ openModalController }) => {
+const ProductReview = ({ modalController }) => {
   return (
     <>
       <ProductReviewArea>
@@ -159,10 +159,7 @@ const ProductReview = ({ openModalController }) => {
               구름도 너무 예뻤고 방안의 가구 소품들 모두 너무 완벽했습니다!! 청소도 정말 잘 청소도 정말 잘
             </span>
           </div>
-          <button
-            className="more"
-            onClick={() => openModalController({ type: 'review', width: '900px', height: '800px' })}
-          >
+          <button className="more" onClick={() => modalController('review', '900px', '800px', 'product_review')}>
             후기 311개 모두 보기
           </button>
         </ProductReviewListArea>

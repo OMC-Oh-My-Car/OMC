@@ -10,15 +10,13 @@ import SellerProductAddPage from '../pages/SellerProductAddPage';
 import SellerProductEditPage from '../pages/SellerProductEditPage';
 import Modal from '../components/modal/Modal';
 import { useSelector, useDispatch } from 'react-redux';
-import { openModal, closeModal } from '../redux/slice/ModalSlice';
+import { openModal } from '../redux/slice/ModalSlice';
 
 const Router = () => {
-  const isOpenModal = useSelector((state) => state.modal.onModal);
   const dispatch = useDispatch();
 
-  const closeModalController = () => {
-    dispatch(closeModal());
-  };
+  const isOpenModal = useSelector((state) => state.modal.onModal);
+
   const openModalController = (type) => {
     dispatch(openModal(type));
   };
@@ -28,7 +26,7 @@ const Router = () => {
       <BrowserRouter>
         <Routes>
           <Route index element={<ProductListPage />} />
-          <Route path="/product/:id" element={<ProductDetailPage openModalController={openModalController} />} />
+          <Route path="/product/:productId" element={<ProductDetailPage openModalController={openModalController} />} />
           <Route path="/signin" element={<SignIn />} />
           <Route
             path="/user/:id/reservation"
@@ -36,10 +34,13 @@ const Router = () => {
           />
           <Route path="/seller/:id/product" element={<SellerProductListPage />} />
           <Route path="/seller/:id/product/add" element={<SellerProductAddPage />} />
-          <Route path="/seller/:id/product/:id/edit" element={<SellerProductEditPage />} />
-          <Route path="/seller/:id/product/:id/reservation" element={<SellerReservationPage />} />
+          <Route path="/seller/:id/product/:productId/edit" element={<SellerProductEditPage />} />
+          <Route
+            path="/seller/:id/product/:productId/reservation"
+            element={<SellerReservationPage openModalController={openModalController} />}
+          />
         </Routes>
-        {isOpenModal && <Modal closeModalController={closeModalController} />}
+        {isOpenModal && <Modal />}
       </BrowserRouter>
     </>
   );

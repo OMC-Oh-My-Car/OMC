@@ -1,10 +1,10 @@
 // import React from 'react';
 import { ProductImageArea } from './ProductImage.style';
 
-const ProductImage = ({ openModalController }) => {
+const ProductImage = ({ modalController }) => {
   return (
     <>
-      <ProductImageArea onClick={() => openModalController({ type: 'image', width: '100vw', height: '100vh' })}>
+      <ProductImageArea onClick={() => modalController('image', '100vw', '100vh', 'product_image')}>
         <img
           className="image1"
           src="https://www.mpva.go.kr/site/hogug/images/contents/cts617_img1.jpg"

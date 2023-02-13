@@ -1,6 +1,15 @@
 import { SellerProductItemArea } from './SellerProductItem.style';
+import { useNavigate } from 'react-router-dom';
 
 const SellerProductItem = () => {
+  const navigate = useNavigate();
+  const productId = 1;
+  const handleClick = (productId) => {
+    navigate(`/seller/12/product/${productId}/reservation`);
+  };
+  const editProductInfo = (productId) => {
+    navigate(`/seller/12/product/${productId}/edit`);
+  };
   return (
     <>
       <SellerProductItemArea>
@@ -9,8 +18,12 @@ const SellerProductItem = () => {
         </div>
         <div className="productInfo">
           <span className="productTitle">전통한옥 단독주택</span>
-          <button className="button buttonRed">상품 정보 수정</button>
-          <button className="button buttonYellow">예약자 확인</button>
+          <button onClick={() => editProductInfo(productId)} className="button buttonRed">
+            상품 정보 수정
+          </button>
+          <button onClick={() => handleClick(productId)} className="button buttonYellow">
+            예약자 확인
+          </button>
         </div>
       </SellerProductItemArea>
     </>

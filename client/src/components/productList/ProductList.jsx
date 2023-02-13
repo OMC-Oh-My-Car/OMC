@@ -2,9 +2,15 @@
 import { ProductListArea } from './ProductList.style';
 import ProductItem from './productItem/ProductItem';
 import ProductItemSkeleton from './productItem/ProductItemSkeleton';
+import { useNavigate } from 'react-router-dom';
 
 const ProductList = ({ data, isLoading, isError }) => {
+  const navigate = useNavigate();
   const skeletonMapArr = Array.from({ length: 12 }, (v, i) => i);
+
+  const handleClick = (productId) => {
+    navigate(`/product/${productId}`);
+  };
 
   if (isLoading) {
     return (
@@ -26,14 +32,13 @@ const ProductList = ({ data, isLoading, isError }) => {
       </>
     );
   }
-
   return (
     <>
       <ProductListArea>
         <div className="productList">
           {data &&
             data.data.map((item) => {
-              return <ProductItem key={item.productId} item={item} />;
+              return <ProductItem handleClick={handleClick} key={item.productId} item={item} />;
             })}
         </div>
       </ProductListArea>

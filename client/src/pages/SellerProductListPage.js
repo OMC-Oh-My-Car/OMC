@@ -3,7 +3,7 @@ import { useQuery } from 'react-query';
 import { Container, MainContainer } from './SellerProductListPage.style';
 import Header from '../components/header/Header';
 import SellerProductList from '../components/sellerProductList/SellerProductList';
-import { getSellerProductList } from '../modules/sellerProductList/sellerProductList';
+import { getSellerProductList } from '../modules/sellerProduct/sellerProductList';
 import Pagination from '../components/pagination/Pagination';
 
 const SellerProductListPage = () => {
@@ -12,7 +12,7 @@ const SellerProductListPage = () => {
   const itemChange = (page) => {
     setpage(page.selected + 1);
   };
-  const { isLoading, data, isError } = useQuery('sellerProductList', async () => {
+  const { isLoading, data, isError } = useQuery(['sellerProductList', page], async () => {
     const data = await getSellerProductList(page);
     return data;
   });

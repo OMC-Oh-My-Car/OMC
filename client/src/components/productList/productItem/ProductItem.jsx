@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ReactComponent as HeartRegular } from '../../../assets/images/heart-regular.svg';
 import { ReactComponent as HeartSolid } from '../../../assets/images/heart-solid.svg';
 
-const ProductItem = ({ item }) => {
+const ProductItem = ({ handleClick, item }) => {
   const [currentImage, setCurrentImage] = useState(0);
   const [hover, setHover] = useState(false);
 
@@ -28,8 +28,12 @@ const ProductItem = ({ item }) => {
             </>
           )}
 
-          <img src={item.img[currentImage].value} alt="상품사진" />
-
+          <img
+            role="presentation"
+            src={item.img[currentImage].value}
+            alt="상품사진"
+            onClick={() => handleClick(item.productId)}
+          />
           {currentImage !== 0 && (
             <>
               <FontAwesomeIcon
@@ -50,7 +54,7 @@ const ProductItem = ({ item }) => {
             </>
           )}
         </div>
-        <div className="productInfo">
+        <div className="productInfo" onClick={() => handleClick(item.productId)} role="presentation">
           <div className="flexArea">
             <p className="productTitle">{item.subject}</p>
             <p className="productLocation">{item.location[0].value}</p>
