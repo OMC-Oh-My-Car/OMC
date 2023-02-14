@@ -49,7 +49,7 @@ const ProductDetailPage = ({ openModalController }) => {
             isError={isError}
             modalController={modalController}
           />
-          <ProductMap productId={productId} />
+          <ProductMap productId={productId} data={data} />
         </MainContainer>
       </Container>
     </>
