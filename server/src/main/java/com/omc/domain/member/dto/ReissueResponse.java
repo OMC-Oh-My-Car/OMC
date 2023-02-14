@@ -10,20 +10,23 @@ public class ReissueResponse {
 
     private String email;
     private String username;
-    private String imageUrl;
+    private String nickname;
+    private String userRole;
 
     @Builder
-    public ReissueResponse(String email, String imageUrl, String username) {
+    public ReissueResponse(String email, String username, String nickname, String userRole) {
         this.email = email;
-        this.imageUrl = imageUrl;
         this.username = username;
+        this.nickname = nickname;
+        this.userRole = userRole;
     }
 
     public static ReissueResponse toResponse(Member member) {
         return ReissueResponse.builder()
                 .email(member.getEmail())
-                .imageUrl(member.getProfileImg())
                 .username(member.getUsername())
+                .nickname(member.getNickname())
+                .userRole((member.getUserRole()).toString())
                 .build();
     }
 
