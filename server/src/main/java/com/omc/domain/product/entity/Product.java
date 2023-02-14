@@ -69,6 +69,9 @@ public class Product extends BaseEntity {
 	@Column
 	private Long likes;
 
+	@Column
+	private Long views;
+
 	@ColumnDefault("0")
 	@Column
 	private Long isStop;
@@ -162,5 +165,9 @@ public class Product extends BaseEntity {
 		for (StopHistory stopHistory : stopHistories) {
 			stopHistory.setProduct(this);
 		}
+	}
+
+	public void addViews() {
+		this.views += 1;
 	}
 }

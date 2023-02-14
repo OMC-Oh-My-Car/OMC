@@ -68,9 +68,10 @@ public class SecurityConfig {
                 .authorizeRequests(
                         authorizeRequests -> authorizeRequests
                                 // .antMatchers("/**").hasAnyRole("ROLE_ADMIN")
-                                .antMatchers( "/member/login", "/member", "/member/confirm/mail", "/member/find/id", "/seller", "/member/certification/mail").permitAll()
-                                .anyRequest()
-                                .authenticated() // 최소자격 : 로그인
+                                // .antMatchers( "/member/login", "/member", "/member/confirm/mail", "/member/find/id", "/seller", "/member/certification/mail").permitAll()
+                                // .anyRequest()
+                                // .authenticated() // 최소자격 : 로그인
+                            .anyRequest().permitAll()
                 )
                 .oauth2Login(
                         oauth2Login -> oauth2Login

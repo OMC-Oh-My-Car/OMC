@@ -43,7 +43,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create # create / update / validate / none
+      ddl-auto: update # create / update / validate / none
     show-sql: true # 콘솔창에 sql 출력
     properties:
       hibernate:

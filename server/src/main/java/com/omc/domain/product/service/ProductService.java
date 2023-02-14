@@ -20,7 +20,6 @@ import com.omc.domain.img.entity.ProductImg;
 import com.omc.domain.img.repository.ImgRepository;
 import com.omc.domain.member.entity.Member;
 import com.omc.domain.member.entity.UserRole;
-import com.omc.domain.member.repository.MemberRepository;
 import com.omc.domain.product.dto.ProductDto;
 import com.omc.domain.product.dto.StopDto;
 import com.omc.domain.product.entity.Facilities;
@@ -155,6 +154,8 @@ public class ProductService {
 																		   findProduct.getId());
 		}
 
+		findProduct.addViews();
+
 		return ProductDto.Response.builder()
 								  .subject(findProduct.getSubject())
 								  .description(findProduct.getDescription())
@@ -185,9 +186,10 @@ public class ProductService {
 		// todo 리팩터링
 
 		String sortBy = switch (search.getSort()) { // 최신순, 인기순, 조회순, 추천순
-			case "추천" -> "likes";
-			case "조회" -> "views";
-			case "인기" -> "reservations";
+			case "0" -> "id"; // 최신순
+			case "1" -> "star"; // 인기순
+			case "2" -> "views"; // 조회순
+			case "3" -> "likes"; // 추천순
 			default -> "id";
 		};
 
@@ -255,9 +257,10 @@ public class ProductService {
 		}
 
 		String sortBy = switch (search.getSort()) { // 최신순, 인기순, 조회순, 추천순
-			case "추천" -> "likes";
-			case "조회" -> "views";
-			case "인기" -> "reservations";
+			case "0" -> "id"; // 최신순
+			case "1" -> "star"; // 인기순
+			case "2" -> "views"; // 조회순
+			case "3" -> "likes"; // 추천순
 			default -> "id";
 		};
 
@@ -368,7 +371,7 @@ public class ProductService {
 	private List<String> getImgs(Long productId) {
 		return imgRepository.findAllByProductId(productId).stream()
 							.map(ProductImg::getImgUrl)
-							.map(s -> "value\":\"" + s)
+							// .map(s -> "value\":\"" + s)
 							.toList();
 	}
 
@@ -381,7 +384,7 @@ public class ProductService {
 	private List<String> getFacilities(Long productId) {
 		return facilitiesRepository.findAllByProductId(productId).stream()
 								   .map(Facilities::getKeyword)
-								   .map(s -> "value\":\"" + s)
+								   // .map(s -> "value\":\"" + s)
 								   .toList();
 	}
 
@@ -394,7 +397,7 @@ public class ProductService {
 	private List<String> getLocations(Long productId) {
 		return locationRepository.findAllByProductId(productId).stream()
 								 .map(Location::getKeyword)
-								 .map(s -> "value\":\"" + s)
+								 // .map(s -> "value\":\"" + s)
 								 .toList();
 	}
 
