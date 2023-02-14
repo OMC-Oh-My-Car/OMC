@@ -12,10 +12,11 @@ const ProductListPage = () => {
   const itemChange = (page) => {
     setpage(page.selected + 1);
   };
-  const { isLoading, data, isError } = useQuery(['productList', filter, page, 'search'], async () => {
-    const data = await getProductList(filter, page, 'search');
+  const { isLoading, data, isError } = useQuery(['productList', filter, page, ''], async () => {
+    const data = await getProductList(filter, page, '');
     return data;
   });
+  console.log(data);
   return (
     <>
       <Container>
@@ -36,7 +37,7 @@ const ProductListPage = () => {
             </button>
           </div>
           <ProductList data={data} isLoading={isLoading} isError={isError} />
-          <Pagination itemChange={itemChange} />
+          <Pagination data={data} itemChange={itemChange} />
         </MainContainer>
       </Container>
     </>

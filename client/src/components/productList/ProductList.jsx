@@ -37,8 +37,8 @@ const ProductList = ({ data, isLoading, isError }) => {
       <ProductListArea>
         <div className="productList">
           {data &&
-            data.data.map((item) => {
-              return <ProductItem handleClick={handleClick} key={item.productId} item={item} />;
+            data.data.data.map((item) => {
+              return <ProductItem handleClick={handleClick} key={item.id} item={item} />;
             })}
         </div>
       </ProductListArea>

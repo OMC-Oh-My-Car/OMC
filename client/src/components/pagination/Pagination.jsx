@@ -1,12 +1,12 @@
 import ReactPaginate from 'react-paginate';
 import { PaginationArea } from './Pagination.style';
 
-const Paginate = ({ itemChange }) => {
+const Paginate = ({ data, itemChange }) => {
   return (
     <>
       <PaginationArea>
         <ReactPaginate
-          pageCount={10}
+          pageCount={data ? data.data.pageInfo.page : 5}
           pageRangeDisplayed={6}
           marginPagesDisplayed={0}
           breakLabel={''}
