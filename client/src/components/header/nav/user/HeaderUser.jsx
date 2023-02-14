@@ -1,14 +1,24 @@
 // import React from 'react';
 import { HeaderUserArea } from './HeaderUser.style';
-// import Button from './button/Button';
+import Button from './button/Button';
 import UserInfo from './userInfo/UserInfo';
+import { useSelector, useDispatch } from 'react-redux';
 
 const HeaderUser = () => {
+  const userInfo = useSelector((state) => state.user);
+  console.log(userInfo.email);
   return (
     <>
       <HeaderUserArea>
-        {/* <Button /> */}
-        <UserInfo />
+        {userInfo.email ? (
+          <>
+            <UserInfo />
+          </>
+        ) : (
+          <>
+            <Button />
+          </>
+        )}
       </HeaderUserArea>
     </>
   );

@@ -6,6 +6,7 @@ const initialState = {
   nickname: '',
   username: '',
   type: '',
+  imageUrl: '',
 };
 
 export const userInfoSlice = createSlice({
@@ -19,6 +20,7 @@ export const userInfoSlice = createSlice({
         nickname: payload.payload.nickname,
         username: payload.payload.username,
         type: payload.payload.type,
+        imageUrl: payload.payload.imageUrl,
       };
     },
     clearUserInfo: (state) => {
@@ -28,6 +30,7 @@ export const userInfoSlice = createSlice({
         nickname: '',
         username: '',
         type: '',
+        imageUrl: '',
       };
     },
   },

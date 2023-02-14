@@ -6,9 +6,9 @@ export const ButtonArea = styled.div`
   align-items: center;
   width: 180px;
   height: 100%;
-  padding: 5px 0px;
+  padding: 2px 0px;
   button {
-    width: 80px;
+    width: 85px;
     height: 100%;
     font-weight: 500;
     font-size: 15px;
