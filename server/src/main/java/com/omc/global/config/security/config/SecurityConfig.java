@@ -28,6 +28,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.List;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -104,9 +106,10 @@ public class SecurityConfig {
 //        configuration.addAllowedOrigin(FRONT_REMOTE_HTTPS);
 //        configuration.addAllowedOrigin(DOMAIN);
         configuration.addAllowedOrigin("http://localhost:3000");
-        configuration.addAllowedOrigin("https://5a26-49-142-61-236.jp.ngrok.io");
+        configuration.addAllowedOrigin("https://05ac-49-142-61-236.jp.ngrok.io");
 //        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Set-Cookie", "X-Requested-With", "Authorization", "Content-Type", "Content-Length", "Cache-Control"));
         configuration.addAllowedHeader("*");
+//        configuration.setAllowedMethods(List.of("GET", "POST", "DELETE", "PATCH", "OPTION"));
         configuration.addAllowedMethod("*");
         configuration.addExposedHeader("Authorization");
         configuration.addExposedHeader("Set-Cookie");

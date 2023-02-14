@@ -111,7 +111,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 "{" +
                         "\"email\":\"" + authMember.getEmail() + "\","
                         +  "\"username\":\"" + authMember.getUsername() + "\","
-                        + "\"nickname\":\"" + authMember.getNickname() + "\"" +
+                        + "\"nickname\":\"" + authMember.getNickname() + "\""
+                        + "\"User_Role\":\"" + authMember.getUserRole() + "\"" +
                         "}"
         );
     }
