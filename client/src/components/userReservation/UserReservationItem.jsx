@@ -6,7 +6,8 @@ import { UserReservationItemArea } from './UserReservationItem.style';
 // import { ReactComponent as HeartSolid } from '../../../assets/images/heart-solid.svg';
 import { useNavigate } from 'react-router-dom';
 
-const UserReservationItem = ({ openModalController }) => {
+const UserReservationItem = ({ item, openModalController }) => {
+  console.log(item);
   const navigate = useNavigate();
 
   const modalController = (type, width, height, modal, id) => {
@@ -24,33 +25,39 @@ const UserReservationItem = ({ openModalController }) => {
           <span className="reservationPeriod">2023년 1월 13일 - 2023년 1월 14일</span>
           <button
             className="button buttonRed"
-            onClick={() => modalController('reservationInfo', '500px', '550px', 'reservation_info', 1)}
+            onClick={() => modalController('reservationInfo', '500px', '550px', 'reservation_info', item.reservationId)}
           >
             예약 정보
           </button>
           <button
             className="button buttonYellow"
             onClick={() =>
-              modalController('reservationCancelAdd', '600px', '800px', 'reservation_add_cancel_reason', 1)
+              modalController(
+                'reservationCancelAdd',
+                '600px',
+                '800px',
+                'reservation_add_cancel_reason',
+                item.reservationId,
+              )
             }
           >
             예약 취소
           </button>
           {/* <button
             className="button buttonYellow"
-            onClick={() => modalController('reservationCancel', '600px', '800px', 'reservation_cancel_reason', 1)}
+            onClick={() => modalController('reservationCancel', '600px', '800px', 'reservation_cancel_reason', item.reservationId)}
           >
             취소된 예약
           </button>
           <button
             className="button buttonYellow"
-            onClick={() => modalController('reservationReviewAdd', '600px', '800px', 'reservation_add_review', 1)}
+            onClick={() => modalController('reservationReviewAdd', '600px', '800px', 'reservation_add_review', item.reservationId)}
           >
             리뷰 작성
           </button>
           <button
             className="button buttonYellow"
-            onClick={() => modalController('reservationReview', '600px', '800px', 'reservation_review', 1)}
+            onClick={() => modalController('reservationReview', '600px', '800px', 'reservation_review', item.reservationId)}
           >
             리뷰 확인
           </button> */}
