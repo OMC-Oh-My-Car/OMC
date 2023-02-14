@@ -1,5 +1,7 @@
 package com.omc.global.common;
 
+import static lombok.AccessLevel.*;
+
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -14,9 +16,11 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @MappedSuperclass
+@NoArgsConstructor(access = PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity {
 	@Id
@@ -30,4 +34,8 @@ public class BaseEntity {
 	@LastModifiedDate
 	@Column(name = "modified_at")
 	private LocalDateTime modifiedAt;
+
+	public BaseEntity(long id) {
+		this.id = id;
+	}
 }

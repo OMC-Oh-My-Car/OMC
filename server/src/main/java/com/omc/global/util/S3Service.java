@@ -47,16 +47,17 @@ public class S3Service {
 	public AmazonS3Client amazonS3Client() {
 		BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
 		return (AmazonS3Client)AmazonS3ClientBuilder.standard()
-			.withRegion(region)
-			.withCredentials(new AWSStaticCredentialsProvider(awsCreds))
-			.build();
+													.withRegion(region)
+													.withCredentials(new AWSStaticCredentialsProvider(awsCreds))
+													.build();
 	}
 
 	/**
 	 * S3에 파일 업로드
-	 * @param inputStream 파일 스트림
+	 *
+	 * @param inputStream    파일 스트림
 	 * @param objectMetadata 파일 메타데이터
-	 * @param fileName 파일 이름
+	 * @param fileName       파일 이름
 	 */
 	public void uploadFile(InputStream inputStream, ObjectMetadata objectMetadata, String fileName) {
 		amazonS3.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata).withCannedAcl(
@@ -65,6 +66,7 @@ public class S3Service {
 
 	/**
 	 * File URL 가져오기
+	 *
 	 * @param fileName 파일 이름
 	 * @return 파일 URL
 	 */
@@ -74,6 +76,7 @@ public class S3Service {
 
 	/**
 	 * S3에 파일 삭제
+	 *
 	 * @param fileName 파일 이름
 	 */
 	public void deleteFile(String fileName) {
@@ -83,7 +86,8 @@ public class S3Service {
 
 	/**
 	 * 이미지 업로드
-	 * @param file 이미지 파일
+	 *
+	 * @param file    이미지 파일
 	 * @param dirName 디렉토리 이름
 	 * @return 이미지 URL
 	 */
@@ -100,13 +104,14 @@ public class S3Service {
 		uploadFile(inputStream, objectMetadata, filename);
 
 		return ImgDto.Request.builder()
-			.imgName(filename)
-			.imgUrl(getFileUrl(filename))
-			.build();
+							 .imgName(filename)
+							 .imgUrl(getFileUrl(filename))
+							 .build();
 	}
 
 	/**
 	 * 중복 파일명 방지를 위한 UUID 파일명 생성
+	 *
 	 * @param fileName 파일 이름
 	 * @return UUID 파일 이름
 	 */
@@ -116,6 +121,7 @@ public class S3Service {
 
 	/**
 	 * 이미지 확장자 검증
+	 *
 	 * @param fileName 파일 이름
 	 * @return 이미지 확장자
 	 */
