@@ -1,13 +1,38 @@
-// import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // import RouterComponent from "./Router";
 import GlobalStyles from './style/GlobalStyles';
 import styled, { ThemeProvider } from 'styled-components';
 import Router from './router/Router';
 import theme from './style/Theme';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { setUserInfo } from './redux/slice/UserInfo';
+import { reissue } from './modules/member/reissue';
 
 const App = () => {
+  const dispatch = useDispatch();
   const isOpenModal = useSelector((state) => state.modal.onModal);
+  const userInfo = useSelector((state) => state.user);
+  console.log(userInfo);
+  useEffect(() => {
+    const userData = JSON.parse(window.sessionStorage.getItem('userData'));
+    const accesstoken = window.sessionStorage.getItem('Authorization');
+    if (userData && accesstoken) {
+      dispatch(setUserInfo(userData));
+    } else {
+      reissue()
+        .then((res) => {
+          console.log(res);
+          let accessToken = res.headers.get('Authorization');
+          sessionStorage.setItem('Authorization', accessToken);
+          sessionStorage.setItem('userData', JSON.stringify(res.data));
+          dispatch(setUserInfo(res.data));
+        })
+        .catch((err) => {
+          console.log(`${err.response.status} 에러`);
+          console.log(err);
+        });
+    }
+  }, []);
   return (
     <>
       <Container isOpenModal={isOpenModal}>
