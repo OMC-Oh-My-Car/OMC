@@ -81,12 +81,16 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         log.debug("RefreshToken : " + tokenDto.getRefreshToken());
         String refreshToken = tokenDto.getRefreshToken();
 
-        RefreshToken refreshTokenEntity = RefreshToken.builder()
-                .key(authMember.getUsername())
-                .value(refreshToken)
-                .build();
+        RefreshToken savedRefreshToken = refreshTokenRepository.findByKey(authMember.getEmail()).orElse(null);
 
-        refreshTokenRepository.save(refreshTokenEntity);
+        if (savedRefreshToken == null) {
+            RefreshToken refreshTokenEntity = RefreshToken.builder()
+                    .key(authMember.getUsername())
+                    .value(refreshToken)
+                    .build();
+
+            refreshTokenRepository.save(refreshTokenEntity);
+        }
 
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
                 .maxAge(7 * 24 * 60 * 60)

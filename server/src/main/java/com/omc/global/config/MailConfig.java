@@ -13,10 +13,10 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @Slf4j
 public class MailConfig {
-    @Value("$(spring.mail.username")
+    @Value("${spring.mail.username}")
     String username;
 
-    @Value("$(spring.mail.password")
+    @Value("${spring.mail.password}")
     String password;
 
     @Bean
@@ -27,8 +27,8 @@ public class MailConfig {
 //        log.debug(username);
 //        log.debug(password);
 
-        mailSender.setUsername("a2346532@gmail.com");
-        mailSender.setPassword("kvgtwiofjqhveetx");
+        mailSender.setUsername(username);
+        mailSender.setPassword(password);
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");

@@ -7,23 +7,18 @@ import java.util.Random;
 import com.omc.domain.member.dto.*;
 import com.omc.domain.member.entity.AuthMember;
 import com.omc.domain.member.entity.RefreshToken;
-import com.omc.domain.member.exception.DuplicateNickname;
-import com.omc.domain.member.exception.DuplicateUsername;
+import com.omc.domain.member.entity.UserRole;
 import com.omc.domain.member.repository.RefreshTokenRepository;
-import com.omc.global.common.annotation.CurrentMember;
 import com.omc.global.error.ErrorCode;
 import com.omc.global.error.exception.BusinessException;
 import com.omc.global.jwt.TokenProvider;
-import io.jsonwebtoken.Claims;
 import org.springframework.http.ResponseCookie;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.omc.domain.member.entity.Member;
-import com.omc.domain.member.exception.DuplicateEmail;
 import com.omc.domain.member.exception.MemberNotFoundException;
 import com.omc.domain.member.repository.MemberRepository;
 
@@ -43,6 +38,8 @@ public class MemberService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final TokenProvider tokenProvider;
 
+    String confirmText = "";
+
     public Optional<Member> findByEmail(String email) {
         return memberRepository.findByEmail(email);
     }
@@ -51,7 +48,7 @@ public class MemberService {
         return memberRepository.findById(id);
     }
 
-    public MemberResponseDto join(SignUpRequestDto signUpRequestDto) {
+    public MemberResponseDto signUp(SignUpRequestDto signUpRequestDto) {
         if (memberRepository.existsByEmail(signUpRequestDto.getEmail())) {
             throw new BusinessException(ErrorCode.DUPLICATE_EMAIL);
         }
@@ -63,6 +60,10 @@ public class MemberService {
         // encoding된 password를 사용한 build
         Member member = signUpRequestDto.encodePasswordSignUp(passwordEncoder);
 
+        // 관리자 전용 테스트 아이디 생성
+        if (signUpRequestDto.getEmail().equals("admin@omc.com")) {
+            member.setUserRole(UserRole.ROLE_ADMIN);
+        }
         // 객체형태의 Response Body 생성
         return memberRepository.save(member).toResponseDto();
     }
@@ -133,11 +134,6 @@ public class MemberService {
         RefreshToken refreshToken = refreshTokenRepository.findByKey(member.getEmail())
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXISTS_AUTHORIZATION));
 
-        // Request된 Header의 refreshtoken 값과 비교하여 분류
-        if (!request.getHeader("Set-Cookie").equals(refreshToken.getValue())) {
-            throw new BusinessException(ErrorCode.NOT_MATCH_REFRESH_TOKEN);
-        }
-
         String savedRefreshToken = refreshToken.getValue();
         log.debug("refreshToken : " + savedRefreshToken);
 
@@ -170,18 +166,45 @@ public class MemberService {
         return ReissueResponse.toResponse(member);
     }
 
-    public void logout(String email) {
-        Member member = memberRepository.findByEmail(email).orElse(null);
-
-        if (member == null) {
-            throw new BusinessException(ErrorCode.NOT_EXISTS_AUTHORIZATION);
+    public void signOut(HttpServletResponse response, String email, String refreshToken) {
+        if (refreshToken == null) {
+            refreshToken = refreshTokenRepository.findByKey(email).orElse(null).getValue();
         }
+
+        // refreshToken 존재 및 유효성 분류
+        if (refreshToken != null && !tokenProvider.validateToken(refreshToken)) {
+            throw new BusinessException(ErrorCode.NOT_VALID_TOKEN);
+        }
+
+        if (!memberRepository.existsByEmail(email)) {
+            throw new BusinessException(ErrorCode.MEMBER_NOT_EXISTS);
+        }
+
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
+                .maxAge(0)
+                .path("/")
+                .secure(true)
+                .sameSite("None")
+                .httpOnly(true)
+                .build();
+        response.setHeader("Set-Cookie", cookie.toString());
+
         refreshTokenRepository.deleteByKey(email);
     }
 
     public void delete(String email) {
-        // member verifi
-        // refreshtoken veri
+        // 회원 존재 파악
+        if (!memberRepository.existsByEmail(email)) {
+            throw new BusinessException(ErrorCode.MEMBER_NOT_EXISTS);
+        }
+
+        RefreshToken refreshToken = refreshTokenRepository.findByKey(email).orElse(null);
+
+        // refreshToken 존재 및 유효성 분류
+        if (refreshToken != null && !tokenProvider.validateToken(refreshToken.getValue())) {
+            throw new BusinessException(ErrorCode.NOT_VALID_TOKEN);
+        }
+
         memberRepository.deleteByEmail(email);
         refreshTokenRepository.deleteByKey(email);
     }
@@ -199,24 +222,50 @@ public class MemberService {
 
     public void confirmMail(SingleParamDto emailDto) {
         SimpleMailMessage message = new SimpleMailMessage();
-//        message.setFrom("OMC@OMC.com");
+        message.setFrom("OMC@OMC.com");
         message.setTo(emailDto.getParam());
-        byte[] array = new byte[7];
-        new Random().nextBytes(array);
-        String confirmText = new String(array, Charset.forName("UTF-8"));
+
+        // *
+        // 랜덤 문자열 + 숫자 지정
+        int leftLimit = 48; // 숫자형
+        int rightLimit = 122; // 문자형
+        int targetStringLength = 10; // 자리수 지정
+        Random random = new Random();
+
+        confirmText = random.ints(leftLimit,rightLimit + 1)
+                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                .limit(targetStringLength)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
+        // *
         String text = "이메일 인증 번호 : " + confirmText;
+        log.debug(text);
         message.setSubject("OMC 이메일 인증입니다.");
         message.setText(text);
         emailSender.send(message);
     }
 
-    public String findByPhone(String param) {
-            Member member = memberRepository.findByPhone(param).orElseThrow(MemberNotFoundException::new);
+    public boolean certificationMail(SingleParamDto certificationMail) {
+        if (!certificationMail.getParam().equals(confirmText)) {
+            return false;
+        }
 
+        return true;
+    }
+
+    public String findByPhone(String param) {
+            Member member = memberRepository.findByPhone(param).orElse(null);
+            if (member == null) {
+                throw new BusinessException(ErrorCode.MEMBER_NOT_EXISTS);
+            }
             return member.getEmail();
     }
 
-    public void adaptPassword(ModifyPasswordDto modifyPasswordDto, Member member) {
+    public void adaptPassword(ModifyPasswordDto modifyPasswordDto, AuthMember member) {
+        if (member == null) {
+            throw new BusinessException(ErrorCode.NOT_EXISTS_AUTHORIZATION);
+        }
+
         if (!passwordEncoder.matches(modifyPasswordDto.getOldPassword(), member.getPassword())) {
             throw new BusinessException(ErrorCode.NOT_MATCH_PASSWORD);
         }

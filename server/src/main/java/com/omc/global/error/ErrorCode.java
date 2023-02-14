@@ -25,8 +25,9 @@ public enum ErrorCode {
 	ALREADY_REGISTERED_MEMBER(HttpStatus.BAD_REQUEST, "M-002", "이미 가입된 회원 입니다."),
 	MEMBER_NOT_EXISTS(HttpStatus.BAD_REQUEST, "M-003", "해당 회원은 존재하지 않습니다."),
 	DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "M-004", "이미 가입되어 있는 이메일 입니다."),
-	DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST, "M-006", "이미 가입되어 있는 닉네임 입니다."),
-	NOT_MATCH_PASSWORD(HttpStatus.BAD_REQUEST, "M-004", "비밀번호가 일치하지 않습니다."),
+	DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST, "M-005", "이미 가입되어 있는 닉네임 입니다."),
+	NOT_MATCH_PASSWORD(HttpStatus.BAD_REQUEST, "M-006", "비밀번호가 일치하지 않습니다."),
+	NOT_MATCH_CONFIRM_TEXT(HttpStatus.BAD_REQUEST, "M-007", "인증번호가 일치하지 않습니다."),
 
 	// 상품
 	PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "P-001", "해당 상품은 존재하지 않습니다."),
@@ -67,5 +68,4 @@ public enum ErrorCode {
 		this.errorCode = errorCode;
 		this.message = message;
 	}
-
 }

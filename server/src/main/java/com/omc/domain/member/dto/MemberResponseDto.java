@@ -19,6 +19,6 @@ public class MemberResponseDto {
     private String profileImg;
 
     public static MemberResponseDto of(Member member) {
-        return new MemberResponseDto(member.getUsername(), member.getNickname(), member.getPhone(), member.getEmail(), member.getProfileImg());
+        return new MemberResponseDto(member.getUsername(), member.getEmail(), member.getNickname(), member.getPhone(), member.getProfileImg());
     }
 }

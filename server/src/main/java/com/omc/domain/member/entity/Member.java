@@ -56,6 +56,7 @@ public class Member extends BaseEntity {
                 .email(email)
                 .nickname(nickname)
                 .phone(phone)
+                .profileImg(profileImg)
                 .build();
     }
 
