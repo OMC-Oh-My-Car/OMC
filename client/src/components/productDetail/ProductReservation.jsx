@@ -4,7 +4,7 @@ import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ProductCalendarModal from './ProductCalendarModal';
 
-const ProductReservation = () => {
+const ProductReservation = ({ data, reviewData }) => {
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -47,12 +47,12 @@ const ProductReservation = () => {
       <ProductReservationArea>
         <div className="flexBox">
           <div>
-            <span className="price">₩ 77,500 /박</span>
+            <span className="price">₩ {data.data.data.price} /박</span>
           </div>
           <div className="prductDescription">
             <FontAwesomeIcon className="starIcon" icon={faStar} />
-            <span>4.69 · </span>
-            <span className="productInfoReviewCount">후기 32개</span>
+            <span>{data.data.data.star} · </span>
+            <span className="productInfoReviewCount">후기 {reviewData.data.pageInfo.totalElements}개</span>
           </div>
         </div>
         <div className="reservationDate">
@@ -81,12 +81,12 @@ const ProductReservation = () => {
         {endDate !== null && !startDate !== null ? (
           <>
             <div className="priceFlex">
-              <span>{'₩77,500' + ' x ' + (endDate.getDate() - startDate.getDate()) + '박'}</span>
-              <span>₩155,000</span>
+              <span>₩ {data.data.data.price + ' x ' + (endDate.getDate() - startDate.getDate()) + '박'}</span>
+              <span>₩ {data.data.data.price * (endDate.getDate() - startDate.getDate())}</span>
             </div>
             <div className="totalPriceFlex">
               <span>총 합계</span>
-              <span>₩155,000</span>
+              <span>₩ {data.data.data.price * (endDate.getDate() - startDate.getDate())}</span>
             </div>
           </>
         ) : (

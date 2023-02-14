@@ -9,12 +9,18 @@ import GoogleButton from './social/Google';
 import KakaoButton from './social/Kakao';
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import axiosInstance from '../../modules';
 import SignUpSuccessModal from '../alert/SignUpSuccessModal';
+import { login } from '../../modules/member/login';
+import { logout } from '../../modules/member/logout';
+import { useDispatch } from 'react-redux';
+import { setUserInfo, clearUserInfo } from '../../redux/slice/UserInfo';
+
 const SignIn = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [idEmail, setIdEmail] = useState('');
   const [password, setPassword] = useState('');
-  const AccessToken = localStorage.getItem('Authorization') || '';
   const [alert, setAlert] = useState({
     open: false,
     title: '',
@@ -22,39 +28,29 @@ const SignIn = () => {
     callback: false,
   });
 
-  const navigate = useNavigate();
-
+  useEffect(() => {
+    setAlert({
+      title: '!로그인!',
+      message: 'OMC에 오신것을 환영합니다!',
+      body: '로그인 후 서비스를 모두 이용하실 수 있습니다.',
+    });
+  }, []);
   const handleIdEmail = (e) => {
     setIdEmail(e.target.value);
   };
+
   const handlePassword = (e) => {
     setPassword(e.target.value);
   };
-  const handleLogout = async () => {
-    axiosInstance
-      .post('/member/logout')
-      .then(() => {
-        console.log('로그아웃되었습니다.');
-        localStorage.clear();
-        navigate('/');
-      })
-      .catch((err) => {
-        console.log(`${AccessToken}`);
-        console.log(`${err.response.status} 에러`);
-        console.log('로그아웃 실패!');
-      });
-  };
-  const submitHandler = () => {
+
+  const submitHandler = (data) => {
     console.log(`${idEmail}, ${password}`);
-    axiosInstance
-      .post('/member/login', {
-        email: idEmail,
-        password: password,
-      })
+    login(data)
       .then((res) => {
         let accessToken = res.headers.get('Authorization');
-        localStorage.setItem('Authorization', JSON.stringify(accessToken));
-        console.log(res);
+        sessionStorage.setItem('Authorization', accessToken);
+        sessionStorage.setItem('userData', JSON.stringify(res.data));
+        dispatch(setUserInfo(res.data));
         navigate('/signin');
       })
       .catch((err) => {
@@ -67,13 +63,21 @@ const SignIn = () => {
         });
       });
   };
-  useEffect(() => {
-    setAlert({
-      title: '!로그인!',
-      message: 'OMC에 오신것을 환영합니다!',
-      body: '로그인 후 서비스를 모두 이용하실 수 있습니다.',
-    });
-  }, []);
+
+  const handleLogout = async () => {
+    logout()
+      .then((res) => {
+        console.log('로그아웃되었습니다.');
+        window.sessionStorage.removeItem('Authorization');
+        dispatch(clearUserInfo());
+        navigate('/');
+      })
+      .catch((err) => {
+        console.log(`${err.response.status} 에러`);
+        console.log('로그아웃 실패!');
+      });
+  };
+
   return (
     <>
       <Template>
@@ -102,7 +106,17 @@ const SignIn = () => {
         />
         <SignInButton>
           <Link to={'/signin'}>
-            <OrangeButton text="로그인" width="197px" height="40px" onClick={submitHandler} />
+            <OrangeButton
+              text="로그인"
+              width="197px"
+              height="40px"
+              onClick={() =>
+                submitHandler({
+                  email: idEmail,
+                  password: password,
+                })
+              }
+            />
           </Link>
           <OrangeButton text="로그아웃" width="197px" height="40px" onClick={handleLogout} />
           {alert && (

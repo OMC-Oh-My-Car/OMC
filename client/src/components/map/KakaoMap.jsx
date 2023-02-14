@@ -1,8 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { KakaoMapArea } from './KakaoMap.style';
 
-const KakaoMap = ({ productId }) => {
-  console.log(productId);
+const KakaoMap = ({ productId, data }) => {
   const mapContainer = useRef(null);
   const { kakao } = window;
   const position = new kakao.maps.LatLng(33.450701, 126.570667);
@@ -19,7 +18,7 @@ const KakaoMap = ({ productId }) => {
     const zoomControl = new kakao.maps.ZoomControl();
     map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
-    geocoder.addressSearch('제주특별자치도 제주시 첨단로 242', function (result, status) {
+    geocoder.addressSearch(`${data.data.data.address}`, function (result, status) {
       if (status === kakao.maps.services.Status.OK) {
         const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
         const marker = new kakao.maps.Marker({

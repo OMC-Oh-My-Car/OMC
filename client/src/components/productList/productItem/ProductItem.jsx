@@ -8,7 +8,6 @@ import { ReactComponent as HeartSolid } from '../../../assets/images/heart-solid
 const ProductItem = ({ handleClick, item }) => {
   const [currentImage, setCurrentImage] = useState(0);
   const [hover, setHover] = useState(false);
-
   return (
     <>
       <ProductItemArea
@@ -28,12 +27,7 @@ const ProductItem = ({ handleClick, item }) => {
             </>
           )}
 
-          <img
-            role="presentation"
-            src={item.img[currentImage].value}
-            alt="상품사진"
-            onClick={() => handleClick(item.productId)}
-          />
+          <img role="presentation" src={item.img[currentImage]} alt="상품사진" onClick={() => handleClick(item.id)} />
           {currentImage !== 0 && (
             <>
               <FontAwesomeIcon
@@ -54,10 +48,10 @@ const ProductItem = ({ handleClick, item }) => {
             </>
           )}
         </div>
-        <div className="productInfo" onClick={() => handleClick(item.productId)} role="presentation">
+        <div className="productInfo" onClick={() => handleClick(item.id)} role="presentation">
           <div className="flexArea">
             <p className="productTitle">{item.subject}</p>
-            <p className="productLocation">{item.location[0].value}</p>
+            <p className="productLocation">{item.address}</p>
           </div>
           <div className="flexArea">
             <p className="productPrice">

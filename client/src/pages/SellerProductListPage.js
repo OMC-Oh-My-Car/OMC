@@ -16,6 +16,7 @@ const SellerProductListPage = () => {
     const data = await getSellerProductList(page);
     return data;
   });
+  console.log(data);
   return (
     <>
       <Container>

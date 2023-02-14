@@ -30,4 +30,11 @@ export const UserInfoArea = styled.button`
     font-size: 33px;
     color: ${(props) => props.theme.yellow};
   }
+  img {
+    position: absolute;
+    right: 10px;
+    width: 33px;
+    height: 33px;
+    border-radius: 50%;
+  }
 `;

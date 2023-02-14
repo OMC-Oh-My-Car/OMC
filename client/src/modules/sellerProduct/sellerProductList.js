@@ -6,5 +6,5 @@ export const getSellerProductList = (page) => {
   };
   console.log(params);
   console.log('판매자 상품 리스트 Loading');
-  return axiosInstance.get('/productMy');
+  return axiosInstance.get('/product/my');
 };

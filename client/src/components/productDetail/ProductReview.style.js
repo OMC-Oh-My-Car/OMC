@@ -131,24 +131,27 @@ export const ProductReviewListArea = styled.div`
       overflow: hidden;
     }
   }
-  .more {
-    margin-bottom: 40px;
-    padding: 10px 20px;
-    font-size: 18px;
-    font-weight: 600;
-    outline: none;
-    border-radius: 5px;
-    transition: all 0.2s;
-    font-family: sans-serif;
-    background-color: ${(props) => props.theme.yellow};
-    border: 1px solid ${(props) => props.theme.yellow};
-    color: white;
-    cursor: pointer;
-  }
-  .more:hover {
-    border: 1px solid ${(props) => props.theme.yellow};
-    color: ${(props) => props.theme.yellow};
-    background-color: white;
+  .btnArea {
+    width: 100%;
+    .more {
+      margin-bottom: 40px;
+      padding: 10px 20px;
+      font-size: 18px;
+      font-weight: 600;
+      outline: none;
+      border-radius: 5px;
+      transition: all 0.2s;
+      font-family: sans-serif;
+      background-color: ${(props) => props.theme.yellow};
+      border: 1px solid ${(props) => props.theme.yellow};
+      color: white;
+      cursor: pointer;
+    }
+    .more:hover {
+      border: 1px solid ${(props) => props.theme.yellow};
+      color: ${(props) => props.theme.yellow};
+      background-color: white;
+    }
   }
   @media (max-width: 1128px) {
     .reviewListItem {

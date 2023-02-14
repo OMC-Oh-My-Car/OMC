@@ -1,9 +1,8 @@
 import styled from 'styled-components';
 
 export const Template = styled.div`
-  border: solid 1px black;
-  height: 100%;
   padding: 15px;
+  margin: 40px 0px;
   .success {
     color: blue;
   }
@@ -33,9 +32,7 @@ export const SignUpButton = styled.div`
   margin-bottom: 20px;
   border: none;
 `;
-export const SignInComment = styled(SignUpButton)`
-  }
-`;
+export const SignInComment = styled(SignUpButton)``;
 export const EmailButton = styled.div`
   display: flex;
   margin-top: 30px;

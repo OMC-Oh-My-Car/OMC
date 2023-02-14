@@ -2,7 +2,8 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import ProductListPage from '../pages/ProductListPage';
 import ProductDetailPage from '../pages/ProductDetailPage';
-import SignIn from '../components/signIn/SignIn';
+import SignInPage from '../pages/SignInPage';
+import SignUpPage from '../pages/SignUpPage';
 import UserReservationPage from '../pages/UserReservationPage';
 import SellerProductListPage from '../pages/SellerProductListPage';
 import SellerReservationPage from '../pages/SellerReservationPage';
@@ -27,7 +28,8 @@ const Router = () => {
         <Routes>
           <Route index element={<ProductListPage />} />
           <Route path="/product/:productId" element={<ProductDetailPage openModalController={openModalController} />} />
-          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signin" element={<SignInPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
           <Route
             path="/user/:id/reservation"
             element={<UserReservationPage openModalController={openModalController} />}

@@ -34,11 +34,11 @@ const userReservationList = ({ data, isLoading, isError, openModalController }) 
         <h1>나의 일정</h1>
         <div className="reservationList">
           {data &&
-            data.data
-              .filter((el) => el.reservationId)
-              .map((item) => {
-                return <UserReservationItem key={item.reservationId} openModalController={openModalController} />;
-              })}
+            data.data.data.map((item) => {
+              return (
+                <UserReservationItem key={item.reservationId} item={item} openModalController={openModalController} />
+              );
+            })}
         </div>
       </UserReservationListArea>
     </>

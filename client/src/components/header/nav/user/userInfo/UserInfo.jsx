@@ -3,9 +3,11 @@ import { UserInfoArea } from './UserInfo.style';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import UserInfoDetail from './UserInfoDetail';
+import { useSelector } from 'react-redux';
 
 const UserInfo = () => {
-  // 나중에 리덕스로 이동
+  const imageUrl = useSelector((state) => state.user.imageUrl);
+
   const [isOpen, setIsOpen] = useState(false);
   const navController = () => {
     setIsOpen(true);
@@ -19,7 +21,15 @@ const UserInfo = () => {
     <>
       <UserInfoArea onClick={navController} isOpen={isOpen}>
         <FontAwesomeIcon className="hambergerIcon" icon={faBars} />
-        <FontAwesomeIcon className="userIcon" icon={faCircleUser} />
+        {imageUrl ? (
+          <>
+            <img src={imageUrl} alt="profileImage" />
+          </>
+        ) : (
+          <>
+            <FontAwesomeIcon className="userIcon" icon={faCircleUser} />
+          </>
+        )}
       </UserInfoArea>
       {isOpen && (
         <>

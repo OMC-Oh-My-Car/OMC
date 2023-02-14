@@ -2,34 +2,32 @@
 import { FacilityModalArea } from './FacilityModal.style';
 import { getProductDetail } from '../../modules/userProduct/userProductDetail';
 import { useQuery } from 'react-query';
-import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 
 const FacilityModal = () => {
-  const productId = useSelector((state) => state.modal.lastPath).split('/')[2];
-  if (productId) {
-    const { data } = useQuery(['productDetail', productId], async () => {
-      const data = await getProductDetail(productId);
-      return data;
-    });
-  }
+  const location = useLocation();
+  const productId = location.pathname.split('/')[2];
+
+  const { data } = useQuery(['productDetail', productId], async () => {
+    const data = await getProductDetail(productId);
+    return data;
+  });
+  console.log(data);
   return (
     <>
       <FacilityModalArea>
         <h2>숙소 편의시설</h2>
         <ul className="facilityList">
-          <li className="facilityItem">헤어드라이어</li>
-          <li className="facilityItem">헤어드라이어</li>
-          <li className="facilityItem">헤어드라이어</li>
-          <li className="facilityItem">헤어드라이어</li>
-          <li className="facilityItem">헤어드라이어</li>
-          <li className="facilityItem">헤어드라이어</li>
-          <li className="facilityItem">헤어드라이어</li>
-          <li className="facilityItem">헤어드라이어</li>
-          <li className="facilityItem">헤어드라이어</li>
-          <li className="facilityItem">헤어드라이어</li>
-          <li className="facilityItem">헤어드라이어</li>
-          <li className="facilityItem">헤어드라이어</li>
-          <li className="facilityItem">헤어드라이어</li>
+          {data &&
+            data.data.data.facilities.map((el, index) => {
+              return (
+                <>
+                  <li key={index} className="facilityItem">
+                    {el}
+                  </li>
+                </>
+              );
+            })}
         </ul>
       </FacilityModalArea>
     </>
