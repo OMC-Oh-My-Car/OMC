@@ -98,7 +98,11 @@ public class ProductController {
 	public ResponseEntity<?> get(@PathVariable Long productId,
 								 @CurrentMember AuthMember member) {
 
-		Optional<Member> findMember = memberService.findByEmail(member.getEmail());
+		Member findMember = null;
+		if (member != null) {
+			findMember = memberService.findByEmail(member.getEmail())
+									  .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_EXISTS));
+		}
 
 		ProductDto.Response res = productService.getProduct(productId, findMember);
 

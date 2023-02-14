@@ -69,6 +69,7 @@ public class Product extends BaseEntity {
 	@Column
 	private Long likes;
 
+	@ColumnDefault("0")
 	@Column
 	private Long views;
 

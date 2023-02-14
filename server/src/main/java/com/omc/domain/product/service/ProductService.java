@@ -143,20 +143,21 @@ public class ProductService {
 	 * @return 상품 정보
 	 */
 	@Transactional
-	public ProductDto.Response getProduct(Long productId, Optional<Member> member) {
+	public ProductDto.Response getProduct(Long productId, Member member) {
 		Product findProduct = productRepository.findById(productId)
 											   .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
 
 		Optional<LikeHistory> likeHistory = Optional.empty();
 
-		if (member.isPresent()) {
-			likeHistory = likeHistoryRepository.findByMemberIdAndProductId(member.get().getId(),
+		if (member != null) {
+			likeHistory = likeHistoryRepository.findByMemberIdAndProductId(member.getId(),
 																		   findProduct.getId());
 		}
 
 		findProduct.addViews();
 
 		return ProductDto.Response.builder()
+								  .id(findProduct.getId())
 								  .subject(findProduct.getSubject())
 								  .description(findProduct.getDescription())
 								  .address(findProduct.getAddress())
