@@ -8,7 +8,6 @@ import { ReactComponent as HeartSolid } from '../../../assets/images/heart-solid
 const ProductItem = ({ handleClick, item }) => {
   const [currentImage, setCurrentImage] = useState(0);
   const [hover, setHover] = useState(false);
-
   return (
     <>
       <ProductItemArea
@@ -49,7 +48,7 @@ const ProductItem = ({ handleClick, item }) => {
             </>
           )}
         </div>
-        <div className="productInfo" onClick={() => handleClick(item.productId)} role="presentation">
+        <div className="productInfo" onClick={() => handleClick(item.id)} role="presentation">
           <div className="flexArea">
             <p className="productTitle">{item.subject}</p>
             <p className="productLocation">{item.address}</p>

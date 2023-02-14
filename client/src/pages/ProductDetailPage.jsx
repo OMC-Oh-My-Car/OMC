@@ -7,6 +7,7 @@ import ProductInfo from '../components/productDetail/ProductInfo';
 import ProductReview from '../components/productDetail/ProductReview';
 import ProductMap from '../components/productDetail/ProductMap';
 import { getProductDetail } from '../modules/userProduct/userProductDetail';
+import { getProductReview } from '../modules/userProduct/userProductReview';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const ProductDetailPage = ({ openModalController }) => {
@@ -18,6 +19,12 @@ const ProductDetailPage = ({ openModalController }) => {
     const data = await getProductDetail(productId);
     return data;
   });
+
+  const { data: reviewData } = useQuery(['productReview', productId], async () => {
+    const data = await getProductReview(productId);
+    return data;
+  });
+
   const modalController = (type, width, height, modal) => {
     navigate(`/product/${productId}?modal=${modal}`);
     openModalController({ type, width, height });
@@ -28,8 +35,20 @@ const ProductDetailPage = ({ openModalController }) => {
         <Header type="short" />
         <MainContainer>
           <ProductImage data={data} isLoading={isLoading} isError={isError} modalController={modalController} />
-          <ProductInfo data={data} isLoading={isLoading} isError={isError} modalController={modalController} />
-          <ProductReview data={data} isLoading={isLoading} isError={isError} modalController={modalController} />
+          <ProductInfo
+            data={data}
+            reviewData={reviewData}
+            isLoading={isLoading}
+            isError={isError}
+            modalController={modalController}
+          />
+          <ProductReview
+            data={data}
+            reviewData={reviewData}
+            isLoading={isLoading}
+            isError={isError}
+            modalController={modalController}
+          />
           <ProductMap productId={productId} />
         </MainContainer>
       </Container>
