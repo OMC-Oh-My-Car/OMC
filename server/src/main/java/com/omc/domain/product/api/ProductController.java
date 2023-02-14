@@ -7,8 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -20,12 +18,14 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.omc.domain.member.entity.AuthMember;
 import com.omc.domain.member.entity.Member;
 import com.omc.domain.member.service.MemberService;
 import com.omc.domain.product.dto.ProductDto;
 import com.omc.domain.product.dto.StopDto;
 import com.omc.domain.product.entity.Product;
 import com.omc.domain.product.service.ProductService;
+import com.omc.global.common.annotation.CurrentMember;
 import com.omc.global.common.dto.MultiResponse;
 import com.omc.global.common.dto.SingleResponseDto;
 import com.omc.global.error.ErrorCode;
@@ -51,23 +51,18 @@ public class ProductController {
 	@PostMapping(value = "/product",
 				 consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<?> create(@RequestPart(value = "product") ProductDto.Request req,
-									@RequestPart(value = "imgUrl") List<MultipartFile> multipartFiles) {
+									@RequestPart(value = "imgUrl") List<MultipartFile> multipartFiles,
+									@CurrentMember AuthMember member) {
 
-		Member member;
-
-		if (!findMemberByEmail().isPresent()) {
-			log.error("member is null");
-			throw new BusinessException(ErrorCode.MEMBER_NOT_EXISTS);
-		} else {
-			member = findMemberByEmail().get();
-		}
+		Member findMember = memberService.findByEmail(member.getEmail())
+										 .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_EXISTS));
 
 		if (multipartFiles == null) {
 			log.error("multipartFiles is null");
 			throw new BusinessException(ErrorCode.IMAGE_NOT_FOUND);
 		}
 
-		productService.create(req, multipartFiles, member);
+		productService.create(req, multipartFiles, findMember);
 
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
@@ -82,17 +77,13 @@ public class ProductController {
 				  consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<?> update(@RequestPart("product") ProductDto.Request req,
 									@RequestPart("imgUrl") List<MultipartFile> multipartFiles,
-									@PathVariable Long productId) {
-		Member member;
+									@PathVariable Long productId,
+									@CurrentMember AuthMember member) {
 
-		if (!findMemberByEmail().isPresent()) {
-			log.error("member is null");
-			throw new BusinessException(ErrorCode.MEMBER_NOT_EXISTS);
-		} else {
-			member = findMemberByEmail().get();
-		}
+		Member findMember = memberService.findByEmail(member.getEmail())
+										 .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_EXISTS));
 
-		productService.update(req, multipartFiles, productId, member);
+		productService.update(req, multipartFiles, productId, findMember);
 
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
@@ -104,11 +95,12 @@ public class ProductController {
 	 * @return 상품 정보
 	 */
 	@GetMapping(value = "/product/{productId}")
-	public ResponseEntity<?> get(@PathVariable Long productId) {
+	public ResponseEntity<?> get(@PathVariable Long productId,
+								 @CurrentMember AuthMember member) {
 
-		Optional<Member> member = findMemberByEmail();
+		Optional<Member> findMember = memberService.findByEmail(member.getEmail());
 
-		ProductDto.Response res = productService.getProduct(productId, member);
+		ProductDto.Response res = productService.getProduct(productId, findMember);
 
 		return new ResponseEntity<>(new SingleResponseDto<>(res), HttpStatus.OK);
 	}
@@ -140,18 +132,13 @@ public class ProductController {
 	 * @return 상품 정보
 	 */
 	@GetMapping(value = "/product/my")
-	public ResponseEntity<?> getMyProductList(@ModelAttribute ProductDto.Search search) {
+	public ResponseEntity<?> getMyProductList(@ModelAttribute ProductDto.Search search,
+											  @CurrentMember AuthMember member) {
 
-		Member member;
+		Member findMember = memberService.findByEmail(member.getEmail())
+										 .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_EXISTS));
 
-		if (!findMemberByEmail().isPresent()) {
-			log.error("member is null");
-			throw new BusinessException(ErrorCode.MEMBER_NOT_EXISTS);
-		} else {
-			member = findMemberByEmail().get();
-		}
-
-		Page<Product> resPage = productService.getMyProductList(member, search);
+		Page<Product> resPage = productService.getMyProductList(findMember, search);
 		List<ProductDto.Response> res = productService.convertToResponse(resPage.getContent());
 
 		return new ResponseEntity<>(new MultiResponse<>(res, resPage), HttpStatus.OK);
@@ -163,18 +150,13 @@ public class ProductController {
 	 * @param productId : 상품 아이디
 	 */
 	@DeleteMapping(value = "/product/{productId}")
-	public ResponseEntity<?> delete(@PathVariable Long productId) {
+	public ResponseEntity<?> delete(@PathVariable Long productId,
+									@CurrentMember AuthMember member) {
 
-		Member member;
+		Member findMember = memberService.findByEmail(member.getEmail())
+										 .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_EXISTS));
 
-		if (!findMemberByEmail().isPresent()) {
-			log.error("member is null");
-			throw new BusinessException(ErrorCode.MEMBER_NOT_EXISTS);
-		} else {
-			member = findMemberByEmail().get();
-		}
-
-		productService.delete(productId, member);
+		productService.delete(productId, findMember);
 
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
@@ -185,18 +167,13 @@ public class ProductController {
 	 * @param productId : 상품 아이디
 	 */
 	@PostMapping(value = "/product/{productId}/like")
-	public ResponseEntity<?> like(@PathVariable Long productId) {
+	public ResponseEntity<?> like(@PathVariable Long productId,
+								  @CurrentMember AuthMember member) {
 
-		Member member;
+		Member findMember = memberService.findByEmail(member.getEmail())
+										 .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_EXISTS));
 
-		if (!findMemberByEmail().isPresent()) {
-			log.error("member is null");
-			throw new BusinessException(ErrorCode.MEMBER_NOT_EXISTS);
-		} else {
-			member = findMemberByEmail().get();
-		}
-
-		productService.likeProduct(productId, member);
+		productService.likeProduct(productId, findMember);
 
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
@@ -212,33 +189,15 @@ public class ProductController {
 	 */
 	@PatchMapping(value = "/product/{productId}/stop")
 	public ResponseEntity<?> status(@PathVariable Long productId,
-									@RequestBody StopDto.Request req) {
+									@RequestBody StopDto.Request req,
+									@CurrentMember AuthMember member) {
 
-		Member member;
+		Member findMember = memberService.findByEmail(member.getEmail())
+										 .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_EXISTS));
 
-		if (!findMemberByEmail().isPresent()) {
-			log.error("member is null");
-			throw new BusinessException(ErrorCode.MEMBER_NOT_EXISTS);
-		} else {
-			member = findMemberByEmail().get();
-		}
-
-		StopDto.Response res = productService.setStatus(productId, req, member);
+		StopDto.Response res = productService.setStatus(productId, req, findMember);
 
 		return new ResponseEntity<>(new SingleResponseDto<>(res), HttpStatus.OK);
 	}
 
-	// SecurityContext에 저장된 회원 정보 todo : 시큐리티 설정 후 어노테이션 사용
-	private String getEmail() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		return authentication.getName();
-	}
-	private Optional<Member> findMemberByEmail() {
-		Optional<Member> member = memberService.findByEmail(getEmail());
-		if (!member.isPresent()) {
-			log.error("member is null");
-			throw new BusinessException(ErrorCode.MEMBER_NOT_EXISTS);
-		}
-		return member;
-	}
 }
