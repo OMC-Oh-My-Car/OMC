@@ -1,6 +1,9 @@
 package com.omc.global.util;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class Util {
@@ -20,5 +23,13 @@ public class Util {
         }
 
         return map;
+    }
+
+    public String convertReviewLocalDateTime(LocalDateTime localDateTime) {
+        return localDateTime.format(DateTimeFormatter.ofPattern("yyyy년 L월 dd일", Locale.KOREA)).toString();
+    }
+
+    public String convertReservationLocalDateTime(LocalDateTime localDateTime) {
+        return localDateTime.format(DateTimeFormatter.ofPattern("yyyy년 L월 dd일 HH시 mm분", Locale.KOREA)).toString();
     }
 }

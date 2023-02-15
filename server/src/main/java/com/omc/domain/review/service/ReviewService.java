@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.omc.domain.member.entity.Member;
+import com.omc.global.util.Util;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final ReservationService reservationService;
+    private final Util util;
 
     DecimalFormat decimalFormat = new DecimalFormat("0.0"); // 소수 1자리 변환
 
@@ -99,15 +101,7 @@ public class ReviewService {
         if (review == null) {
             throw new BusinessException(ErrorCode.REVIEW_NOT_FOUND);
         }
-        return ReviewDto.Response.builder()
-                .content(review.getContent())
-                .totalStar(review.getTotalStar())
-                .starCleanliness(review.getStarCleanliness())
-                .starAccuracy(review.getStarAccuracy())
-                .starLocation(review.getStarLocation())
-                .starCostEffective(review.getStarCostEffective())
-                .createTime(review.getCreatedAt())
-                .build();
+        return toResponseDto(review);
     }
 
     @Transactional
@@ -150,7 +144,7 @@ public class ReviewService {
                 .starAccuracy(review.getStarAccuracy())
                 .starLocation(review.getStarLocation())
                 .starCostEffective(review.getStarCostEffective())
-                .createTime(review.getCreatedAt())
+                .createTime(util.convertReviewLocalDateTime(review.getCreatedAt()))
                 .build();
     }
 }

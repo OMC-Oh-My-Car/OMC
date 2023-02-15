@@ -33,8 +33,8 @@ public class ReservationDto {
     public static class Response {
         private String reservationId;
         private String phoneNumber;
-        private LocalDateTime checkIn;
-        private LocalDateTime checkOut;
+        private String checkIn;
+        private String checkOut;
         private int isCancel;
     }
 

@@ -6,7 +6,9 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.omc.domain.cashlog.service.CashLogService;
 import com.omc.domain.member.service.MemberService;
+import com.omc.global.util.Util;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,6 +40,8 @@ public class ReservationService {
     private final MemberService memberService;
     private final CancelService cancelService;
     private final ProductRepository productRepository;
+    private final CashLogService cashLogService;
+    private final Util util;
 
     public Reservation findById(long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId).orElse(null);
@@ -64,6 +68,8 @@ public class ReservationService {
         if (countRes > 0) {
             throw new BusinessException(ErrorCode.CANT_RESERVATION);
         }
+
+        // 결제 후 예약 추가
 
         Reservation reservation = Reservation.builder()
                 .member(member)
@@ -102,8 +108,8 @@ public class ReservationService {
         ReservationDto.Response responseDto = ReservationDto.Response.builder()
                 .reservationId(reservation.getUniqueId())
                 .phoneNumber(reservation.getPhoneNumber())
-                .checkIn(reservation.getCheckIn())
-                .checkOut(reservation.getCheckOut())
+                .checkIn(util.convertReviewLocalDateTime(reservation.getCheckIn()))
+                .checkOut(util.convertReviewLocalDateTime(reservation.getCheckOut()))
                 .isCancel(reservation.getIsCancel())
                 .build();
 
