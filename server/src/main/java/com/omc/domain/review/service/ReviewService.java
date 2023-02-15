@@ -2,7 +2,6 @@ package com.omc.domain.review.service;
 
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -135,20 +134,12 @@ public class ReviewService {
         Object[] avgList = reviewRepository.findReviewsAvgByProductId(productId);
         Object[] valueArr = (Object[]) avgList[0];
 
-//        return ReviewDto.productTotalStar.builder()
-//                .totalStar(Double.valueOf(avgList[0].toString()))
-//                .starCleanliness(Double.valueOf(avgList[1].toString()))
-//                .starAccuracy(Double.valueOf(avgList[2].toString()))
-//                .starLocation(Double.valueOf(avgList[3].toString()))
-//                .starCostEffective(Double.valueOf(avgList[4].toString()))
-//                .build();
-
         return ReviewDto.productTotalStar.builder()
-                .totalStar(Double.valueOf(decimalFormat.format(valueArr[0])))
-                .starCleanliness(Double.valueOf(decimalFormat.format(valueArr[1])))
-                .starAccuracy(Double.valueOf(decimalFormat.format(valueArr[2])))
-                .starLocation(Double.valueOf(decimalFormat.format(valueArr[3])))
-                .starCostEffective(Double.valueOf(decimalFormat.format(valueArr[4])))
+                .totalStarAvg(Double.valueOf(decimalFormat.format(valueArr[0])))
+                .starCleanlinessAvg(Double.valueOf(decimalFormat.format(valueArr[1])))
+                .starAccuracyAvg(Double.valueOf(decimalFormat.format(valueArr[2])))
+                .starLocationAvg(Double.valueOf(decimalFormat.format(valueArr[3])))
+                .starCostEffectiveAvg(Double.valueOf(decimalFormat.format(valueArr[4])))
                 .build();
     }
 
@@ -159,6 +150,8 @@ public class ReviewService {
     private ReviewDto.Response toResponseDto(Review review) {
 
         return ReviewDto.Response.builder()
+                .nickname(review.getMember().getNickname())
+                .profileImg(review.getMember().getProfileImg())
                 .content(review.getContent())
                 .totalStar(review.getTotalStar())
                 .starCleanliness(review.getStarCleanliness())

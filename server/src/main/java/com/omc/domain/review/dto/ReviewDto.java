@@ -1,7 +1,5 @@
 package com.omc.domain.review.dto;
 
-import java.time.LocalDateTime;
-
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PositiveOrZero;
@@ -40,6 +38,8 @@ public class ReviewDto {
     @Getter
     @Builder
     public static class Response {
+        private String nickname;
+        private String profileImg;
         private String content;
         private Double totalStar; // 총 평점, 소수 1자리까지
         private Double starCleanliness; // 청결도, 소수 1자리까지
@@ -69,10 +69,10 @@ public class ReviewDto {
     @Getter
     @Builder
     public static class productTotalStar {
-        private Double totalStar; // 총 평점, 소수 1자리까지
-        private Double starCleanliness; // 청결도, 소수 1자리까지
-        private Double starAccuracy; // 정확도, 소수 1자리까지
-        private Double starLocation; // 위치, 소수 1자리까지
-        private Double starCostEffective; // 가격 대비 만족도, 소수 1자리까지
+        private Double totalStarAvg; // 총 평점, 소수 1자리까지
+        private Double starCleanlinessAvg; // 청결도, 소수 1자리까지
+        private Double starAccuracyAvg; // 정확도, 소수 1자리까지
+        private Double starLocationAvg; // 위치, 소수 1자리까지
+        private Double starCostEffectiveAvg; // 가격 대비 만족도, 소수 1자리까지
     }
 }
