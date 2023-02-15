@@ -51,6 +51,13 @@ const ProductInfo = ({ data, reviewData, modalController }) => {
             </div>
             <div className="reservation">
               <ProductReservation data={data} reviewData={reviewData} />
+              <span
+                role="presentation"
+                onClick={() => modalController('addReport', '600px', '590px', 'product_add_report')}
+                className="report"
+              >
+                숙소 신고하기
+              </span>
             </div>
           </ProductInfoArea>
         </>

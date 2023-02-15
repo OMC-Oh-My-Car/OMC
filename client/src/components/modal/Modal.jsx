@@ -14,6 +14,7 @@ import ReservationCancelModal from './ReservationCancelModal';
 import ReservationCancelAddModal from './ReservationCancelAddModal';
 import { useNavigate } from 'react-router-dom';
 import { closeModal, setLastPath } from '../../redux/slice/ModalSlice';
+import AddReport from './AddReport';
 
 const Modal = () => {
   const navigate = useNavigate();
@@ -42,6 +43,7 @@ const Modal = () => {
     else if (type === 'reservationReview') return <ReservationReviewModal />;
     else if (type === 'reservationCancel') return <ReservationCancelModal />;
     else if (type === 'reservationCancelAdd') return <ReservationCancelAddModal />;
+    else if (type === 'addReport') return <AddReport />;
   };
 
   return (
