@@ -18,6 +18,7 @@ public enum ErrorCode {
 	REFRESH_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "A-006", "해당 refresh token은 만료됐습니다."),
 	NOT_ACCESS_TOKEN_TYPE(HttpStatus.UNAUTHORIZED, "A-007", "해당 토큰은 ACCESS TOKEN이 아닙니다."),
 	FORBIDDEN_ADMIN(HttpStatus.FORBIDDEN, "A-008", "관리자 Role이 아닙니다."),
+	NOT_MATCH_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "A-009", "해당 refresh token과 일치하지 않습니다."),
 
 	// 회원
 	INVALID_MEMBER_TYPE(HttpStatus.BAD_REQUEST, "M-001", "잘못된 회원 타입 입니다.(memberType : KAKAO)"),
@@ -27,12 +28,24 @@ public enum ErrorCode {
 
 	// 상품
 	PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "P-001", "해당 상품은 존재하지 않습니다."),
+	DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "M-004", "이미 가입되어 있는 이메일 입니다."),
+	DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST, "M-005", "이미 가입되어 있는 닉네임 입니다."),
+	NOT_MATCH_PASSWORD(HttpStatus.BAD_REQUEST, "M-006", "비밀번호가 일치하지 않습니다."),
+	NOT_MATCH_CONFIRM_TEXT(HttpStatus.BAD_REQUEST, "M-007", "인증번호가 일치하지 않습니다."),
+
+	// 상품
+	PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "P-001", "해당 상품은 존재하지 않습니다."),
+	NOT_PRODUCT_WRITER(HttpStatus.BAD_REQUEST, "P-002", "상품 작성자가 아닙니다."),
 
 	// 리뷰
 	REVIEW_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "R-001", "리뷰가 이미 존재합니다."),
 	REVIEW_NOT_FOUND(HttpStatus.BAD_REQUEST, "R-002", "해당 리뷰가 존재하지 않습니다."),
 	NOT_YET_CHECKIN(HttpStatus.BAD_REQUEST, "R-003", "체크인 이후부터 리뷰를 작성할 수 있습니다."),
 	CANCEL_CANT_WRITE(HttpStatus.BAD_REQUEST, "R-004", "환불한 상품은 리뷰를 작성할 수 없습니다."),
+
+	// 신고
+	REPORT_NOT_FOUND(HttpStatus.BAD_REQUEST, "R-005", "해당 신고가 존재하지 않습니다."),
+
 
 	// 이미지
 	IMAGE_NOT_FOUND(HttpStatus.BAD_REQUEST, "I-001", "이미지 파일이 존재하지 않습니다."),

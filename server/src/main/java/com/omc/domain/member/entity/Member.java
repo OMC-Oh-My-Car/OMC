@@ -13,14 +13,11 @@ import com.omc.domain.member.dto.MemberResponseDto;
 import com.omc.global.common.BaseEntity;
 import com.omc.global.util.Util;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -59,6 +56,7 @@ public class Member extends BaseEntity {
                 .email(email)
                 .nickname(nickname)
                 .phone(phone)
+                .profileImg(profileImg)
                 .build();
     }
 

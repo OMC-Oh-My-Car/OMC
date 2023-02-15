@@ -99,7 +99,7 @@ public class ProductDto {
 		public Search(@RequestParam(value = "page") Long page,
 					  @RequestParam(value = "sort", required = false) String sort,
 					  @RequestParam(value = "facilities", required = false) String facilities,
-					  @RequestParam(value = "query", required = false) String query) {
+					  @RequestParam(value = "q", required = false) String query) {
 			this.page = page == null ? 1 : page;
 			this.sort = sort == null ? "id" : sort;
 			this.size = 20L;

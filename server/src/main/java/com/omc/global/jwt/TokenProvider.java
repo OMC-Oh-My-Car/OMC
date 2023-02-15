@@ -25,12 +25,14 @@ import com.omc.domain.member.repository.MemberRepository;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -71,12 +73,14 @@ public class TokenProvider {
         String accessToken = Jwts.builder()
                 .setSubject(authMember.getEmail())
                 .setClaims(claims)
-                .setExpiration(accessTokenExpiresIn)
+                // .setExpiration(accessTokenExpiresIn)
+                .setExpiration(new Date(System.currentTimeMillis() + (ACCESS_TOKEN_EXPIRE_TIME * 1000L)))
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
 
         String refreshToken = Jwts.builder()
-                .setExpiration(refreshTokenExpiresIn)
+                // .setExpiration(refreshTokenExpiresIn)
+                .setExpiration(new Date(System.currentTimeMillis() + (REFRESH_TOKEN_EXPIRE_TIME * 1000L)))
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
 
@@ -88,13 +92,11 @@ public class TokenProvider {
                 .build();
     }
 
-    public TokenDto generateTokenWithAuthentication(Authentication authentication) {
+    public TokenDto generateTokenWithAuthentication(AuthMember authMember) {
         Date accessTokenExpiresIn = getTokenExpiration(ACCESS_TOKEN_EXPIRE_TIME);
         Date refreshTokenExpiresIn = getTokenExpiration(REFRESH_TOKEN_EXPIRE_TIME);
 
-        Object principal = authentication.getPrincipal();
-        UserDetails userDetails = (UserDetails) principal;
-        Member member = memberRepository.findByEmail(userDetails.getUsername()).get();
+        Member member = memberRepository.findByEmail(authMember.getEmail()).get();
 
         String accessToken = Jwts.builder()
                 .setSubject(member.getEmail())
@@ -142,12 +144,31 @@ public class TokenProvider {
                     .parseClaimsJws(token)
                     .getBody();
         } catch(ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | IllegalArgumentException e) {
+            log.error(e.getMessage());
             e.printStackTrace();
             throw new InvalidParameterException("유효하지 않은 토큰입니다");
         }
     }
 
+    public Member getUser(String refreshToken) {
+        Claims claims;
+        Member member;
+        try {
+            claims = getClaims(refreshToken);
+            String userEmail = claims.get("sub").toString();
+            member = memberRepository.findByEmail(userEmail).get();
+        } catch (SignatureException se) {
+            throw new JwtException("사용자 인증 실패");
+        } catch (ExpiredJwtException ee) {
+            throw new JwtException("토큰 기한 만료");
+        } catch (Exception e) {
+            throw e;
+        }
+        return member;
+    }
+
     public boolean validateToken(String token) {
+        log.debug("ValidateToken 실행");
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
