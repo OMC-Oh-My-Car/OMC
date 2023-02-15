@@ -1,7 +1,9 @@
 package com.omc.domain.product.api;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.omc.domain.member.entity.AuthMember;
 import com.omc.domain.member.entity.Member;
@@ -45,24 +48,28 @@ public class ProductController {
 	/**
 	 * 상품 등록
 	 *
-	 * @param req:            상품 정보
-	 * @param multipartFiles: 상품 이미지
+	 * @param contents: 상품 정보
 	 */
 	@PostMapping(value = "/product",
 				 consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-	public ResponseEntity<?> create(@RequestPart(value = "product") ProductDto.Request req,
-									@RequestPart(value = "imgUrl") List<MultipartFile> multipartFiles,
-									@CurrentMember AuthMember member) {
+	public ResponseEntity<?> create(@RequestPart(value = "product") ProductDto.Request contents,
+									HttpServletRequest request,
+									@CurrentMember AuthMember member) throws IllegalStateException, IOException {
 
 		Member findMember = memberService.findByEmail(member.getEmail())
 										 .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_EXISTS));
 
-		if (multipartFiles == null) {
+		MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest)request;
+		List<MultipartFile> multipartFiles;
+
+		if (multipartHttpServletRequest.getFiles("product").isEmpty()) {
 			log.error("multipartFiles is null");
 			throw new BusinessException(ErrorCode.IMAGE_NOT_FOUND);
+		} else {
+			multipartFiles = multipartHttpServletRequest.getFiles("imgUrl");
 		}
 
-		productService.create(req, multipartFiles, findMember);
+		productService.create(contents, multipartFiles, findMember);
 
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
@@ -71,17 +78,19 @@ public class ProductController {
 	 * 상품 수정
 	 *
 	 * @param req:            수정할 상품 정보
-	 * @param multipartFiles: 상품 이미지
 	 */
 	@PatchMapping(value = "/product/{productId}",
 				  consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<?> update(@RequestPart("product") ProductDto.Request req,
-									@RequestPart("imgUrl") List<MultipartFile> multipartFiles,
+									HttpServletRequest request,
 									@PathVariable Long productId,
-									@CurrentMember AuthMember member) {
+									@CurrentMember AuthMember member) throws IllegalStateException, IOException {
 
 		Member findMember = memberService.findByEmail(member.getEmail())
 										 .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_EXISTS));
+
+		MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest)request;
+		List<MultipartFile> multipartFiles = multipartHttpServletRequest.getFiles("imgUrl");
 
 		productService.update(req, multipartFiles, productId, findMember);
 

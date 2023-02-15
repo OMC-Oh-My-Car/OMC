@@ -1,7 +1,8 @@
 package com.omc.domain.report.api;
 
 import java.util.List;
-import java.util.Optional;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -14,11 +15,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.omc.domain.member.entity.AuthMember;
 import com.omc.domain.member.entity.Member;
 import com.omc.domain.member.service.MemberService;
-import com.omc.domain.product.dto.ProductDto;
 import com.omc.domain.report.dto.ReportDto;
 import com.omc.domain.report.entity.Report;
 import com.omc.domain.report.service.ReportService;
@@ -42,20 +43,19 @@ public class ReportController {
 
 	@PostMapping(value = "/report/{productId}",
 				 consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-	public ResponseEntity<?> create(@RequestPart(value = "report") ReportDto.Request req,
-									@RequestPart(value = "imgUrl") List<MultipartFile> multipartFiles,
+	public ResponseEntity<?> create(@RequestPart(value = "report") ReportDto.Request contents,
+									HttpServletRequest request,
 									@PathVariable Long productId,
-									@CurrentMember AuthMember member) {
+									@CurrentMember AuthMember member)  throws IllegalStateException {
 
 		Member findMember = memberService.findByEmail(member.getEmail())
 										 .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_EXISTS));
 
-		if (multipartFiles == null) {
-			log.error("multipartFiles is null");
-			throw new BusinessException(ErrorCode.IMAGE_NOT_FOUND);
-		}
+		MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest)request;
 
-		reportService.create(req, multipartFiles, productId, findMember);
+		List<MultipartFile> multipartFiles = multipartHttpServletRequest.getFiles("imgUrl");
+
+		reportService.create(contents, multipartFiles, productId, findMember);
 
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
