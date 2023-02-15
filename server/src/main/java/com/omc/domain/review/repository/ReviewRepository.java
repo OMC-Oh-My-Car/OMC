@@ -23,4 +23,9 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     Page<Review> findAllByReservationProductId(long productId, Pageable pageable);
     @EntityGraph(attributePaths = {"reservation"})
     Optional<Review> findById(long reviewId);
+
+    @Query("SELECT AVG(r.totalStar), AVG(r.starCleanliness), AVG(r.starAccuracy), AVG(r.starLocation), AVG(r.starCostEffective) " +
+            "FROM Review r JOIN r.reservation rv WHERE rv.product.id = :productId GROUP BY r.reservation.product.id")
+    Object[] findReviewsAvgByProductId(long productId);
+
 }

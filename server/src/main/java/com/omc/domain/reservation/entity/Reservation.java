@@ -31,8 +31,6 @@ public class Reservation extends BaseEntity {
     private String uniqueId;
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
-    //    @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL)
-//    private Seller seller;
     private String phoneNumber;
     private LocalDateTime checkIn; // 체크인
     private LocalDateTime checkOut; // 체크아웃
@@ -50,14 +48,12 @@ public class Reservation extends BaseEntity {
 
     @Builder
     public Reservation(Product product, Member member,
-//                       Seller seller,
                        String phoneNumber, LocalDateTime checkIn, LocalDateTime checkOut,
 //                       LocalDate startDate, LocalDate endDate,
                        String status, int isCancel) {
         this.product = product;
         this.member = member;
         this.uniqueId = makeUniqueId();
-//        this.seller = seller;
         this.phoneNumber = phoneNumber;
         this.checkIn = checkIn;
         this.checkOut = checkOut;

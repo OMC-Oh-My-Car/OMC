@@ -1,8 +1,14 @@
 package com.omc.global.util;
 
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 
+@Component
 public class Util {
     public static <K, V> Map<K, V> mapOf(Object... args) {
         Map<K, V> map = new LinkedHashMap<>();
@@ -20,5 +26,13 @@ public class Util {
         }
 
         return map;
+    }
+
+    public String convertReviewLocalDateTime(LocalDateTime localDateTime) {
+        return localDateTime.format(DateTimeFormatter.ofPattern("yyyy년 L월 dd일", Locale.KOREA)).toString();
+    }
+
+    public String convertReservationLocalDateTime(LocalDateTime localDateTime) {
+        return localDateTime.format(DateTimeFormatter.ofPattern("yyyy년 L월 dd일 HH시 mm분", Locale.KOREA)).toString();
     }
 }

@@ -6,6 +6,9 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.omc.domain.cashlog.service.CashLogService;
+import com.omc.domain.member.service.MemberService;
+import com.omc.global.util.Util;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +22,6 @@ import com.omc.domain.cancel.service.CancelService;
 import com.omc.domain.member.entity.Member;
 import com.omc.domain.product.entity.Product;
 import com.omc.domain.product.repository.ProductRepository;
-import com.omc.domain.product.service.ProductService;
 import com.omc.domain.reservation.dto.ReservationDto;
 import com.omc.domain.reservation.entity.Reservation;
 import com.omc.domain.reservation.repository.ReservationRepository;
@@ -34,9 +36,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ReservationService {
     private final ReservationRepository reservationRepository;
-    private final ProductService productService;
+    private final MemberService memberService;
     private final CancelService cancelService;
     private final ProductRepository productRepository;
+    private final CashLogService cashLogService;
+    private final Util ut;
 
     public Reservation findById(long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId).orElse(null);
@@ -64,11 +68,11 @@ public class ReservationService {
             throw new BusinessException(ErrorCode.CANT_RESERVATION);
         }
 
+        // 결제 후 예약 추가
+
         Reservation reservation = Reservation.builder()
                 .member(member)
-                //회원정보, 결제상태 추가해야함
                 .product(product)
-//                .seller(product.getSeller())
                 .checkIn(resCheckIn)
                 .checkOut(resCheckOut)
                 .phoneNumber(request.getPhoneNumber())
@@ -103,8 +107,8 @@ public class ReservationService {
         ReservationDto.Response responseDto = ReservationDto.Response.builder()
                 .reservationId(reservation.getUniqueId())
                 .phoneNumber(reservation.getPhoneNumber())
-                .checkIn(reservation.getCheckIn())
-                .checkOut(reservation.getCheckOut())
+                .checkIn(ut.convertReviewLocalDateTime(reservation.getCheckIn()))
+                .checkOut(ut.convertReviewLocalDateTime(reservation.getCheckOut()))
                 .isCancel(reservation.getIsCancel())
                 .build();
 
@@ -129,13 +133,18 @@ public class ReservationService {
     }
 
     @Transactional
-    public void cancelReservation(long reservationId, CancelDto.Request request) {
+    public void cancelReservation(long reservationId, CancelDto.Request request, Member member) {
         Reservation reservation = findById(reservationId);
         if (reservation == null) {
             throw new BusinessException(ErrorCode.RESERVATION_NOT_FOUND);
         }
+
+        if (reservation.getMember().getId() != member.getId()){
+            throw new BusinessException(ErrorCode.NO_PERMISSION);
+        }
+
         // 취소 사유 생성
-        reservation.setIsCancelOn(cancelService.createCancel(request, reservation));
+        reservation.setIsCancelOn(cancelService.createCancel(request, reservation, member));
         reservationRepository.save(reservation);
     }
 

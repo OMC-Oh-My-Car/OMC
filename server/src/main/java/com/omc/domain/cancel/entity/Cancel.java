@@ -1,10 +1,8 @@
 package com.omc.domain.cancel.entity;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
+import com.omc.domain.member.entity.Member;
 import com.omc.domain.reservation.entity.Reservation;
 import com.omc.global.common.BaseEntity;
 
@@ -18,12 +16,15 @@ import lombok.NoArgsConstructor;
 public class Cancel extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "cancel", cascade = CascadeType.ALL)
     private Reservation reservation;
+    @ManyToOne
+    private Member member;
 
     private String reason;
 
     @Builder
-    public Cancel(Reservation reservation, String reason) {
+    public Cancel(Reservation reservation, String reason, Member member) {
         this.reservation = reservation;
         this.reason = reason;
+        this.member = member;
     }
 }
