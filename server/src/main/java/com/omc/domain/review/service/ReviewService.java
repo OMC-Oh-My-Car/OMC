@@ -2,6 +2,7 @@ package com.omc.domain.review.service;
 
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -128,7 +129,27 @@ public class ReviewService {
         Page<Review> reviewPage = reviewRepository.findAllByReservationProductId(productId, pageable);
 
         return reviewPage;
+    }
 
+    public ReviewDto.productTotalStar getProductAvg(long productId) {
+        Object[] avgList = reviewRepository.findReviewsAvgByProductId(productId);
+        Object[] valueArr = (Object[]) avgList[0];
+
+//        return ReviewDto.productTotalStar.builder()
+//                .totalStar(Double.valueOf(avgList[0].toString()))
+//                .starCleanliness(Double.valueOf(avgList[1].toString()))
+//                .starAccuracy(Double.valueOf(avgList[2].toString()))
+//                .starLocation(Double.valueOf(avgList[3].toString()))
+//                .starCostEffective(Double.valueOf(avgList[4].toString()))
+//                .build();
+
+        return ReviewDto.productTotalStar.builder()
+                .totalStar(Double.valueOf(decimalFormat.format(valueArr[0])))
+                .starCleanliness(Double.valueOf(decimalFormat.format(valueArr[1])))
+                .starAccuracy(Double.valueOf(decimalFormat.format(valueArr[2])))
+                .starLocation(Double.valueOf(decimalFormat.format(valueArr[3])))
+                .starCostEffective(Double.valueOf(decimalFormat.format(valueArr[4])))
+                .build();
     }
 
     public List<ReviewDto.Response> pageToResponseList(List<Review> content) {

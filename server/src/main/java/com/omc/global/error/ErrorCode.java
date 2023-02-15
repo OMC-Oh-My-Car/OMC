@@ -32,9 +32,6 @@ public enum ErrorCode {
 	DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST, "M-005", "이미 가입되어 있는 닉네임 입니다."),
 	NOT_MATCH_PASSWORD(HttpStatus.BAD_REQUEST, "M-006", "비밀번호가 일치하지 않습니다."),
 	NOT_MATCH_CONFIRM_TEXT(HttpStatus.BAD_REQUEST, "M-007", "인증번호가 일치하지 않습니다."),
-
-	// 상품
-	PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "P-001", "해당 상품은 존재하지 않습니다."),
 	NOT_PRODUCT_WRITER(HttpStatus.BAD_REQUEST, "P-002", "상품 작성자가 아닙니다."),
 
 	// 리뷰

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.omc.domain.member.entity.Member;
 import com.omc.global.common.annotation.CurrentMember;
+import com.omc.global.common.dto.ReviewsMultiResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -61,9 +62,10 @@ public class ReviewController {
     @GetMapping(value = "/{productId}")
     public ResponseEntity<?> getReviews(@PathVariable long productId,
                                         @ModelAttribute ReviewDto.Search search) {
+        ReviewDto.productTotalStar productTotalStar = reviewService.getProductAvg(productId);
         Page<Review> reviewPage = reviewService.getProductReviews(productId, search);
         List<ReviewDto.Response> responseList = reviewService.pageToResponseList(reviewPage.getContent());
 
-        return new ResponseEntity<>(new MultiResponse<>(responseList, reviewPage), HttpStatus.OK);
+        return new ResponseEntity<>(new ReviewsMultiResponse<>(productTotalStar, responseList, reviewPage), HttpStatus.OK);
     }
 }

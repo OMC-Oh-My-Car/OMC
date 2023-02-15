@@ -1,11 +1,14 @@
 package com.omc.global.util;
 
+import org.springframework.stereotype.Component;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 
+@Component
 public class Util {
     public static <K, V> Map<K, V> mapOf(Object... args) {
         Map<K, V> map = new LinkedHashMap<>();

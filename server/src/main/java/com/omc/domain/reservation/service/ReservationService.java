@@ -22,7 +22,6 @@ import com.omc.domain.cancel.service.CancelService;
 import com.omc.domain.member.entity.Member;
 import com.omc.domain.product.entity.Product;
 import com.omc.domain.product.repository.ProductRepository;
-import com.omc.domain.product.service.ProductService;
 import com.omc.domain.reservation.dto.ReservationDto;
 import com.omc.domain.reservation.entity.Reservation;
 import com.omc.domain.reservation.repository.ReservationRepository;
@@ -41,7 +40,7 @@ public class ReservationService {
     private final CancelService cancelService;
     private final ProductRepository productRepository;
     private final CashLogService cashLogService;
-    private final Util util;
+    private final Util ut;
 
     public Reservation findById(long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId).orElse(null);
@@ -108,8 +107,8 @@ public class ReservationService {
         ReservationDto.Response responseDto = ReservationDto.Response.builder()
                 .reservationId(reservation.getUniqueId())
                 .phoneNumber(reservation.getPhoneNumber())
-                .checkIn(util.convertReviewLocalDateTime(reservation.getCheckIn()))
-                .checkOut(util.convertReviewLocalDateTime(reservation.getCheckOut()))
+                .checkIn(ut.convertReviewLocalDateTime(reservation.getCheckIn()))
+                .checkOut(ut.convertReviewLocalDateTime(reservation.getCheckOut()))
                 .isCancel(reservation.getIsCancel())
                 .build();
 

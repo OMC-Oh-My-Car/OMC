@@ -65,4 +65,14 @@ public class ReviewDto {
             this.sort = sort == null ? "id" : sort;
         }
     }
+
+    @Getter
+    @Builder
+    public static class productTotalStar {
+        private Double totalStar; // 총 평점, 소수 1자리까지
+        private Double starCleanliness; // 청결도, 소수 1자리까지
+        private Double starAccuracy; // 정확도, 소수 1자리까지
+        private Double starLocation; // 위치, 소수 1자리까지
+        private Double starCostEffective; // 가격 대비 만족도, 소수 1자리까지
+    }
 }

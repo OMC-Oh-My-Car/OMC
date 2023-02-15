@@ -25,8 +25,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     Optional<Review> findById(long reviewId);
 
     @Query("SELECT AVG(r.totalStar), AVG(r.starCleanliness), AVG(r.starAccuracy), AVG(r.starLocation), AVG(r.starCostEffective) " +
-            "FROM Review r JOIN r.reservation rv " +
-            "WHERE rv.product.id = :productId")
-    @EntityGraph(attributePaths = {"reservation"})
+            "FROM Review r JOIN r.reservation rv WHERE rv.product.id = :productId GROUP BY r.reservation.product.id")
     Object[] findReviewsAvgByProductId(long productId);
+
 }
