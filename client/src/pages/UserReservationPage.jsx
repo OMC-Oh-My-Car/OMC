@@ -36,7 +36,7 @@ const ReservationUserPage = ({ openModalController }) => {
               />
             </>
           )}
-          <Pagination itemChange={itemChange} />
+          <Pagination data={data} itemChange={itemChange} />
         </MainContainer>
       </Container>
     </>
