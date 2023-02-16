@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.omc.domain.member.entity.Member;
+import com.omc.domain.member.repository.MemberRepository;
 import com.omc.global.util.Util;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +31,7 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final ReservationService reservationService;
     private final Util util;
+    private final MemberRepository memberRepository;
 
     DecimalFormat decimalFormat = new DecimalFormat("0.0"); // 소수 1자리 변환
 
@@ -148,10 +150,11 @@ public class ReviewService {
     }
 
     private ReviewDto.Response toResponseDto(Review review) {
+        Member member = memberRepository.findById(review.getMember().getId()).orElse(null);
 
         return ReviewDto.Response.builder()
-                .nickname(review.getMember().getNickname())
-                .profileImg(review.getMember().getProfileImg())
+                .nickname(member.getNickname())
+                .profileImg(member.getProfileImg())
                 .content(review.getContent())
                 .totalStar(review.getTotalStar())
                 .starCleanliness(review.getStarCleanliness())
