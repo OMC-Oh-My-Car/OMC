@@ -69,15 +69,4 @@ public class ReservationDto {
         }
     }
 
-    @Getter
-    @Builder
-    public static class DetailDto {
-        private String title;
-        private String thumbNail;
-        private String reservationId;
-        private String phoneNumber;
-        private String checkIn;
-        private String checkOut;
-        private int isCancel;
-    }
 }
