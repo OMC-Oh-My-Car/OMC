@@ -5,7 +5,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -46,6 +48,10 @@ public class Reservation extends BaseEntity {
     @JoinColumn(name = "cancel_id")
     private Cancel cancel;
 
+    @Enumerated
+    @Column(name = "reservation_status")
+    private ReservationStatus reservationStatus;
+
     @Builder
     public Reservation(Product product, Member member,
                        String phoneNumber, LocalDateTime checkIn, LocalDateTime checkOut,
@@ -61,6 +67,7 @@ public class Reservation extends BaseEntity {
 //        this.endDate = endDate;
         this.status = status;
         this.isCancel = isCancel;
+        this.reservationStatus = ReservationStatus.RESERVATION_COMPLETE;
     }
 
     public void setReview(Review review) {
@@ -86,6 +93,10 @@ public class Reservation extends BaseEntity {
                 decimalFormat1.format(Math.random() * 10000);
 
         return uniqueId;
+    }
+
+    public void setReservationStatus(ReservationStatus reservationStatus) {
+        this.reservationStatus = reservationStatus;
     }
 
 }

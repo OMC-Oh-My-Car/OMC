@@ -27,6 +27,7 @@ import com.omc.domain.product.entity.Product;
 import com.omc.domain.product.repository.ProductRepository;
 import com.omc.domain.reservation.dto.ReservationDto;
 import com.omc.domain.reservation.entity.Reservation;
+import com.omc.domain.reservation.entity.ReservationStatus;
 import com.omc.domain.reservation.repository.ReservationRepository;
 import com.omc.domain.review.entity.Review;
 import com.omc.domain.review.repository.ReviewRepository;
@@ -161,6 +162,7 @@ public class ReservationService {
 																	 .isCancel(reservation.getIsCancel())
 																	 .hasReview(
 																		 review.isPresent())
+																	 .status(reservation.getReservationStatus().toString())
 																	 .build();
 
 		return responseDto;
@@ -193,6 +195,8 @@ public class ReservationService {
 		if (reservation.getMember().getId() != member.getId()) {
 			throw new BusinessException(ErrorCode.NO_PERMISSION);
 		}
+
+		reservation.setReservationStatus(ReservationStatus.RESERVATION_CANCEL);
 
 		// 취소 사유 생성
 		reservation.setIsCancelOn(cancelService.createCancel(request, reservation, member));
