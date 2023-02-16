@@ -40,6 +40,7 @@ public class ReportDto {
 		private String subject;
 		private String content;
 		private Long status;
+		private String reportImg;
 
 		@Builder
 		public Response(Long reportId,
@@ -48,7 +49,8 @@ public class ReportDto {
 						LocalDateTime createTime,
 						String subject,
 						String content,
-						Long status) {
+						Long status,
+						String reportImg) {
 			this.reportId = reportId;
 			this.reporter = reporter;
 			this.productImg = productImg;
@@ -56,6 +58,7 @@ public class ReportDto {
 			this.subject = subject;
 			this.content = content;
 			this.status = status;
+			this.reportImg = reportImg;
 		}
 	}
 

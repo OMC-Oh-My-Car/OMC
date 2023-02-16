@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.omc.domain.img.dto.ImgDto;
 import com.omc.domain.img.entity.ProductImg;
-import com.omc.domain.img.repository.ImgRepository;
+import com.omc.domain.img.repository.ProductImgRepository;
 import com.omc.domain.member.entity.Member;
 import com.omc.domain.member.entity.UserRole;
 import com.omc.domain.product.dto.ProductDto;
@@ -47,7 +47,7 @@ public class ProductService {
 	private final ProductRepository productRepository;
 	private final FacilitiesRepository facilitiesRepository;
 	private final LocationRepository locationRepository;
-	private final ImgRepository imgRepository;
+	private final ProductImgRepository productImgRepository;
 	private final LikeHistoryRepository likeHistoryRepository;
 
 	private final S3Service s3Service;
@@ -128,7 +128,7 @@ public class ProductService {
 
 		if (multipartFiles != null) {
 			findProduct.getProductImgList().stream().map(ProductImg::getImgName).forEach(s3Service::deleteFile);
-			imgRepository.deleteByProductId(productId);
+			productImgRepository.deleteByProductId(productId);
 			List<ProductImg> productImgs = uploadImgAndImgDtoToEntity(multipartFiles);
 			findProduct.setProductImgList(productImgs);
 		}
@@ -370,10 +370,10 @@ public class ProductService {
 	 * @return 상품 이미지 목록
 	 */
 	private List<String> getImgs(Long productId) {
-		return imgRepository.findAllByProductId(productId).stream()
-							.map(ProductImg::getImgUrl)
-							// .map(s -> "value\":\"" + s)
-							.toList();
+		return productImgRepository.findAllByProductId(productId).stream()
+								   .map(ProductImg::getImgUrl)
+								   // .map(s -> "value\":\"" + s)
+								   .toList();
 	}
 
 	/**

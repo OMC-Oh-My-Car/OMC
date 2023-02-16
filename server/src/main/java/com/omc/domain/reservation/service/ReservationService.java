@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.omc.domain.cashlog.service.CashLogService;
-import com.omc.domain.img.entity.Img;
 import com.omc.domain.img.entity.ProductImg;
-import com.omc.domain.img.repository.ImgRepository;
+import com.omc.domain.img.repository.ProductImgRepository;
 import com.omc.domain.member.service.MemberService;
 import com.omc.global.util.Util;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,134 +38,140 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class ReservationService {
-    private final ReservationRepository reservationRepository;
-    private final MemberService memberService;
-    private final CancelService cancelService;
-    private final ProductRepository productRepository;
-    private final CashLogService cashLogService;
-    private final Util ut;
-    private final ImgRepository imgRepository;
+	private final ReservationRepository reservationRepository;
+	private final MemberService memberService;
+	private final CancelService cancelService;
+	private final ProductRepository productRepository;
+	private final CashLogService cashLogService;
+	private final Util ut;
+	private final ProductImgRepository productImgRepository;
 
-    public Reservation findById(long reservationId) {
-        Reservation reservation = reservationRepository.findById(reservationId).orElse(null);
-        return reservation;
-    }
+	public Reservation findById(long reservationId) {
+		Reservation reservation = reservationRepository.findById(reservationId).orElse(null);
+		return reservation;
+	}
 
-    @Transactional
-    public void createReservation(ReservationDto.Request request, Member member) {
-        Product product = productRepository.findById(request.getProductId()).orElse(null);
+	@Transactional
+	public void createReservation(ReservationDto.Request request, Member member) {
+		Product product = productRepository.findById(request.getProductId()).orElse(null);
 
-        if (product == null) {
-            // 상품 존재하지 않아서 예외처리
-            throw new BusinessException(ErrorCode.PRODUCT_NOT_FOUND);
-        }
-        LocalDateTime resCheckIn = LocalDateTime.of(LocalDate.parse(request.getStartDate()), LocalTime.parse(product.getCheckIn()));
-        LocalDateTime resCheckOut = LocalDateTime.of(LocalDate.parse(request.getEndDate()), LocalTime.parse(product.getCheckOut()));
+		if (product == null) {
+			// 상품 존재하지 않아서 예외처리
+			throw new BusinessException(ErrorCode.PRODUCT_NOT_FOUND);
+		}
+		LocalDateTime resCheckIn = LocalDateTime.of(LocalDate.parse(request.getStartDate()),
+													LocalTime.parse(product.getCheckIn()));
+		LocalDateTime resCheckOut = LocalDateTime.of(LocalDate.parse(request.getEndDate()),
+													 LocalTime.parse(product.getCheckOut()));
 
-        // 현재보다 과거는 불가능
-//        if (LocalDateTime.now().isBefore(resCheckIn)) {
-//            throw new BusinessException(ErrorCode.NOT_YET_CHECKIN);
-//        }
+		// 현재보다 과거는 불가능
+		//        if (LocalDateTime.now().isBefore(resCheckIn)) {
+		//            throw new BusinessException(ErrorCode.NOT_YET_CHECKIN);
+		//        }
 
-        long countRes = reservationRepository.countByCheckInBetween(request.getProductId(), resCheckIn);
-        if (countRes > 0) {
-            throw new BusinessException(ErrorCode.CANT_RESERVATION);
-        }
+		long countRes = reservationRepository.countByCheckInBetween(request.getProductId(), resCheckIn);
+		if (countRes > 0) {
+			throw new BusinessException(ErrorCode.CANT_RESERVATION);
+		}
 
-        // 결제 후 예약 추가
+		// 결제 후 예약 추가
 
-        Reservation reservation = Reservation.builder()
-                .member(member)
-                .product(product)
-                .checkIn(resCheckIn)
-                .checkOut(resCheckOut)
-                .phoneNumber(request.getPhoneNumber())
-//                .startDate(LocalDate.parse(request.getStartDate()))
-//                .endDate(LocalDate.parse(request.getEndDate()))
-                .isCancel(0)
-                .build();
+		Reservation reservation = Reservation.builder()
+											 .member(member)
+											 .product(product)
+											 .checkIn(resCheckIn)
+											 .checkOut(resCheckOut)
+											 .phoneNumber(request.getPhoneNumber())
+											 //                .startDate(LocalDate.parse(request.getStartDate()))
+											 //                .endDate(LocalDate.parse(request.getEndDate()))
+											 .isCancel(0)
+											 .build();
 
-        reservationRepository.save(reservation);
-    }
+		reservationRepository.save(reservation);
+	}
 
-    public ReservationDto.Response getResponseDto(long reservationId) {
-        Reservation reservation = reservationRepository.findById(reservationId).orElse(null);
-        if (reservation == null) {
-            throw new BusinessException(ErrorCode.RESERVATION_NOT_FOUND);
-        }
-        ReservationDto.Response responseDto = toResponseDto(reservation);
+	public ReservationDto.Response getResponseDto(long reservationId) {
+		Reservation reservation = reservationRepository.findById(reservationId).orElse(null);
+		if (reservation == null) {
+			throw new BusinessException(ErrorCode.RESERVATION_NOT_FOUND);
+		}
+		ReservationDto.Response responseDto = toResponseDto(reservation);
 
-        return responseDto;
-    }
+		return responseDto;
+	}
 
-    public Page<Reservation> getReservationPages(ReservationDto.Search search) {
-        Pageable pageable = PageRequest.of(Math.toIntExact(search.getPage() - 1),
-                Math.toIntExact(search.getSize()),
-                Sort.by("id").descending());
-        Page<Reservation> reservationPage = reservationRepository.findAllByOrderByIdDesc(pageable);
+	public Page<Reservation> getReservationPages(ReservationDto.Search search) {
+		Pageable pageable = PageRequest.of(Math.toIntExact(search.getPage() - 1),
+										   Math.toIntExact(search.getSize()),
+										   Sort.by("id").descending());
+		Page<Reservation> reservationPage = reservationRepository.findAllByOrderByIdDesc(pageable);
 
-        return reservationPage;
-    }
+		return reservationPage;
+	}
 
-    private ReservationDto.Response toResponseDto(Reservation reservation) {
-        ProductImg productImg = imgRepository.findFirstByProductId(reservation.getProduct().getId());
+	private ReservationDto.Response toResponseDto(Reservation reservation) {
+		ProductImg productImg = productImgRepository.findFirstByProductId(reservation.getProduct().getId());
+		Product product = productRepository.findById(reservation.getProduct().getId())
+										   .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
 
-        ReservationDto.Response responseDto = ReservationDto.Response.builder()
-                .title(reservation.getProduct().getSubject())
-                .thumbNail(productImg.getImgUrl())
-                .reservationId(reservation.getUniqueId())
-                .phoneNumber(reservation.getPhoneNumber())
-                .checkIn(ut.convertReviewLocalDateTime(reservation.getCheckIn()))
-                .checkOut(ut.convertReviewLocalDateTime(reservation.getCheckOut()))
-                .isCancel(reservation.getIsCancel())
-                .build();
+		ReservationDto.Response responseDto = ReservationDto.Response.builder()
+																	 .title(product.getSubject())
+																	 .thumbNail(productImg.getImgUrl())
+																	 .reservationId(reservation.getUniqueId())
+																	 .phoneNumber(reservation.getPhoneNumber())
+																	 .checkIn(ut.convertReviewLocalDateTime(
+																		 reservation.getCheckIn()))
+																	 .checkOut(ut.convertReviewLocalDateTime(
+																		 reservation.getCheckOut()))
+																	 .isCancel(reservation.getIsCancel())
+																	 .build();
 
-        return responseDto;
-    }
+		return responseDto;
+	}
 
-    public CancelDto.Response getCancelReason(long reservationId) {
-        Cancel cancel = cancelService.findByResId(reservationId);
-        if (cancel == null) {
-            throw new BusinessException(ErrorCode.CANCEL_NOT_FOUND);
-        }
-        if (cancel.getReason() == null) {
-            throw new BusinessException(ErrorCode.RESERVATION_NOT_FOUND);
-        }
+	public CancelDto.Response getCancelReason(long reservationId) {
+		Cancel cancel = cancelService.findByResId(reservationId);
+		if (cancel == null) {
+			throw new BusinessException(ErrorCode.CANCEL_NOT_FOUND);
+		}
+		if (cancel.getReason() == null) {
+			throw new BusinessException(ErrorCode.RESERVATION_NOT_FOUND);
+		}
 
-        CancelDto.Response response = CancelDto.Response.builder()
-                .cancelTime(cancel.getCreatedAt())
-                .cancelReason(cancel.getReason())
-                .build();
+		CancelDto.Response response = CancelDto.Response.builder()
+														.cancelTime(cancel.getCreatedAt())
+														.cancelReason(cancel.getReason())
+														.build();
 
-        return response;
-    }
+		return response;
+	}
 
-    @Transactional
-    public void cancelReservation(long reservationId, CancelDto.Request request, Member member) {
-        Reservation reservation = findById(reservationId);
-        if (reservation == null) {
-            throw new BusinessException(ErrorCode.RESERVATION_NOT_FOUND);
-        }
+	@Transactional
+	public void cancelReservation(long reservationId, CancelDto.Request request, Member member) {
+		Reservation reservation = findById(reservationId);
+		if (reservation == null) {
+			throw new BusinessException(ErrorCode.RESERVATION_NOT_FOUND);
+		}
 
-        if (reservation.getMember().getId() != member.getId()){
-            throw new BusinessException(ErrorCode.NO_PERMISSION);
-        }
+		if (reservation.getMember().getId() != member.getId()) {
+			throw new BusinessException(ErrorCode.NO_PERMISSION);
+		}
 
-        // 취소 사유 생성
-        reservation.setIsCancelOn(cancelService.createCancel(request, reservation, member));
-        reservationRepository.save(reservation);
-    }
+		// 취소 사유 생성
+		reservation.setIsCancelOn(cancelService.createCancel(request, reservation, member));
+		reservationRepository.save(reservation);
+	}
 
-    public Page<Reservation> getProductsReservationList(long productId, ReservationDto.Search search) {
-        Pageable pageable = PageRequest.of(Math.toIntExact(search.getPage() - 1),
-                Math.toIntExact(search.getSize()),
-                Sort.by(search.getSort()).descending());
-        Page<Reservation> reservationPage = reservationRepository.findAllByProductId(productId, pageable);
+	public Page<Reservation> getProductsReservationList(long productId, ReservationDto.Search search) {
+		Pageable pageable = PageRequest.of(Math.toIntExact(search.getPage() - 1),
+										   Math.toIntExact(search.getSize()),
+										   Sort.by(search.getSort()).descending());
+		Page<Reservation> reservationPage = reservationRepository.findAllByProductId(productId, pageable);
 
-        return reservationPage;
-    }
+		return reservationPage;
+	}
 
-    public List<ReservationDto.Response> pageToResponseList(List<Reservation> reservationList) {
-        return reservationList.stream().map(reservation -> toResponseDto(reservation)).collect(Collectors.toList());
-    }
+	public List<ReservationDto.Response> pageToResponseList(List<Reservation> reservationList) {
+		return reservationList.stream().map(reservation -> toResponseDto(reservation)).collect(Collectors.toList());
+	}
 }

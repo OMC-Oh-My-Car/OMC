@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.omc.domain.img.dto.ImgDto;
+import com.omc.domain.img.entity.ProductImg;
 import com.omc.domain.img.entity.ReportImg;
+import com.omc.domain.img.repository.ProductImgRepository;
 import com.omc.domain.member.entity.Member;
 import com.omc.domain.product.entity.Product;
 import com.omc.domain.product.service.ProductService;
@@ -33,6 +35,7 @@ public class ReportService {
 	private final ReportRepository reportRepository;
 
 	private final ProductService productService;
+	private final ProductImgRepository productImgRepository;
 
 	private final S3Service s3Service;
 
@@ -84,14 +87,12 @@ public class ReportService {
 
 		Report findReport = reportRepository.findById(reportId)
 											.orElseThrow(() -> new BusinessException(ErrorCode.REPORT_NOT_FOUND));
-
+		ProductImg productImg = productImgRepository.findFirstByProductId(findReport.getProduct().getId());
 		return ReportDto.Response.builder()
 								 .reportId(findReport.getId())
 								 .reporter(findReport.getMember().getEmail())
-								 .productImg(findReport.getProduct()
-													   .getProductImgList()
-													   .get(0)
-													   .getImgUrl())
+								 .productImg(productImg
+												 .getImgUrl())
 								 .createTime(findReport.getCreatedAt())
 								 .subject(findReport.getSubject())
 								 .content(findReport.getContent())
@@ -116,13 +117,12 @@ public class ReportService {
 		List<ReportDto.Response> responseList = new ArrayList<>();
 
 		for (Report report : content) {
+			ProductImg productImg = productImgRepository.findFirstByProductId(report.getProduct().getId());
 			ReportDto.Response response = ReportDto.Response.builder()
 															.reportId(report.getId())
 															.reporter(report.getMember().getEmail())
-															.productImg(report.getProduct()
-																			  .getProductImgList()
-																			  .get(0)
-																			  .getImgUrl())
+															.productImg(productImg
+																			.getImgUrl())
 															.createTime(report.getCreatedAt())
 															.subject(report.getSubject())
 															.content(report.getContent())
