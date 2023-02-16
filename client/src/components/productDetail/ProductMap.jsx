@@ -10,7 +10,7 @@ const ProductMap = ({ productId, data }) => {
         <div className="kakaoMap">
           <KakaoMap productId={productId} data={data} />
         </div>
-        <h3>속초시, 강원도, 한국</h3>
+        <h3>{data.data.data.address}</h3>
       </ProductMapArea>
     </>
   );
