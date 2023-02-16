@@ -114,9 +114,9 @@ public class ReservationService {
 																	   .thumbNail(productImg.getImgUrl())
 																	   .reservationCode(reservation.getUniqueId())
 																	   .phoneNumber(reservation.getPhoneNumber())
-																	   .checkIn(ut.convertReservationLocalDateTimeForDetail(
+																	   .checkIn(ut.convertLocalDateTimeFormat2(
 																		   reservation.getCheckIn()))
-																	   .checkOut(ut.convertReservationLocalDateTimeForDetail(
+																	   .checkOut(ut.convertLocalDateTimeFormat2(
 																		   reservation.getCheckOut()))
 																	   .isCancel(reservation.getIsCancel())
 																	   .name(member.getUsername())
@@ -147,9 +147,9 @@ public class ReservationService {
 																	 .thumbNail(productImg.getImgUrl())
 																	 .reservationCode(reservation.getUniqueId())
 																	 .phoneNumber(reservation.getPhoneNumber())
-																	 .checkIn(ut.convertReviewLocalDateTime(
+																	 .checkIn(ut.convertLocalDateTimeFormat1(
 																		 reservation.getCheckIn()))
-																	 .checkOut(ut.convertReviewLocalDateTime(
+																	 .checkOut(ut.convertLocalDateTimeFormat1(
 																		 reservation.getCheckOut()))
 																	 .isCancel(reservation.getIsCancel())
 																	 .build();

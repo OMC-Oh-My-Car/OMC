@@ -165,7 +165,7 @@ public class ReviewService {
                 .starAccuracy(review.getStarAccuracy())
                 .starLocation(review.getStarLocation())
                 .starCostEffective(review.getStarCostEffective())
-                .createTime(util.convertReviewLocalDateTime(review.getCreatedAt()))
+                .createTime(util.convertLocalDateTimeFormat1(review.getCreatedAt()))
                 .build();
     }
 }

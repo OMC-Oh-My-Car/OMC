@@ -28,14 +28,12 @@ public class Util {
         return map;
     }
 
-    public String convertReviewLocalDateTime(LocalDateTime localDateTime) {
-        // return localDateTime.format(DateTimeFormatter.ofPattern("yyyy년 L월 dd일", Locale.KOREA)).toString();
-        return localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.KOREA)).toString();
+    public String convertLocalDateTimeFormat1(LocalDateTime localDateTime) {
+        return localDateTime.format(DateTimeFormatter.ofPattern("yyyy년 L월 dd일", Locale.KOREA)).toString();
 
     }
 
-    public String convertReservationLocalDateTime(LocalDateTime localDateTime) {
-        // return localDateTime.format(DateTimeFormatter.ofPattern("yyyy년 L월 dd일 HH시 mm분", Locale.KOREA)).toString();
+    public String convertLocalDateTimeFormat2(LocalDateTime localDateTime) {
         return localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.KOREA)).toString();
     }
 }
