@@ -6,12 +6,11 @@ const ReservationInfoModal = () => {
   const params = new URLSearchParams(location.search);
   let reservationId = params.get('reservation_id');
 
-  if (reservationId) {
-    const { data } = useQuery(['reservationInfo', reservationId], async () => {
-      const data = await getUserReservationDetail(reservationId);
-      return data;
-    });
-  }
+  const { data } = useQuery(['reservationInfo', reservationId], async () => {
+    const data = await getUserReservationDetail(reservationId);
+    return data;
+  });
+  console.log(data);
   return (
     <>
       <ReservationInfoModalArea>
