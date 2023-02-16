@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -27,6 +28,8 @@ import com.omc.domain.product.repository.ProductRepository;
 import com.omc.domain.reservation.dto.ReservationDto;
 import com.omc.domain.reservation.entity.Reservation;
 import com.omc.domain.reservation.repository.ReservationRepository;
+import com.omc.domain.review.entity.Review;
+import com.omc.domain.review.repository.ReviewRepository;
 import com.omc.global.error.ErrorCode;
 import com.omc.global.error.exception.BusinessException;
 import com.omc.global.util.Util;
@@ -39,6 +42,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ReservationService {
 	private final ReservationRepository reservationRepository;
+	private final ReviewRepository reviewRepository;
 	private final MemberService memberService;
 	private final CancelService cancelService;
 	private final ProductRepository productRepository;
@@ -140,6 +144,9 @@ public class ReservationService {
 		ProductImg productImg = productImgRepository.findFirstByProductId(reservation.getProduct().getId());
 		Product product = productRepository.findById(reservation.getProduct().getId())
 										   .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
+		Optional<Review> review = reviewRepository.findByReservationId(reservation.getId());
+
+		log.info("review : {}", review);
 
 		ReservationDto.Response responseDto = ReservationDto.Response.builder()
 																	 .reservationId(reservation.getId())
@@ -152,6 +159,8 @@ public class ReservationService {
 																	 .checkOut(ut.convertLocalDateTimeFormat1(
 																		 reservation.getCheckOut()))
 																	 .isCancel(reservation.getIsCancel())
+																	 .hasReview(
+																		 review.isPresent())
 																	 .build();
 
 		return responseDto;

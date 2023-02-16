@@ -37,6 +37,7 @@ public class ReservationDto {
         private String checkIn;
         private String checkOut;
         private int isCancel;
+        private Boolean hasReview;
     }
 
     @Getter
