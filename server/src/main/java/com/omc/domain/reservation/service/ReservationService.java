@@ -93,7 +93,24 @@ public class ReservationService {
         if (reservation == null) {
             throw new BusinessException(ErrorCode.RESERVATION_NOT_FOUND);
         }
-        ReservationDto.Response responseDto = toResponseDto(reservation);
+        ReservationDto.Response responseDto = toDetailResponseDto(reservation);
+
+        return responseDto;
+    }
+
+    private ReservationDto.Response toDetailResponseDto(Reservation reservation) {
+        ProductImg productImg = imgRepository.findFirstByProductId(reservation.getProduct().getId());
+
+        ReservationDto.Response responseDto = ReservationDto.Response.builder()
+                .reservationId(reservation.getId())
+                .title(reservation.getProduct().getSubject())
+                .thumbNail(productImg.getImgUrl())
+                .reservationCode(reservation.getUniqueId())
+                .phoneNumber(reservation.getPhoneNumber())
+                .checkIn(ut.convertReservationLocalDateTime(reservation.getCheckIn()))
+                .checkOut(ut.convertReservationLocalDateTime(reservation.getCheckOut()))
+                .isCancel(reservation.getIsCancel())
+                .build();
 
         return responseDto;
     }
@@ -111,9 +128,10 @@ public class ReservationService {
         ProductImg productImg = imgRepository.findFirstByProductId(reservation.getProduct().getId());
 
         ReservationDto.Response responseDto = ReservationDto.Response.builder()
+                .reservationId(reservation.getId())
                 .title(reservation.getProduct().getSubject())
                 .thumbNail(productImg.getImgUrl())
-                .reservationId(reservation.getUniqueId())
+                .reservationCode(reservation.getUniqueId())
                 .phoneNumber(reservation.getPhoneNumber())
                 .checkIn(ut.convertReviewLocalDateTime(reservation.getCheckIn()))
                 .checkOut(ut.convertReviewLocalDateTime(reservation.getCheckOut()))

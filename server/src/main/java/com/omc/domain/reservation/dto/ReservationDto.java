@@ -32,9 +32,23 @@ public class ReservationDto {
     @Getter
     @Builder
     public static class Response {
+        private long reservationId;
         private String title;
         private String thumbNail;
-        private String reservationId;
+        private String reservationCode;
+        private String phoneNumber;
+        private String checkIn;
+        private String checkOut;
+        private int isCancel;
+    }
+
+    @Getter
+    @Builder
+    public static class DetailDto {
+        private long reservationId;
+        private String title;
+        private String thumbNail;
+        private String reservationCode;
         private String phoneNumber;
         private String checkIn;
         private String checkOut;
