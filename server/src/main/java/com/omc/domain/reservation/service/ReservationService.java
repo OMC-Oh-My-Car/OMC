@@ -20,6 +20,7 @@ import com.omc.domain.cashlog.service.CashLogService;
 import com.omc.domain.img.entity.ProductImg;
 import com.omc.domain.img.repository.ProductImgRepository;
 import com.omc.domain.member.entity.Member;
+import com.omc.domain.member.repository.MemberRepository;
 import com.omc.domain.member.service.MemberService;
 import com.omc.domain.product.entity.Product;
 import com.omc.domain.product.repository.ProductRepository;
@@ -44,6 +45,7 @@ public class ReservationService {
 	private final CashLogService cashLogService;
 	private final Util ut;
 	private final ProductImgRepository productImgRepository;
+	private final MemberRepository memberRepository;
 
 	public Reservation findById(long reservationId) {
 		Reservation reservation = reservationRepository.findById(reservationId).orElse(null);
@@ -89,29 +91,38 @@ public class ReservationService {
 		reservationRepository.save(reservation);
 	}
 
-    public ReservationDto.Response getResponseDto(long reservationId) {
-        Reservation reservation = reservationRepository.findById(reservationId).orElse(null);
-        if (reservation == null) {
-            throw new BusinessException(ErrorCode.RESERVATION_NOT_FOUND);
-        }
-        ReservationDto.Response responseDto = toDetailResponseDto(reservation);
+	public ReservationDto.DetailDto getResponseDto(long reservationId) {
+		Reservation reservation = reservationRepository.findById(reservationId).orElse(null);
+		if (reservation == null) {
+			throw new BusinessException(ErrorCode.RESERVATION_NOT_FOUND);
+		}
+		ReservationDto.DetailDto responseDto = toDetailResponseDto(reservation);
 
-        return responseDto;
-    }
+		return responseDto;
+	}
 
-    private ReservationDto.Response toDetailResponseDto(Reservation reservation) {
-        ProductImg productImg = productImgRepository.findFirstByProductId(reservation.getProduct().getId());
+	private ReservationDto.DetailDto toDetailResponseDto(Reservation reservation) {
+		ProductImg productImg = productImgRepository.findFirstByProductId(reservation.getProduct().getId());
+		Product product = productRepository.findById(reservation.getProduct().getId())
+										   .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
+		Member member = memberRepository.findById(reservation.getMember().getId())
+										.orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_EXISTS));
 
-        ReservationDto.Response responseDto = ReservationDto.Response.builder()
-                .reservationId(reservation.getId())
-                .title(reservation.getProduct().getSubject())
-                .thumbNail(productImg.getImgUrl())
-                .reservationCode(reservation.getUniqueId())
-                .phoneNumber(reservation.getPhoneNumber())
-                .checkIn(ut.convertReservationLocalDateTime(reservation.getCheckIn()))
-                .checkOut(ut.convertReservationLocalDateTime(reservation.getCheckOut()))
-                .isCancel(reservation.getIsCancel())
-                .build();
+		ReservationDto.DetailDto responseDto = ReservationDto.DetailDto.builder()
+																	   .reservationId(reservation.getId())
+																	   .title(product.getSubject())
+																	   .thumbNail(productImg.getImgUrl())
+																	   .reservationCode(reservation.getUniqueId())
+																	   .phoneNumber(reservation.getPhoneNumber())
+																	   .checkIn(ut.convertReservationLocalDateTimeForDetail(
+																		   reservation.getCheckIn()))
+																	   .checkOut(ut.convertReservationLocalDateTimeForDetail(
+																		   reservation.getCheckOut()))
+																	   .isCancel(reservation.getIsCancel())
+																	   .name(member.getUsername())
+																	   .email(member.getEmail())
+																	   .productId(product.getId())
+																	   .build();
 
 		return responseDto;
 	}
@@ -130,16 +141,18 @@ public class ReservationService {
 		Product product = productRepository.findById(reservation.getProduct().getId())
 										   .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
 
-        ReservationDto.Response responseDto = ReservationDto.Response.builder()
-                .reservationId(reservation.getId())
-                .title(product.getSubject())
-                .thumbNail(productImg.getImgUrl())
-                .reservationCode(reservation.getUniqueId())
-                .phoneNumber(reservation.getPhoneNumber())
-                .checkIn(ut.convertReviewLocalDateTime(reservation.getCheckIn()))
-                .checkOut(ut.convertReviewLocalDateTime(reservation.getCheckOut()))
-                .isCancel(reservation.getIsCancel())
-                .build();
+		ReservationDto.Response responseDto = ReservationDto.Response.builder()
+																	 .reservationId(reservation.getId())
+																	 .title(product.getSubject())
+																	 .thumbNail(productImg.getImgUrl())
+																	 .reservationCode(reservation.getUniqueId())
+																	 .phoneNumber(reservation.getPhoneNumber())
+																	 .checkIn(ut.convertReviewLocalDateTime(
+																		 reservation.getCheckIn()))
+																	 .checkOut(ut.convertReviewLocalDateTime(
+																		 reservation.getCheckOut()))
+																	 .isCancel(reservation.getIsCancel())
+																	 .build();
 
 		return responseDto;
 	}

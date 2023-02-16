@@ -59,7 +59,7 @@ public class ReservationController {
     // @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/{reservationId}")
     public ResponseEntity<?> getReservation(@PathVariable long reservationId) {
-        ReservationDto.Response reservationResponseDto = reservationService.getResponseDto(reservationId);
+        ReservationDto.DetailDto reservationResponseDto = reservationService.getResponseDto(reservationId);
 
         return new ResponseEntity<>(new SingleResponseDto<>(reservationResponseDto), HttpStatus.OK);
     }

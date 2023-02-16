@@ -50,6 +50,9 @@ public class ReservationDto {
         private String checkIn;
         private String checkOut;
         private int isCancel;
+        private String email;
+        private String name;
+        private Long productId;
     }
 
     @Getter
