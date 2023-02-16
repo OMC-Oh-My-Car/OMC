@@ -10,7 +10,7 @@ const ProductInfo = ({ data, reviewData, modalController }) => {
   }
   return (
     <>
-      {data ? (
+      {data && reviewData && (
         <>
           <ProductInfoArea>
             <div className="productInfo">
@@ -66,8 +66,6 @@ const ProductInfo = ({ data, reviewData, modalController }) => {
             </div>
           </ProductInfoArea>
         </>
-      ) : (
-        <></>
       )}
     </>
   );
