@@ -17,9 +17,9 @@ const ProductInfo = ({ data, reviewData, modalController }) => {
               <h1>{data.data.data.subject}</h1>
               <div className="prductDescription">
                 <FontAwesomeIcon className="starIcon" icon={faStar} />
-                <span>{!reviewData ? reviewData.data.productTotalStar.totalStarAvg : 0} · </span>
+                <span>{reviewData.data.data ? reviewData.data.productTotalStar.totalStarAvg : 0} · </span>
                 <span className="productInfoReviewCount">
-                  후기 {!reviewData ? reviewData.data.pageInfo.totalElements : 0}개
+                  후기 {reviewData.data.data ? reviewData.data.pageInfo.totalElements : 0}개
                 </span>
                 <span> · </span>
                 <span className="productInfoPlace">{data.data.data.address}</span>
