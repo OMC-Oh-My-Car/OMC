@@ -89,28 +89,29 @@ public class ReservationService {
 		reservationRepository.save(reservation);
 	}
 
-	public ReservationDto.Response getResponseDto(long reservationId) {
-		Reservation reservation = reservationRepository.findById(reservationId).orElse(null);
-		if (reservation == null) {
-			throw new BusinessException(ErrorCode.RESERVATION_NOT_FOUND);
-		}
-		ReservationDto.Response responseDto = toDetailResponseDto(reservation);
+    public ReservationDto.Response getResponseDto(long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId).orElse(null);
+        if (reservation == null) {
+            throw new BusinessException(ErrorCode.RESERVATION_NOT_FOUND);
+        }
+        ReservationDto.Response responseDto = toDetailResponseDto(reservation);
 
-		return responseDto;
-	}
+        return responseDto;
+    }
 
-	private ReservationDto.Response toDetailResponseDto(Reservation reservation) {
-		ProductImg productImg = productImgRepository.findFirstByProductId(reservation.getProduct().getId());
+    private ReservationDto.Response toDetailResponseDto(Reservation reservation) {
+        ProductImg productImg = productImgRepository.findFirstByProductId(reservation.getProduct().getId());
 
-		ReservationDto.Response responseDto = ReservationDto.Response.builder()
-																	 .title(reservation.getProduct().getSubject())
-																	 .thumbNail(productImg.getImgUrl())
-																	 .reservationId(reservation.getUniqueId())
-																	 .phoneNumber(reservation.getPhoneNumber())
-																	 .checkIn(ut.convertReservationLocalDateTime(reservation.getCheckIn()))
-																	 .checkOut(ut.convertReservationLocalDateTime(reservation.getCheckOut()))
-																	 .isCancel(reservation.getIsCancel())
-																	 .build();
+        ReservationDto.Response responseDto = ReservationDto.Response.builder()
+                .reservationId(reservation.getId())
+                .title(reservation.getProduct().getSubject())
+                .thumbNail(productImg.getImgUrl())
+                .reservationCode(reservation.getUniqueId())
+                .phoneNumber(reservation.getPhoneNumber())
+                .checkIn(ut.convertReservationLocalDateTime(reservation.getCheckIn()))
+                .checkOut(ut.convertReservationLocalDateTime(reservation.getCheckOut()))
+                .isCancel(reservation.getIsCancel())
+                .build();
 
 		return responseDto;
 	}
@@ -129,17 +130,16 @@ public class ReservationService {
 		Product product = productRepository.findById(reservation.getProduct().getId())
 										   .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
 
-		ReservationDto.Response responseDto = ReservationDto.Response.builder()
-																	 .title(product.getSubject())
-																	 .thumbNail(productImg.getImgUrl())
-																	 .reservationId(reservation.getUniqueId())
-																	 .phoneNumber(reservation.getPhoneNumber())
-																	 .checkIn(ut.convertReviewLocalDateTime(
-																		 reservation.getCheckIn()))
-																	 .checkOut(ut.convertReviewLocalDateTime(
-																		 reservation.getCheckOut()))
-																	 .isCancel(reservation.getIsCancel())
-																	 .build();
+        ReservationDto.Response responseDto = ReservationDto.Response.builder()
+                .reservationId(reservation.getId())
+                .title(product.getSubject())
+                .thumbNail(productImg.getImgUrl())
+                .reservationCode(reservation.getUniqueId())
+                .phoneNumber(reservation.getPhoneNumber())
+                .checkIn(ut.convertReviewLocalDateTime(reservation.getCheckIn()))
+                .checkOut(ut.convertReviewLocalDateTime(reservation.getCheckOut()))
+                .isCancel(reservation.getIsCancel())
+                .build();
 
 		return responseDto;
 	}
