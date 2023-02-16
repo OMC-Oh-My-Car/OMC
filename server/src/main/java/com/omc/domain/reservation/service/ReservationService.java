@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.omc.domain.member.entity.AuthMember;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -137,6 +138,15 @@ public class ReservationService {
 										   Math.toIntExact(search.getSize()),
 										   Sort.by("id").descending());
 		Page<Reservation> reservationPage = reservationRepository.findAllByOrderByIdDesc(pageable);
+
+		return reservationPage;
+	}
+
+	public Page<Reservation> getMyReservationPages(ReservationDto.Search search, Member member) {
+		Pageable pageable = PageRequest.of(Math.toIntExact(search.getPage() - 1),
+				Math.toIntExact(search.getSize()),
+				Sort.by("id").descending());
+		Page<Reservation> reservationPage = reservationRepository.findAllByMemberOrderByIdDesc(pageable, member);
 
 		return reservationPage;
 	}

@@ -73,6 +73,18 @@ public class ReservationController {
         return new ResponseEntity<>(new MultiResponse<>(responseList, reservationPage), HttpStatus.OK);
     }
 
+    // @PreAuthorize("isAuthenticated()")
+    @GetMapping(value = "/my")
+    public ResponseEntity<?> getMyReservationList(@ModelAttribute ReservationDto.Search search, @CurrentMember AuthMember member) {
+        Member findMember = memberService.findByEmail(member.getEmail())
+                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_EXISTS));
+
+        Page<Reservation> reservationPage = reservationService.getMyReservationPages(search, findMember);
+        List<ReservationDto.Response> responseList = reservationService.pageToResponseList(reservationPage.getContent());
+
+        return new ResponseEntity<>(new MultiResponse<>(responseList, reservationPage), HttpStatus.OK);
+    }
+
     //    특정 상품 예약 목록 조회
     // @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/p/{productId}")
