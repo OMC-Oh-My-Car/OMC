@@ -5,17 +5,22 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ProductReservation from './ProductReservation';
 
 const ProductInfo = ({ data, reviewData, modalController }) => {
+  if (reviewData) {
+    console.log(reviewData);
+  }
   return (
     <>
-      {data && reviewData ? (
+      {data ? (
         <>
           <ProductInfoArea>
             <div className="productInfo">
               <h1>{data.data.data.subject}</h1>
               <div className="prductDescription">
                 <FontAwesomeIcon className="starIcon" icon={faStar} />
-                <span>{data.data.data.star} · </span>
-                <span className="productInfoReviewCount">후기 {reviewData.data.pageInfo.totalElements}개</span>
+                <span>{!reviewData ? reviewData.data.productTotalStar.totalStarAvg : 0} · </span>
+                <span className="productInfoReviewCount">
+                  후기 {!reviewData ? reviewData.data.pageInfo.totalElements : 0}개
+                </span>
                 <span> · </span>
                 <span className="productInfoPlace">{data.data.data.address}</span>
               </div>

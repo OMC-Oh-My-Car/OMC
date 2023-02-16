@@ -1,7 +1,7 @@
 import axiosInstance from '..';
 
-axiosInstance.defaults.headers.common['Authorization'] = window.sessionStorage.getItem('Authorization');
-axiosInstance.defaults.headers.common['Content-Type'] = 'multipart/form-data';
+// axiosInstance.defaults.headers.common['Authorization'] = window.sessionStorage.getItem('Authorization');
+// axiosInstance.defaults.headers.common['Content-Type'] = 'multipart/form-data';
 
 export const createNewProduct = (content) => {
   console.log(window.sessionStorage.getItem('Authorization'));
@@ -27,5 +27,11 @@ export const createNewProduct = (content) => {
 
   console.log(content.image[0].name);
   console.log('판매자 상품 등록');
-  return axiosInstance.post('/product', frm);
+  return axiosInstance.post('/product', {
+    frm,
+    headers: {
+      Authorization: window.sessionStorage.getItem('Authorization'),
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 };

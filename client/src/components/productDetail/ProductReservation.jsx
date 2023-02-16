@@ -51,8 +51,10 @@ const ProductReservation = ({ data, reviewData }) => {
           </div>
           <div className="prductDescription">
             <FontAwesomeIcon className="starIcon" icon={faStar} />
-            <span>{data.data.data.star} · </span>
-            <span className="productInfoReviewCount">후기 {reviewData.data.pageInfo.totalElements}개</span>
+            <span>{!reviewData ? reviewData.data.productTotalStar.totalStarAvg : 0} · </span>
+            <span className="productInfoReviewCount">
+              후기 {!reviewData ? reviewData.data.pageInfo.totalElements : 0}개
+            </span>
           </div>
         </div>
         <div className="reservationDate">

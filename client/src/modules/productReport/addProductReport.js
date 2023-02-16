@@ -1,8 +1,8 @@
 import axiosInstance from '..';
 
-axiosInstance.defaults.headers.common['Authorization'] = window.sessionStorage.getItem('Authorization');
+// axiosInstance.defaults.headers.common['Authorization'] = window.sessionStorage.getItem('Authorization');
 // axiosInstance.defaults.headers.common['Content-Type'] = 'application/json';
-axiosInstance.defaults.headers.common['Content-Type'] = 'multipart/form-data';
+// axiosInstance.defaults.headers.common['Content-Type'] = 'multipart/form-data';
 
 export const addProductReport = (content, productId) => {
   let frm = new FormData();
@@ -11,5 +11,12 @@ export const addProductReport = (content, productId) => {
 
   frm.append('report', contentBlob);
   console.log('상품 신고');
-  return axiosInstance.post(`/report/${productId}`, frm);
+  // return axiosInstance.post(`/report/${productId}`, frm);
+  return axiosInstance.post(`/report/${productId}`, {
+    frm,
+    headers: {
+      Authorization: window.sessionStorage.getItem('Authorization'),
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 };
