@@ -8,11 +8,67 @@ import { useNavigate } from 'react-router-dom';
 
 const UserReservationItem = ({ item, openModalController }) => {
   console.log(item);
+  console.log(item.status);
   const navigate = useNavigate();
 
   const modalController = (type, width, height, modal, id) => {
     navigate(`/user/123/reservation?reservation_id=${id}&modal=${modal}`);
     openModalController({ type, width, height });
+  };
+  const SetContent = () => {
+    if (item.status === 'RESERVATION_COMPLETE') {
+      return (
+        <button
+          className="button buttonYellow"
+          onClick={() =>
+            modalController(
+              'reservationCancelAdd',
+              '600px',
+              '800px',
+              'reservation_add_cancel_reason',
+              item.reservationId,
+            )
+          }
+        >
+          예약 취소
+        </button>
+      );
+    } else if (item.status === 'RESERVATION_CANCEL') {
+      return (
+        <button
+          className="button buttonYellow"
+          onClick={() =>
+            modalController('reservationCancel', '600px', '800px', 'reservation_cancel_reason', item.reservationId)
+          }
+        >
+          취소된 예약
+        </button>
+      );
+    } else {
+      if (item.hasReview) {
+        return (
+          <button
+            className="button buttonYellow"
+            onClick={() =>
+              modalController('reservationReview', '600px', '800px', 'reservation_review', item.reservationId)
+            }
+          >
+            리뷰 확인
+          </button>
+        );
+      } else {
+        return (
+          <button
+            className="button buttonYellow"
+            onClick={() =>
+              modalController('reservationReviewAdd', '600px', '800px', 'reservation_add_review', item.reservationId)
+            }
+          >
+            리뷰 작성
+          </button>
+        );
+      }
+    }
   };
   return (
     <>
@@ -31,44 +87,7 @@ const UserReservationItem = ({ item, openModalController }) => {
           >
             예약 정보
           </button>
-          {/* <button
-            className="button buttonYellow"
-            onClick={() =>
-              modalController(
-                'reservationCancelAdd',
-                '600px',
-                '800px',
-                'reservation_add_cancel_reason',
-                item.reservationId,
-              )
-            }
-          >
-            예약 취소
-          </button> */}
-          {/* <button
-            className="button buttonYellow"
-            onClick={() =>
-              modalController('reservationCancel', '600px', '800px', 'reservation_cancel_reason', item.reservationId)
-            }
-          >
-            취소된 예약
-          </button> */}
-          {/* <button
-            className="button buttonYellow"
-            onClick={() =>
-              modalController('reservationReviewAdd', '600px', '800px', 'reservation_add_review', item.reservationId)
-            }
-          >
-            리뷰 작성
-          </button> */}
-          <button
-            className="button buttonYellow"
-            onClick={() =>
-              modalController('reservationReview', '600px', '800px', 'reservation_review', item.reservationId)
-            }
-          >
-            리뷰 확인
-          </button>
+          <SetContent />
         </div>
       </UserReservationItemArea>
     </>
