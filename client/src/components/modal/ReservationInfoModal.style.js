@@ -10,7 +10,7 @@ export const ReservationInfoModalArea = styled.div`
   h2 {
     font-size: 27px;
     font-weight: 700;
-    margin-bottom: 30px;
+    margin-bottom: 15px;
   }
   .reservationInfo {
     display: flex;
@@ -27,8 +27,7 @@ export const ReservationInfoModalArea = styled.div`
         color: ${(props) => props.theme.gray};
       }
       .reservationNumber {
-        font-size: 22px;
-        font-weight: 500;
+        font-size: 20px;
       }
       width: 100%;
       height: 80px;
@@ -36,17 +35,20 @@ export const ReservationInfoModalArea = styled.div`
       border-bottom: none;
     }
     .reservationCheckInArea {
+      display: flex;
+      flex-wrap: wrap;
       position: relative;
-      padding: 40px 0px 0px 20px;
+      padding: 30px 0px 10px 20px;
       .label {
         position: absolute;
-        top: 13px;
+        top: 10px;
         font-size: 17px;
         color: ${(props) => props.theme.gray};
       }
       .reservationCheckIn {
-        font-size: 22px;
-        font-weight: 500;
+        width: 100%;
+        font-size: 20px;
+        margin-bottom: 5px;
       }
       width: 50%;
       height: 80px;
@@ -56,16 +58,19 @@ export const ReservationInfoModalArea = styled.div`
     }
     .reservationCheckOutArea {
       position: relative;
-      padding: 40px 0px 0px 20px;
+      padding: 30px 0px 10px 20px;
+      display: flex;
+      flex-wrap: wrap;
       .label {
         position: absolute;
-        top: 13px;
+        top: 10px;
         font-size: 17px;
         color: ${(props) => props.theme.gray};
       }
       .reservationCheckOut {
-        font-size: 22px;
-        font-weight: 500;
+        width: 100%;
+        font-size: 20px;
+        margin-bottom: 5px;
       }
       width: 50%;
       height: 80px;
@@ -82,8 +87,7 @@ export const ReservationInfoModalArea = styled.div`
         color: ${(props) => props.theme.gray};
       }
       .reservationName {
-        font-size: 22px;
-        font-weight: 500;
+        font-size: 20px;
       }
       width: 100%;
       height: 80px;
@@ -100,15 +104,14 @@ export const ReservationInfoModalArea = styled.div`
         color: ${(props) => props.theme.gray};
       }
       .reservationEmail {
-        font-size: 22px;
-        font-weight: 500;
+        font-size: 20px;
       }
       width: 100%;
       height: 80px;
       border: 1px solid black;
     }
     .more {
-      padding: 10px 25px;
+      padding: 10px 45px;
       margin: 20px 0px;
       font-size: 20px;
       font-weight: 600;
