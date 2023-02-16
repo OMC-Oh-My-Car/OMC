@@ -1,5 +1,7 @@
 import axiosInstance from '..';
 
+axiosInstance.defaults.headers.common['Authorization'] = window.sessionStorage.getItem('Authorization');
+
 export const getUserReservationList = (page) => {
   let params = {
     page,
@@ -52,6 +54,7 @@ export const cancelUserReservation = (content, reservationId) => {
     headers: {
       Authorization: window.sessionStorage.getItem('Authorization'),
     },
+    cancelReason: content,
   });
 };
 

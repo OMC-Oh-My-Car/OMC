@@ -31,7 +31,7 @@ const UserReservationItem = ({ item, openModalController }) => {
           >
             예약 정보
           </button>
-          <button
+          {/* <button
             className="button buttonYellow"
             onClick={() =>
               modalController(
@@ -44,25 +44,31 @@ const UserReservationItem = ({ item, openModalController }) => {
             }
           >
             예약 취소
-          </button>
+          </button> */}
           {/* <button
             className="button buttonYellow"
-            onClick={() => modalController('reservationCancel', '600px', '800px', 'reservation_cancel_reason', item.reservationId)}
+            onClick={() =>
+              modalController('reservationCancel', '600px', '800px', 'reservation_cancel_reason', item.reservationId)
+            }
           >
             취소된 예약
-          </button>
-          <button
+          </button> */}
+          {/* <button
             className="button buttonYellow"
-            onClick={() => modalController('reservationReviewAdd', '600px', '800px', 'reservation_add_review', item.reservationId)}
+            onClick={() =>
+              modalController('reservationReviewAdd', '600px', '800px', 'reservation_add_review', item.reservationId)
+            }
           >
             리뷰 작성
-          </button>
+          </button> */}
           <button
             className="button buttonYellow"
-            onClick={() => modalController('reservationReview', '600px', '800px', 'reservation_review', item.reservationId)}
+            onClick={() =>
+              modalController('reservationReview', '600px', '800px', 'reservation_review', item.reservationId)
+            }
           >
             리뷰 확인
-          </button> */}
+          </button>
         </div>
       </UserReservationItemArea>
     </>
