@@ -94,7 +94,23 @@ public class ReservationService {
 		if (reservation == null) {
 			throw new BusinessException(ErrorCode.RESERVATION_NOT_FOUND);
 		}
-		ReservationDto.Response responseDto = toResponseDto(reservation);
+		ReservationDto.Response responseDto = toDetailResponseDto(reservation);
+
+		return responseDto;
+	}
+
+	private ReservationDto.Response toDetailResponseDto(Reservation reservation) {
+		ProductImg productImg = productImgRepository.findFirstByProductId(reservation.getProduct().getId());
+
+		ReservationDto.Response responseDto = ReservationDto.Response.builder()
+																	 .title(reservation.getProduct().getSubject())
+																	 .thumbNail(productImg.getImgUrl())
+																	 .reservationId(reservation.getUniqueId())
+																	 .phoneNumber(reservation.getPhoneNumber())
+																	 .checkIn(ut.convertReservationLocalDateTime(reservation.getCheckIn()))
+																	 .checkOut(ut.convertReservationLocalDateTime(reservation.getCheckOut()))
+																	 .isCancel(reservation.getIsCancel())
+																	 .build();
 
 		return responseDto;
 	}
