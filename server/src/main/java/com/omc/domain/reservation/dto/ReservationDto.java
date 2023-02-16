@@ -1,10 +1,7 @@
 package com.omc.domain.reservation.dto;
 
-import java.time.LocalDateTime;
-
 import javax.validation.constraints.NotBlank;
 
-import com.omc.domain.img.entity.ProductImg;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import lombok.AccessLevel;

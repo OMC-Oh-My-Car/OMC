@@ -4,10 +4,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import com.omc.domain.member.entity.Member;
-import com.omc.domain.member.service.MemberService;
 import org.hibernate.annotations.DynamicInsert;
 
+import com.omc.domain.member.entity.Member;
 import com.omc.domain.reservation.entity.Reservation;
 import com.omc.global.common.BaseEntity;
 

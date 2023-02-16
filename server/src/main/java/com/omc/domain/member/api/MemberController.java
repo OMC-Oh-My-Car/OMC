@@ -1,29 +1,27 @@
 package com.omc.domain.member.api;
 
+import java.net.URI;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import com.omc.domain.member.dto.*;
-import com.omc.domain.member.entity.AuthMember;
-import com.omc.global.common.annotation.CurrentMember;
-import com.omc.global.error.ErrorCode;
-import com.omc.global.error.exception.BusinessException;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.omc.domain.member.dto.*;
+import com.omc.domain.member.entity.AuthMember;
 import com.omc.domain.member.entity.Member;
 import com.omc.domain.member.service.MemberService;
+import com.omc.global.common.annotation.CurrentMember;
 import com.omc.global.common.dto.SingleResponseDto;
+import com.omc.global.error.ErrorCode;
+import com.omc.global.error.exception.BusinessException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.net.URI;
 
 @RestController
 @RequestMapping("/member")

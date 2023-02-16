@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.omc.domain.cancel.dto.CancelDto;
+import com.omc.domain.member.entity.AuthMember;
 import com.omc.domain.member.entity.Member;
+import com.omc.domain.member.service.MemberService;
 import com.omc.domain.product.service.ProductService;
 import com.omc.domain.reservation.dto.ReservationDto;
 import com.omc.domain.reservation.entity.Reservation;
@@ -26,6 +28,8 @@ import com.omc.domain.review.service.ReviewService;
 import com.omc.global.common.annotation.CurrentMember;
 import com.omc.global.common.dto.MultiResponse;
 import com.omc.global.common.dto.SingleResponseDto;
+import com.omc.global.error.ErrorCode;
+import com.omc.global.error.exception.BusinessException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,13 +43,15 @@ public class ReservationController {
 
     private final ProductService productService;
     private final ReviewService reviewService;
+    private final MemberService memberService;
 
     // @PreAuthorize("isAuthenticated()")
     @PostMapping(value = "", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> createReservation(@RequestBody ReservationDto.Request request,
-                                               @CurrentMember Member member) {
-
-        reservationService.createReservation(request, member);
+                                               @CurrentMember AuthMember member) {
+        Member findMember = memberService.findByEmail(member.getEmail())
+                                         .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_EXISTS));
+        reservationService.createReservation(request, findMember);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -98,8 +104,11 @@ public class ReservationController {
     @PatchMapping(value = "/cancel/{reservationId}", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> cancelReservation(@PathVariable long reservationId,
                                                @RequestBody CancelDto.Request request,
-                                               @CurrentMember Member member) {
-        reservationService.cancelReservation(reservationId, request, member);
+                                               @CurrentMember AuthMember member) {
+
+        Member findMember = memberService.findByEmail(member.getEmail())
+                                         .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_EXISTS));
+        reservationService.cancelReservation(reservationId, request, findMember);
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }

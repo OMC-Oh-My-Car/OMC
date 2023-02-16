@@ -9,8 +9,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import com.omc.domain.img.entity.ReportImg;
 import com.omc.domain.member.entity.Member;
 import com.omc.domain.product.entity.Product;

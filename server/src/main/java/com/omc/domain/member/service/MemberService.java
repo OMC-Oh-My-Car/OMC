@@ -3,14 +3,8 @@ package com.omc.domain.member.service;
 import java.util.Optional;
 import java.util.Random;
 
-import com.omc.domain.member.dto.*;
-import com.omc.domain.member.entity.AuthMember;
-import com.omc.domain.member.entity.RefreshToken;
-import com.omc.domain.member.entity.UserRole;
-import com.omc.domain.member.repository.RefreshTokenRepository;
-import com.omc.global.error.ErrorCode;
-import com.omc.global.error.exception.BusinessException;
-import com.omc.global.jwt.TokenProvider;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.ResponseCookie;
 import org.springframework.mail.SimpleMailMessage;
@@ -18,15 +12,20 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.omc.domain.member.dto.*;
+import com.omc.domain.member.entity.AuthMember;
 import com.omc.domain.member.entity.Member;
+import com.omc.domain.member.entity.RefreshToken;
+import com.omc.domain.member.entity.UserRole;
 import com.omc.domain.member.exception.MemberNotFoundException;
 import com.omc.domain.member.repository.MemberRepository;
+import com.omc.domain.member.repository.RefreshTokenRepository;
+import com.omc.global.error.ErrorCode;
+import com.omc.global.error.exception.BusinessException;
+import com.omc.global.jwt.TokenProvider;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 @Service
 @RequiredArgsConstructor

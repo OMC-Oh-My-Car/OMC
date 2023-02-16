@@ -5,9 +5,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.omc.domain.member.entity.Member;
-import com.omc.domain.member.repository.MemberRepository;
-import com.omc.global.util.Util;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +12,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.omc.domain.member.entity.Member;
+import com.omc.domain.member.repository.MemberRepository;
 import com.omc.domain.reservation.entity.Reservation;
 import com.omc.domain.reservation.service.ReservationService;
 import com.omc.domain.review.dto.ReviewDto;
@@ -22,6 +21,7 @@ import com.omc.domain.review.entity.Review;
 import com.omc.domain.review.repository.ReviewRepository;
 import com.omc.global.error.ErrorCode;
 import com.omc.global.error.exception.BusinessException;
+import com.omc.global.util.Util;
 
 import lombok.RequiredArgsConstructor;
 
@@ -134,6 +134,9 @@ public class ReviewService {
 
     public ReviewDto.productTotalStar getProductAvg(long productId) {
         Object[] avgList = reviewRepository.findReviewsAvgByProductId(productId);
+        if (avgList == null || avgList.length == 0) {
+            return null;
+        }
         Object[] valueArr = (Object[]) avgList[0];
 
         return ReviewDto.productTotalStar.builder()

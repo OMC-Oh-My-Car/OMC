@@ -2,7 +2,6 @@ package com.omc.domain.member.api;
 
 import java.net.URI;
 
-import com.omc.domain.member.service.MemberService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +12,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.omc.domain.member.dto.MemberResponseDto;
 import com.omc.domain.member.dto.SignUpRequestDto;
+import com.omc.domain.member.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

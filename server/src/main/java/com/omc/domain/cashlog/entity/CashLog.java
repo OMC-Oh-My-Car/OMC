@@ -1,13 +1,14 @@
 package com.omc.domain.cashlog.entity;
 
+import javax.persistence.*;
+
 import com.omc.domain.member.entity.Member;
 import com.omc.domain.reservation.entity.Reservation;
 import com.omc.global.common.BaseEntity;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @Entity
 @Getter
