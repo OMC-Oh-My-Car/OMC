@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import javax.validation.constraints.NotBlank;
 
+import com.omc.domain.img.entity.ProductImg;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import lombok.AccessLevel;
@@ -31,6 +32,8 @@ public class ReservationDto {
     @Getter
     @Builder
     public static class Response {
+        private String title;
+        private String thumbNail;
         private String reservationId;
         private String phoneNumber;
         private String checkIn;

@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.omc.domain.cashlog.service.CashLogService;
+import com.omc.domain.img.entity.Img;
+import com.omc.domain.img.entity.ProductImg;
+import com.omc.domain.img.repository.ImgRepository;
 import com.omc.domain.member.service.MemberService;
 import com.omc.global.util.Util;
 import org.springframework.data.domain.Page;
@@ -41,6 +44,7 @@ public class ReservationService {
     private final ProductRepository productRepository;
     private final CashLogService cashLogService;
     private final Util ut;
+    private final ImgRepository imgRepository;
 
     public Reservation findById(long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId).orElse(null);
@@ -104,7 +108,11 @@ public class ReservationService {
     }
 
     private ReservationDto.Response toResponseDto(Reservation reservation) {
+        ProductImg productImg = imgRepository.findFirstByProductId(reservation.getProduct().getId());
+
         ReservationDto.Response responseDto = ReservationDto.Response.builder()
+                .title(reservation.getProduct().getSubject())
+                .thumbNail(productImg.getImgUrl())
                 .reservationId(reservation.getUniqueId())
                 .phoneNumber(reservation.getPhoneNumber())
                 .checkIn(ut.convertReviewLocalDateTime(reservation.getCheckIn()))
