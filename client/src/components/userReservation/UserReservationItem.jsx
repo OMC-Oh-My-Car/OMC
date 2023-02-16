@@ -18,11 +18,13 @@ const UserReservationItem = ({ item, openModalController }) => {
     <>
       <UserReservationItemArea>
         <div className="imageArea">
-          <img src="https://cdn.thescoop.co.kr/news/photo/202107/51410_73168_3149.jpg" alt="상품사진" />
+          <img src={item.thumbNail} alt="상품사진" />
         </div>
         <div className="productInfo">
-          <span className="productTitle">전통한옥 단독주택</span>
-          <span className="reservationPeriod">2023년 1월 13일 - 2023년 1월 14일</span>
+          <span className="productTitle">{item.title}</span>
+          <span className="reservationPeriod">
+            {item.checkIn} - {item.checkOut}
+          </span>
           <button
             className="button buttonRed"
             onClick={() => modalController('reservationInfo', '500px', '550px', 'reservation_info', item.reservationId)}
