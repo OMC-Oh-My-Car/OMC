@@ -11,9 +11,15 @@ const SellerReservationList = ({ data, isLoading, isError, filter, setFilter, mo
         <SellerReservationListArea>
           <h1>예약 관리</h1>
           <ul className="filter">
-            <li>일정 임박</li>
-            <li>신규 예약</li>
-            <li>취소된 예약</li>
+            <li role="presentation" onClick={() => setFilter(0)}>
+              일정 임박
+            </li>
+            <li role="presentation" onClick={() => setFilter(1)}>
+              신규 예약
+            </li>
+            <li role="presentation" onClick={() => setFilter(2)}>
+              취소된 예약
+            </li>
           </ul>
           <div className="reservationList">
             {skeletonMapArr.map((el) => {
@@ -49,11 +55,9 @@ const SellerReservationList = ({ data, isLoading, isError, filter, setFilter, mo
         </ul>
         <div className="reservationList">
           {data &&
-            data.data
-              .filter((el) => el.reservationId)
-              .map((item) => {
-                return <SellerReservationItem key={item.reservationId} item={item} modalController={modalController} />;
-              })}
+            data.data.data.map((item) => {
+              return <SellerReservationItem key={item.reservationId} item={item} modalController={modalController} />;
+            })}
         </div>
       </SellerReservationListArea>
     </>

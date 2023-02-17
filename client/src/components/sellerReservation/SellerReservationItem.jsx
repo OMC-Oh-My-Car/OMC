@@ -2,49 +2,81 @@
 import { SellerReservationItemArea } from './SellerReservationItem.style';
 
 const SellerReservationItem = ({ item, modalController }) => {
+  console.log(item);
+  const SetContent = () => {
+    if (item.status === 'RESERVATION_COMPLETE') {
+      return (
+        <button
+          onClick={() =>
+            modalController(
+              'reservationCancelAdd',
+              '600px',
+              '800px',
+              'reservation_add_cancel_reason',
+              item.reservationId,
+            )
+          }
+          className="buttonRight"
+        >
+          예약 취소
+        </button>
+      );
+    } else if (item.status === 'RESERVATION_CANCEL') {
+      return (
+        <button
+          onClick={() =>
+            modalController('reservationCancel', '600px', '800px', 'reservation_cancel_reason', item.reservationId)
+          }
+          className="buttonRight"
+        >
+          취소 사유
+        </button>
+      );
+    } else {
+      if (item.hasReview) {
+        return (
+          <button
+            onClick={() =>
+              modalController('reservationReview', '600px', '800px', 'reservation_review', item.reservationId)
+            }
+            className="buttonRight"
+          >
+            리뷰 조회
+          </button>
+        );
+      } else {
+        return (
+          <button className="button buttonYellow" onClick={() => alert('등록된 리뷰가 없습니다')}>
+            리뷰 작성
+          </button>
+        );
+      }
+    }
+  };
   return (
     <>
       <SellerReservationItemArea>
         <div className="image">
-          <img src="https://cdn.thescoop.co.kr/news/photo/202107/51410_73168_3149.jpg" alt="상품사진" />
+          <img src={item.thumbNail} alt="상품사진" />
         </div>
         <div className="flexRight">
           <div className="reservationInfo">
-            <span className="reservationNumber">예약 번호: 2022-1220-0874</span>
-            <span className="reservationDate">예약 기간: 2023년 1월 12일 ~ 2023년 1월 13일</span>
-            <span className="userEmail">이메일: shinker1002@naver.com</span>
+            <span className="reservationNumber">예약 번호: {item.reservationCode}</span>
+            <span className="reservationDate">
+              예약 기간: {item.checkIn} ~ {item.checkOut}
+            </span>
+            <span className="userEmail">이메일: {item.email}</span>
           </div>
           <div className="button">
             <button
-              onClick={() => modalController('reservationInfo', '500px', '550px', 'reservation_info', '2022-1222-0001')}
+              onClick={() =>
+                modalController('reservationInfo', '500px', '550px', 'reservation_info', item.reservationId)
+              }
               className="buttonLeft"
             >
               예약 정보
             </button>
-            {/* <button
-              onClick={() =>
-                modalController('reservationCancel', '600px', '800px', 'reservation_cancel_reason', '2022-1222-0001')
-              }
-              className="buttonRight"
-            >
-              취소 사유
-            </button> */}
-            {/* <button
-              onClick={() =>
-                modalController('reservationReview', '600px', '800px', 'reservation_review', '2022-1222-0001')
-              }
-              className="buttonRight"
-            >
-              리뷰 조회
-            </button> */}
-            <button
-              onClick={() =>
-                modalController('reservationReviewAdd', '600px', '800px', 'reservation_add_review', '2022-1222-0001')
-              }
-              className="buttonRight"
-            >
-              예약 취소
-            </button>
+            <SetContent />
           </div>
         </div>
       </SellerReservationItemArea>

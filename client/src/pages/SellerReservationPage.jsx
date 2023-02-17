@@ -5,7 +5,7 @@ import Header from '../components/header/Header';
 import Pagination from '../components/pagination/Pagination';
 import SellerReservationList from '../components/sellerReservation/SellerReservationList';
 import { getSellerReservationList } from '../modules/sellerReservation/sellerReservation';
-// import SellerReservationListEmpty from '../components/sellerReservation/SellerReservationListEmpty';
+import SellerReservationListEmpty from '../components/sellerReservation/SellerReservationListEmpty';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const SellerReservationPage = ({ openModalController }) => {
@@ -26,8 +26,8 @@ const SellerReservationPage = ({ openModalController }) => {
     openModalController({ type, width, height });
   };
 
-  const { isLoading, data, isError } = useQuery(['sellerProductList', filter, page], async () => {
-    const data = await getSellerReservationList(filter, page);
+  const { isLoading, data, isError } = useQuery(['sellerProductList', filter, page, productId], async () => {
+    const data = await getSellerReservationList(filter, page, productId);
     return data;
   });
 
@@ -36,16 +36,23 @@ const SellerReservationPage = ({ openModalController }) => {
       <Container>
         <Header type="short" />
         <MainContainer>
-          <SellerReservationList
-            data={data}
-            isLoading={isLoading}
-            isError={isError}
-            filter={filter}
-            setFilter={setFilter}
-            modalController={modalController}
-          />
-          {/* <SellerReservationListEmpty /> */}
-          <Pagination itemChange={itemChange} />
+          {data && data.data.data !== [] ? (
+            <>
+              <SellerReservationList
+                data={data}
+                isLoading={isLoading}
+                isError={isError}
+                filter={filter}
+                setFilter={setFilter}
+                modalController={modalController}
+              />
+              <Pagination data={data} itemChange={itemChange} />
+            </>
+          ) : (
+            <>
+              <SellerReservationListEmpty />
+            </>
+          )}
         </MainContainer>
       </Container>
     </>
