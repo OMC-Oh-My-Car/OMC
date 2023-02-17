@@ -18,6 +18,7 @@ const SellerProductItem = ({ item }) => {
         </div>
         <div className="productInfo">
           <span className="productTitle">{item.subject}</span>
+          <span className="productLocation">{item.address}</span>
           <button onClick={() => editProductInfo()} className="button buttonRed">
             상품 정보 수정
           </button>
