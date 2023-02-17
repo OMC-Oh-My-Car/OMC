@@ -17,6 +17,7 @@ const ProductCalendarModal = ({ setCalendarOpen, startDate, endDate, onChangeDat
           <DatePicker
             locale={ko}
             selected={startDate}
+            minDate={new Date()}
             onChange={onChangeDate}
             startDate={startDate}
             endDate={endDate}

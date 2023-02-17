@@ -5,10 +5,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ProductCalendarModal from './ProductCalendarModal';
 
 const ProductReservation = ({ data, reviewData }) => {
+  let date = new Date();
+  date.setDate(date.getDate() + 1);
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-
+  const [endDate, setEndDate] = useState(date);
   const onChangeDate = (dates) => {
     const [start, end] = dates;
     console.log(new Date());
