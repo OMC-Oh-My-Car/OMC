@@ -40,6 +40,7 @@ const ProductDetailPage = ({ openModalController }) => {
             reviewData={reviewData}
             isLoading={isLoading}
             isError={isError}
+            productId={productId}
             modalController={modalController}
           />
           <ProductReview

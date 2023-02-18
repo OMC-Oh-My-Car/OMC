@@ -28,15 +28,12 @@ export const getUserReservationDetail = (reservationId) => {
     },
   });
 };
+
 // 결제 API 와 같이 구현 예정.
-export const addUserReservation = (page) => {
+export const addUserReservation = (reservationData, paymentData) => {
   // 예약 정보 가져와야 함
-  let params = {
-    page,
-  };
-  console.log(params);
   console.log('유저 예약 추가 Loading');
-  return axiosInstance.get('/reservation', {
+  return axiosInstance.post('/reservation', {
     headers: {
       Authorization: window.sessionStorage.getItem('Authorization'),
     },

@@ -45,8 +45,8 @@ const Router = () => {
             element={<SellerReservationPage openModalController={openModalController} />}
           />
           <Route path="/user/:id/userInfo" element={<UserInfoPage openModalController={openModalController} />} />
-          <Route path="/payments/success" element={<PaymentSuccessPage />} />
-          <Route path="/payments/failed" element={<PaymentFailedPage />} />
+          <Route path="/payment/success" element={<PaymentSuccessPage />} />
+          <Route path="/payment/failed" element={<PaymentFailedPage />} />
         </Routes>
         {isOpenModal && <Modal />}
       </BrowserRouter>

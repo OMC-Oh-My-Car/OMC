@@ -4,20 +4,20 @@ import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ProductCalendarModal from './ProductCalendarModal';
 import { tossPay } from '../../modules/payments/Payments';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-const ProductReservation = ({ data, reviewData }) => {
+const ProductReservation = ({ data, reviewData, productId }) => {
   const nickname = useSelector((state) => state.user.nickname);
 
   let date = new Date();
   date.setDate(date.getDate() + 1);
+
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(date);
+
   const onChangeDate = (dates) => {
     const [start, end] = dates;
-    console.log(new Date());
-    console.log(start);
 
     setStartDate(start);
     setEndDate(end);
@@ -46,7 +46,19 @@ const ProductReservation = ({ data, reviewData }) => {
       return [year, month, day].join(' ');
     }
   }
+  const createReservation = () => {
+    sessionStorage.setItem(
+      'reservation',
+      JSON.stringify({
+        productId,
+        phone: '010-7533-2401',
+        startDate: startDate.toString(),
+        endDate: endDate.toString(),
+      }),
+    );
 
+    tossPay(nickname, ((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) * data.data.data.price);
+  };
   return (
     <>
       <ProductReservationArea>
@@ -83,15 +95,7 @@ const ProductReservation = ({ data, reviewData }) => {
             </>
           )}
         </div>
-        <button
-          onClick={() =>
-            tossPay(
-              nickname,
-              ((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) * data.data.data.price,
-            )
-          }
-          className="reserveButton"
-        >
+        <button onClick={() => createReservation()} className="reserveButton">
           예약하기
         </button>
 

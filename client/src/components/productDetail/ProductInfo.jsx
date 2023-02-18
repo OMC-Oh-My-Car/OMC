@@ -4,7 +4,7 @@ import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ProductReservation from './ProductReservation';
 
-const ProductInfo = ({ data, reviewData, modalController }) => {
+const ProductInfo = ({ data, reviewData, productId, modalController }) => {
   if (reviewData) {
     console.log(reviewData);
   }
@@ -55,7 +55,7 @@ const ProductInfo = ({ data, reviewData, modalController }) => {
               </div>
             </div>
             <div className="reservation">
-              <ProductReservation data={data} reviewData={reviewData} />
+              <ProductReservation data={data} reviewData={reviewData} productId={productId} />
               <span
                 role="presentation"
                 onClick={() => modalController('addReport', '600px', '590px', 'product_add_report')}
