@@ -8,7 +8,9 @@ const ProductCalendarModal = ({ setCalendarOpen, startDate, endDate, onChangeDat
     <>
       <ProductCalendarModalArea>
         <h2>
-          {endDate !== null && !startDate !== null ? endDate.getDate() - startDate.getDate() + '박' : '날짜 선택'}
+          {endDate !== null && !startDate !== null
+            ? (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24) + '박'
+            : '날짜 선택'}
         </h2>
         <span>
           {toStringByFormatting(startDate, null, 1)} - {toStringByFormatting(endDate, null, 1)}

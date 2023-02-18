@@ -3,8 +3,12 @@ import { ProductReservationArea } from './ProductReservation.style';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ProductCalendarModal from './ProductCalendarModal';
+import { tossPay } from '../../modules/payments/Payments';
+import { useSelector, useDispatch } from 'react-redux';
 
 const ProductReservation = ({ data, reviewData }) => {
+  const nickname = useSelector((state) => state.user.nickname);
+
   let date = new Date();
   date.setDate(date.getDate() + 1);
   const [calendarOpen, setCalendarOpen] = useState(false);
@@ -79,17 +83,37 @@ const ProductReservation = ({ data, reviewData }) => {
             </>
           )}
         </div>
-        <button className="reserveButton">예약하기</button>
+        <button
+          onClick={() =>
+            tossPay(
+              nickname,
+              ((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) * data.data.data.price,
+            )
+          }
+          className="reserveButton"
+        >
+          예약하기
+        </button>
 
         {endDate !== null && !startDate !== null ? (
           <>
             <div className="priceFlex">
-              <span>₩ {data.data.data.price + ' x ' + (endDate.getDate() - startDate.getDate()) + '박'}</span>
-              <span>₩ {data.data.data.price * (endDate.getDate() - startDate.getDate())}</span>
+              <span>
+                ₩{' '}
+                {data.data.data.price +
+                  ' x ' +
+                  (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24) +
+                  '박'}
+              </span>
+              <span>
+                ₩ {(data.data.data.price * (endDate.getTime() - startDate.getTime())) / (1000 * 60 * 60 * 24)}
+              </span>
             </div>
             <div className="totalPriceFlex">
               <span>총 합계</span>
-              <span>₩ {data.data.data.price * (endDate.getDate() - startDate.getDate())}</span>
+              <span>
+                ₩ {(data.data.data.price * (endDate.getTime() - startDate.getTime())) / (1000 * 60 * 60 * 24)}
+              </span>
             </div>
           </>
         ) : (
