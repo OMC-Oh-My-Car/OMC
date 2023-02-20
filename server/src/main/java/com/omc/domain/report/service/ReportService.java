@@ -16,6 +16,7 @@ import com.omc.domain.img.entity.ReportImg;
 import com.omc.domain.img.repository.ProductImgRepository;
 import com.omc.domain.member.entity.Member;
 import com.omc.domain.product.entity.Product;
+import com.omc.domain.product.repository.ProductRepository;
 import com.omc.domain.product.service.ProductService;
 import com.omc.domain.report.dto.ReportDto;
 import com.omc.domain.report.entity.Report;
@@ -33,10 +34,8 @@ import lombok.extern.slf4j.Slf4j;
 public class ReportService {
 
 	private final ReportRepository reportRepository;
-
+	private final ProductRepository productRepository;
 	private final ProductService productService;
-	private final ProductImgRepository productImgRepository;
-
 	private final S3Service s3Service;
 
 	public void create(ReportDto.Request req,
@@ -44,7 +43,11 @@ public class ReportService {
 					   Long productId,
 					   Member member) {
 
-		List<ReportImg> reportImgs = uploadImgAndImgDtoToEntity(multipartFiles);
+		List<ReportImg> reportImgs = null;
+
+		if (multipartFiles != null) {
+			reportImgs = uploadImgAndImgDtoToEntity(multipartFiles);
+		}
 
 		Report report = Report.builder()
 							  .subject(req.getSubject())
@@ -87,12 +90,15 @@ public class ReportService {
 
 		Report findReport = reportRepository.findById(reportId)
 											.orElseThrow(() -> new BusinessException(ErrorCode.REPORT_NOT_FOUND));
-		ProductImg productImg = productImgRepository.findFirstByProductId(findReport.getProduct().getId());
+
+		String imgUrl = findReport.getProduct().getProductImgList().get(0).getImgUrl().isEmpty()
+						? null
+						: findReport.getProduct().getProductImgList().get(0).getImgUrl();
+
 		return ReportDto.Response.builder()
 								 .reportId(findReport.getId())
 								 .reporter(findReport.getMember().getEmail())
-								 .productImg(productImg
-												 .getImgUrl())
+								 .productImg(imgUrl)
 								 .createTime(findReport.getCreatedAt())
 								 .subject(findReport.getSubject())
 								 .content(findReport.getContent())
@@ -117,12 +123,17 @@ public class ReportService {
 		List<ReportDto.Response> responseList = new ArrayList<>();
 
 		for (Report report : content) {
-			ProductImg productImg = productImgRepository.findFirstByProductId(report.getProduct().getId());
+			Product findProduct = productRepository.findById(report.getProduct().getId())
+												   .orElseThrow(
+													   () -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
+			String imgUrl = findProduct.getProductImgList().get(0).getImgUrl().isEmpty()
+							? null
+							: findProduct.getProductImgList().get(0).getImgUrl();
+
 			ReportDto.Response response = ReportDto.Response.builder()
 															.reportId(report.getId())
 															.reporter(report.getMember().getEmail())
-															.productImg(productImg
-																			.getImgUrl())
+															.productImg(imgUrl)
 															.createTime(report.getCreatedAt())
 															.subject(report.getSubject())
 															.content(report.getContent())
@@ -132,5 +143,17 @@ public class ReportService {
 		}
 
 		return responseList;
+	}
+
+	public Page<Report> getMyReportList(ReportDto.Page request, Member findMember) {
+		Pageable pageable = PageRequest.of(Math.toIntExact(request.getPage() - 1),
+										   Math.toIntExact(request.getSize()),
+										   Sort.by(request.getSort()).descending());
+
+		if (request.getFilter() == null) {
+			return reportRepository.findAllByMember(findMember, pageable);
+		} else {
+			return reportRepository.findAllByMemberAndStatus(findMember, request.getFilter(), pageable);
+		}
 	}
 }

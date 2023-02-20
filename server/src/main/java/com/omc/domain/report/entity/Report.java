@@ -50,8 +50,12 @@ public class Report extends BaseEntity {
 		this.content = content;
 		this.status = status;
 		this.reportImgList = reportImgList;
-		for (ReportImg reportImg : reportImgList) {
-			reportImg.setReport(this);
+		if (reportImgList != null) {
+			for (ReportImg reportImg : reportImgList) {
+				reportImg.setReport(this);
+			}
+		} else {
+			this.reportImgList = new ArrayList<>();
 		}
 		this.member = member;
 	}
