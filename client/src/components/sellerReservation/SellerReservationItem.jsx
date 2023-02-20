@@ -46,7 +46,7 @@ const SellerReservationItem = ({ item, modalController }) => {
         );
       } else {
         return (
-          <button className="button buttonYellow" onClick={() => alert('등록된 리뷰가 없습니다')}>
+          <button className="buttonRight" onClick={() => alert('등록된 리뷰가 없습니다')}>
             리뷰 작성
           </button>
         );
