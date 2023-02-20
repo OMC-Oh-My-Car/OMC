@@ -5,15 +5,20 @@ import Header from '../components/header/Header';
 import ProductList from '../components/productList/ProductList';
 import { getProductList } from '../modules/userProduct/userProductList';
 import Pagination from '../components/pagination/Pagination';
+import { useSelector, useDispatch } from 'react-redux';
 
 const ProductListPage = () => {
   const [filter, setFilter] = useState(0);
   const [page, setpage] = useState(1);
+
+  const search = useSelector((state) => state.search.q);
+
+  console.log(search);
   const itemChange = (page) => {
     setpage(page.selected + 1);
   };
-  const { isLoading, data, isError } = useQuery(['productList', filter, page, ''], async () => {
-    const data = await getProductList(filter, page, '');
+  const { isLoading, data, isError } = useQuery(['productList', filter, page, search], async () => {
+    const data = await getProductList(filter, page, search);
     return data;
   });
   return (

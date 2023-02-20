@@ -4,18 +4,23 @@ import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ProductReservation from './ProductReservation';
 
-const ProductInfo = ({ data, reviewData, modalController }) => {
+const ProductInfo = ({ data, reviewData, productId, modalController }) => {
+  if (reviewData) {
+    console.log(reviewData);
+  }
   return (
     <>
-      {data && reviewData ? (
+      {data && reviewData && (
         <>
           <ProductInfoArea>
             <div className="productInfo">
               <h1>{data.data.data.subject}</h1>
               <div className="prductDescription">
                 <FontAwesomeIcon className="starIcon" icon={faStar} />
-                <span>{data.data.data.star} · </span>
-                <span className="productInfoReviewCount">후기 {reviewData.data.pageInfo.totalElements}개</span>
+                <span>{reviewData.data.data ? reviewData.data.productTotalStar.totalStarAvg : 0} · </span>
+                <span className="productInfoReviewCount">
+                  후기 {reviewData.data.data ? reviewData.data.pageInfo.totalElements : 0}개
+                </span>
                 <span> · </span>
                 <span className="productInfoPlace">{data.data.data.address}</span>
               </div>
@@ -50,12 +55,17 @@ const ProductInfo = ({ data, reviewData, modalController }) => {
               </div>
             </div>
             <div className="reservation">
-              <ProductReservation data={data} reviewData={reviewData} />
+              <ProductReservation data={data} reviewData={reviewData} productId={productId} />
+              <span
+                role="presentation"
+                onClick={() => modalController('addReport', '600px', '590px', 'product_add_report')}
+                className="report"
+              >
+                숙소 신고하기
+              </span>
             </div>
           </ProductInfoArea>
         </>
-      ) : (
-        <></>
       )}
     </>
   );

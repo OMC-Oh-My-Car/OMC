@@ -5,6 +5,7 @@ export const ProductReservationArea = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 30px;
   .flexBox {
     width: 100%;
     flex-wrap: wrap;

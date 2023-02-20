@@ -35,7 +35,12 @@ export const SellerProductItemArea = styled.div`
     .productTitle {
       font-size: 17px;
       font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .productLocation {
+      color: ${(props) => props.theme.gray};
       margin-bottom: 20px;
+      text-overflow: ellipsis;
     }
     button {
       padding: 10px 20px;

@@ -6,12 +6,11 @@ const ReservationInfoModal = () => {
   const params = new URLSearchParams(location.search);
   let reservationId = params.get('reservation_id');
 
-  if (reservationId) {
-    const { data } = useQuery(['reservationInfo', reservationId], async () => {
-      const data = await getUserReservationDetail(reservationId);
-      return data;
-    });
-  }
+  const { data } = useQuery(['reservationInfo', reservationId], async () => {
+    const data = await getUserReservationDetail(reservationId);
+    return data;
+  });
+  console.log(data);
   return (
     <>
       <ReservationInfoModalArea>
@@ -19,23 +18,25 @@ const ReservationInfoModal = () => {
         <div className="reservationInfo">
           <div className="reservationNumberArea">
             <span className="label">예약 번호</span>
-            <span className="reservationNumber">2023-0201-0001</span>
+            <span className="reservationNumber">{data && data.data.data.reservationCode}</span>
           </div>
           <div className="reservationCheckInArea">
             <span className="label">체크인</span>
-            <span className="reservationCheckIn">2023-02-01</span>
+            <span className="reservationCheckIn">{data && data.data.data.checkIn.split(' ')[0]}</span>
+            <span className="reservationCheckIn">{data && data.data.data.checkIn.split(' ')[1]}</span>
           </div>
           <div className="reservationCheckOutArea">
             <span className="label">체크아웃</span>
-            <span className="reservationCheckOut">2023-02-02</span>
+            <span className="reservationCheckOut">{data && data.data.data.checkOut.split(' ')[0]}</span>
+            <span className="reservationCheckOut">{data && data.data.data.checkOut.split(' ')[1]}</span>
           </div>
           <div className="reservationUserNameArea">
             <span className="label">예약자명</span>
-            <span className="reservationName">최민수</span>
+            <span className="reservationName">{data && data.data.data.name}</span>
           </div>
           <div className="reservationUserEmailArea">
             <span className="label">이메일</span>
-            <span className="reservationEmail">shinker1002@naver.com</span>
+            <span className="reservationEmail">{data && data.data.data.email}</span>
           </div>
           <button className="more">상품 페이지 이동</button>
         </div>

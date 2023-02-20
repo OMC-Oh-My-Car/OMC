@@ -83,6 +83,9 @@ export const ProductInfoArea = styled.div`
     }
   }
   .reservation {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     padding: 20px;
     width: 30%;
     height: fit-content;
@@ -90,6 +93,11 @@ export const ProductInfoArea = styled.div`
     top: 200px !important;
     border-radius: 10px;
     box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.1), 0 1px 4px hsla(0, 0%, 0%, 0.1), 0 2px 8px hsla(0, 0%, 0%, 0.1);
+    .report {
+      color: #333;
+      text-decoration: underline;
+      cursor: pointer;
+    }
   }
   @media (max-width: 1128px) {
     .facilities {

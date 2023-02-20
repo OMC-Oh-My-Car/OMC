@@ -16,14 +16,14 @@ const SellerProductListPage = () => {
     const data = await getSellerProductList(page);
     return data;
   });
-  console.log(data);
+
   return (
     <>
       <Container>
         <Header type="short" />
         <MainContainer>
           <SellerProductList data={data} isLoading={isLoading} isError={isError} />
-          <Pagination itemChange={itemChange} />
+          {data && <Pagination data={data} itemChange={itemChange} />}
         </MainContainer>
       </Container>
     </>

@@ -1,12 +1,18 @@
 import axiosInstance from '..';
 
+axiosInstance.defaults.headers.common['Authorization'] = window.sessionStorage.getItem('Authorization');
+
 export const getUserReservationList = (page) => {
   let params = {
     page,
   };
   console.log(params);
   console.log('예약 리스트 Loading');
-  return axiosInstance.get('/reservation');
+  return axiosInstance.get('/reservation', {
+    headers: {
+      Authorization: window.sessionStorage.getItem('Authorization'),
+    },
+  });
 };
 
 export const getUserReservationDetail = (reservationId) => {
@@ -16,17 +22,22 @@ export const getUserReservationDetail = (reservationId) => {
   };
   console.log(params);
   console.log('예약 리스트 Loading');
-  return axiosInstance.get(`/reservation/${reservationId}`);
+  return axiosInstance.get(`/reservation/${reservationId}`, {
+    headers: {
+      Authorization: window.sessionStorage.getItem('Authorization'),
+    },
+  });
 };
+
 // 결제 API 와 같이 구현 예정.
-export const addUserReservation = (page) => {
+export const addUserReservation = (reservationData, paymentData) => {
   // 예약 정보 가져와야 함
-  let params = {
-    page,
-  };
-  console.log(params);
   console.log('유저 예약 추가 Loading');
-  return axiosInstance.get('/reservation');
+  return axiosInstance.post('/reservation', {
+    headers: {
+      Authorization: window.sessionStorage.getItem('Authorization'),
+    },
+  });
 };
 
 export const cancelUserReservation = (content, reservationId) => {
@@ -36,7 +47,12 @@ export const cancelUserReservation = (content, reservationId) => {
     reservationId,
   };
   console.log(params);
-  return axiosInstance.patch(`/reservation/cancel/${reservationId}`);
+  return axiosInstance.patch(`/reservation/cancel/${reservationId}`, {
+    headers: {
+      Authorization: window.sessionStorage.getItem('Authorization'),
+    },
+    cancelReason: content,
+  });
 };
 
 export const getCancelUserReason = (reservationId) => {
@@ -46,5 +62,9 @@ export const getCancelUserReason = (reservationId) => {
   };
   console.log(params);
   console.log('유저 예약 추가 Loading');
-  return axiosInstance.get(`/reservation/${reservationId}/cancel-reason`);
+  return axiosInstance.get(`/reservation/${reservationId}/cancel-reason`, {
+    headers: {
+      Authorization: window.sessionStorage.getItem('Authorization'),
+    },
+  });
 };

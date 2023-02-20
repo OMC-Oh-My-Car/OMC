@@ -3,16 +3,21 @@ import { ProductReservationArea } from './ProductReservation.style';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ProductCalendarModal from './ProductCalendarModal';
+import { tossPay } from '../../modules/payments/Payments';
+import { useSelector } from 'react-redux';
 
-const ProductReservation = ({ data, reviewData }) => {
+const ProductReservation = ({ data, reviewData, productId }) => {
+  const nickname = useSelector((state) => state.user.nickname);
+
+  let date = new Date();
+  date.setDate(date.getDate() + 1);
+
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(date);
 
   const onChangeDate = (dates) => {
     const [start, end] = dates;
-    console.log(new Date());
-    console.log(start);
 
     setStartDate(start);
     setEndDate(end);
@@ -41,7 +46,19 @@ const ProductReservation = ({ data, reviewData }) => {
       return [year, month, day].join(' ');
     }
   }
+  const createReservation = () => {
+    sessionStorage.setItem(
+      'reservation',
+      JSON.stringify({
+        productId,
+        phone: '010-7533-2401',
+        startDate: startDate.toString(),
+        endDate: endDate.toString(),
+      }),
+    );
 
+    tossPay(nickname, ((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) * data.data.data.price);
+  };
   return (
     <>
       <ProductReservationArea>
@@ -51,8 +68,10 @@ const ProductReservation = ({ data, reviewData }) => {
           </div>
           <div className="prductDescription">
             <FontAwesomeIcon className="starIcon" icon={faStar} />
-            <span>{data.data.data.star} · </span>
-            <span className="productInfoReviewCount">후기 {reviewData.data.pageInfo.totalElements}개</span>
+            <span>{reviewData.data.data ? reviewData.data.productTotalStar.totalStarAvg : 0} · </span>
+            <span className="productInfoReviewCount">
+              후기 {reviewData.data.data ? reviewData.data.pageInfo.totalElements : 0}개
+            </span>
           </div>
         </div>
         <div className="reservationDate">
@@ -76,17 +95,29 @@ const ProductReservation = ({ data, reviewData }) => {
             </>
           )}
         </div>
-        <button className="reserveButton">예약하기</button>
+        <button onClick={() => createReservation()} className="reserveButton">
+          예약하기
+        </button>
 
         {endDate !== null && !startDate !== null ? (
           <>
             <div className="priceFlex">
-              <span>₩ {data.data.data.price + ' x ' + (endDate.getDate() - startDate.getDate()) + '박'}</span>
-              <span>₩ {data.data.data.price * (endDate.getDate() - startDate.getDate())}</span>
+              <span>
+                ₩{' '}
+                {data.data.data.price +
+                  ' x ' +
+                  (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24) +
+                  '박'}
+              </span>
+              <span>
+                ₩ {(data.data.data.price * (endDate.getTime() - startDate.getTime())) / (1000 * 60 * 60 * 24)}
+              </span>
             </div>
             <div className="totalPriceFlex">
               <span>총 합계</span>
-              <span>₩ {data.data.data.price * (endDate.getDate() - startDate.getDate())}</span>
+              <span>
+                ₩ {(data.data.data.price * (endDate.getTime() - startDate.getTime())) / (1000 * 60 * 60 * 24)}
+              </span>
             </div>
           </>
         ) : (

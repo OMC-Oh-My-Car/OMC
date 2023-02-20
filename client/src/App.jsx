@@ -7,13 +7,14 @@ import theme from './style/Theme';
 import { useSelector, useDispatch } from 'react-redux';
 import { setUserInfo } from './redux/slice/UserInfo';
 import { reissue } from './modules/member/reissue';
+import { clearSearch } from './redux/slice/ProductSearch';
 
 const App = () => {
   const dispatch = useDispatch();
   const isOpenModal = useSelector((state) => state.modal.onModal);
-  const userInfo = useSelector((state) => state.user);
-  console.log(userInfo);
+
   useEffect(() => {
+    dispatch(clearSearch());
     const userData = JSON.parse(window.sessionStorage.getItem('userData'));
     const accesstoken = window.sessionStorage.getItem('Authorization');
     if (userData && accesstoken) {

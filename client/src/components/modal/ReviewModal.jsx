@@ -14,7 +14,6 @@ const ReviewModal = () => {
     const data = await getProductReview(productId);
     return data;
   });
-  console.log(data.data.data);
 
   return (
     <>
@@ -22,73 +21,51 @@ const ReviewModal = () => {
         <h2>
           <span>
             <FontAwesomeIcon className="starIcon" icon={faStar} />
-            4.91 · 후기 11개
+            {data.data.productTotalStar.totalStarAvg} · 후기 {data.data.pageInfo.totalElements}개
           </span>
         </h2>
         <div className="reviewScoreList">
-          <ProductReviewScoreArea reviewScore="4.2">
+          <ProductReviewScoreArea reviewScore={data.data.productTotalStar.starCleanlinessAvg}>
             <div className="reviewFlexBox margin">
               <div className="reviewText">청결도</div>
               <div className="reviewScore">
                 <div className="scoreBarBackground">
                   <div className="scoreBar" />
                 </div>
-                <span>4.2</span>
+                <span>{data.data.productTotalStar.starCleanlinessAvg}</span>
               </div>
             </div>
           </ProductReviewScoreArea>
-          <ProductReviewScoreArea reviewScore="4.2">
+          <ProductReviewScoreArea reviewScore={data.data.productTotalStar.starAccuracyAvg}>
             <div className="reviewFlexBox">
               <div className="reviewText">정확성</div>
               <div className="reviewScore">
                 <div className="scoreBarBackground">
                   <div className="scoreBar" />
                 </div>
-                <span>4.2</span>
+                <span>{data.data.productTotalStar.starAccuracyAvg}</span>
               </div>
             </div>
           </ProductReviewScoreArea>
-          <ProductReviewScoreArea reviewScore="4.2">
+          <ProductReviewScoreArea reviewScore={data.data.productTotalStar.starLocationAvg}>
             <div className="reviewFlexBox margin">
-              <div className="reviewText">의사소통</div>
-              <div className="reviewScore">
-                <div className="scoreBarBackground">
-                  <div className="scoreBar" />
-                </div>
-                <span>4.2</span>
-              </div>
-            </div>
-          </ProductReviewScoreArea>
-          <ProductReviewScoreArea reviewScore="4.2">
-            <div className="reviewFlexBox">
               <div className="reviewText">위치</div>
               <div className="reviewScore">
                 <div className="scoreBarBackground">
                   <div className="scoreBar" />
                 </div>
-                <span>4.2</span>
+                <span>{data.data.productTotalStar.starLocationAvg}</span>
               </div>
             </div>
           </ProductReviewScoreArea>
-          <ProductReviewScoreArea reviewScore="4.2">
-            <div className="reviewFlexBox margin">
-              <div className="reviewText">체크인</div>
-              <div className="reviewScore">
-                <div className="scoreBarBackground">
-                  <div className="scoreBar" />
-                </div>
-                <span>4.2</span>
-              </div>
-            </div>
-          </ProductReviewScoreArea>
-          <ProductReviewScoreArea reviewScore="4.2">
+          <ProductReviewScoreArea reviewScore={data.data.productTotalStar.starCostEffectiveAvg}>
             <div className="reviewFlexBox">
               <div className="reviewText">가격 대비 만족도</div>
               <div className="reviewScore">
                 <div className="scoreBarBackground">
                   <div className="scoreBar" />
                 </div>
-                <span>4.2</span>
+                <span>{data.data.productTotalStar.starCostEffectiveAvg}</span>
               </div>
             </div>
           </ProductReviewScoreArea>
@@ -104,8 +81,8 @@ const ReviewModal = () => {
                         <FontAwesomeIcon className="userIcon" icon={faUser} />
                       </div>
                       <div className="userInfo">
-                        <div className="username">혜지</div>
-                        <div className="createAt">2021년 12월</div>
+                        <div className="username">{el.nickname}</div>
+                        <div className="createAt">{el.createTime}</div>
                       </div>
                     </div>
                     <span className="review">{el.content}</span>

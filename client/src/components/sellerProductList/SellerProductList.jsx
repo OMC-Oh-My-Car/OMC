@@ -42,11 +42,9 @@ const SellerProductList = ({ data, isLoading, isError }) => {
         </div>
         <div className="productList">
           {data &&
-            data.data
-              .filter((el) => el.productId)
-              .map((item) => {
-                return <SellerProductItem key={item.productId} />;
-              })}
+            data.data.data.map((item) => {
+              return <SellerProductItem item={item} key={item.id} />;
+            })}
         </div>
       </SellerProductListArea>
     </>

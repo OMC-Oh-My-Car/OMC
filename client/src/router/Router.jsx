@@ -12,6 +12,9 @@ import SellerProductEditPage from '../pages/SellerProductEditPage';
 import Modal from '../components/modal/Modal';
 import { useSelector, useDispatch } from 'react-redux';
 import { openModal } from '../redux/slice/ModalSlice';
+import UserInfoPage from '../pages/UserInfoPage';
+import PaymentSuccessPage from '../pages/PaymentSuccessPage';
+import PaymentFailedPage from '../pages/PaymentFailedPage';
 
 const Router = () => {
   const dispatch = useDispatch();
@@ -41,6 +44,9 @@ const Router = () => {
             path="/seller/:id/product/:productId/reservation"
             element={<SellerReservationPage openModalController={openModalController} />}
           />
+          <Route path="/user/:id/userInfo" element={<UserInfoPage openModalController={openModalController} />} />
+          <Route path="/payment/success" element={<PaymentSuccessPage />} />
+          <Route path="/payment/failed" element={<PaymentFailedPage />} />
         </Routes>
         {isOpenModal && <Modal />}
       </BrowserRouter>

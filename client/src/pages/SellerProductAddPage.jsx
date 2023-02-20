@@ -15,7 +15,7 @@ import { createNewProduct } from '../modules/sellerProduct/sellerProductAdd';
 const SellerProductAddPage = () => {
   const navigate = useNavigate();
 
-  const mutation = useMutation(() => createNewProduct(content), {
+  const mutation = useMutation((item) => createNewProduct(item), {
     onMutate() {},
     onSuccess(data) {
       console.log(data);
@@ -157,11 +157,12 @@ const SellerProductAddPage = () => {
             <button
               onClick={() =>
                 addProduct({
+                  image: image,
                   subject: title,
                   description: content,
                   address: address,
                   zipcode: zipCode,
-                  facilities: tags,
+                  facilities: `#${tags.join('#')}`,
                   telephone: '02-123-1234',
                   price: price,
                   checkIn: '13:00',

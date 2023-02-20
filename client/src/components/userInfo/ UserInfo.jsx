@@ -4,6 +4,8 @@ import UserInfoInputBox from './userInfoForm/UserInfoInputBox';
 import { Template, UserInfoForm, ChangeButton } from './ UserInfo.style';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useQuery, useMutation } from 'react-query';
+
 // import ChangeButton from './userInfoForm/ChangeButton';
 import { useEffect, useState } from 'react';
 // import NameModal from './userInfoForm/NameModal';
@@ -13,6 +15,8 @@ import { useEffect, useState } from 'react';
 import ProfileImg from './userInfoForm/ProfileImg';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { getUserInfo, editUserInfo } from '../../modules/member/userInfo';
+
 const UserInfo = () => {
   // const [name, setName] = useState(false);
   // const [mail, setMail] = useState(false);
@@ -37,23 +41,31 @@ const UserInfo = () => {
   //   setHome(true);
   // };
 
-  const getUserData = async () => {
-    const res = await axios.get('https://5a26-49-142-61-236.jp.ngrok.io/member/detail', {
-      headers: {
-        Authorization: localStorage.getItem('Authorization'),
+  const { isLoading, data, isError } = useQuery(['userInfo'], async () => {
+    const data = await getUserInfo();
+    return data;
+  });
+  console.log(data);
+
+  const mutation = useMutation(
+    () =>
+      editUserInfo({
+        email: 'test@gmail.com',
+        username: '김철수',
+        profileImg: 'http://image.dongascience.com/Photo/2016/09/14750507361195.jpg',
+        phone: '010-1234-5678',
+      }),
+    {
+      onMutate() {},
+      onSuccess(data) {
+        console.log(data);
       },
-    });
-    setUser({
-      email: res.email,
-      username: res.username,
-      profileImg: res.profileImg,
-      phone: res.phone,
-    });
-    return res.data;
-  };
-  useEffect(() => {
-    getUserData();
-  }, []);
+      onError(err) {
+        console.log(err);
+      },
+    },
+  );
+
   return (
     <>
       <Template key={user.id}>
@@ -132,6 +144,8 @@ const UserInfo = () => {
         <Link to={'/user/edit'}>
           <ChangeButton>수정하기</ChangeButton>
         </Link>
+
+        <ChangeButton onClick={() => mutation.mutate()}>수정하기</ChangeButton>
       </Template>
     </>
   );
