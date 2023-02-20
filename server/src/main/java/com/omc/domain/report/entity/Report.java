@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -23,11 +24,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Report extends BaseEntity {
 
+	@Column
 	private String subject;
 
+	@Column
 	private String content;
 
+	@Column
 	private Long status; // 0: 신고완료, 1: 처리완료
+
+	@Column
+	private String adminComment;
 
 	@OneToMany(mappedBy = "report", cascade = CascadeType.ALL)
 	private List<ReportImg> reportImgList = new ArrayList<>();
@@ -62,6 +69,14 @@ public class Report extends BaseEntity {
 
 	public void setProduct(Product product) {
 		this.product = product;
+	}
+
+	public void setStatus(Long status) {
+		this.status = status;
+	}
+
+	public void setAdminComment(String adminComment) {
+		this.adminComment = adminComment;
 	}
 
 }

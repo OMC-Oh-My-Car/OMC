@@ -182,7 +182,7 @@ public class ProductService {
 	 * @param search : 검색어
 	 * @return 상품 목록
 	 */
-	@Transactional
+
 	public Page<Product> getProductList(ProductDto.Search search) {
 		// todo 리팩터링
 
@@ -250,7 +250,7 @@ public class ProductService {
 	 * @param search : Pageable
 	 * @return : 상품 목록
 	 */
-	@Transactional
+
 	public Page<Product> getMyProductList(Member member, ProductDto.Search search) {
 
 		if (member.getUserRole() == UserRole.ROLE_USER) {

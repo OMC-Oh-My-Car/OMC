@@ -3,10 +3,14 @@ package com.omc.domain.report.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,7 +41,9 @@ public class ReportService {
 	private final ProductRepository productRepository;
 	private final ProductService productService;
 	private final S3Service s3Service;
+	private final JavaMailSender emailSender;
 
+	@Transactional
 	public void create(ReportDto.Request req,
 					   List<MultipartFile> multipartFiles,
 					   Long productId,
@@ -155,5 +161,28 @@ public class ReportService {
 		} else {
 			return reportRepository.findAllByMemberAndStatus(findMember, request.getFilter(), pageable);
 		}
+	}
+
+	@Transactional
+	public void answer(Long reportId, ReportDto.Answer request) {
+
+		Report findReport = reportRepository.findById(reportId)
+											.orElseThrow(() -> new BusinessException(ErrorCode.REPORT_NOT_FOUND));
+
+		findReport.setAdminComment(request.getContent());
+		findReport.setStatus(1L);
+
+		reportRepository.save(findReport);
+
+		sendEmail(findReport.getMember().getEmail(), findReport.getSubject(), findReport.getAdminComment());
+	}
+
+	private void sendEmail(String email, String subject, String adminComment) {
+		SimpleMailMessage message = new SimpleMailMessage();
+		message.setFrom("OMC@OMC.com");
+		message.setTo(email);
+		message.setSubject("\"" + subject + "\"" + "에 대한 답변입니다.");
+		message.setText(adminComment);
+		emailSender.send(message);
 	}
 }

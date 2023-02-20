@@ -89,4 +89,13 @@ public class ReportController {
 
 		return new ResponseEntity<>(new MultiResponse<>(res, resPage), HttpStatus.OK);
 	}
+
+	@PostMapping("/report/{reportId}/answer")
+	public ResponseEntity<?> answer(@PathVariable Long reportId,
+									@ModelAttribute ReportDto.Answer request) {
+
+		reportService.answer(reportId, request);
+
+		return ResponseEntity.status(HttpStatus.OK).build();
+	}
 }
