@@ -1,52 +1,23 @@
-// import React from 'react';
-// import BlackButton from './userInfoForm/BlackButton';
-import UserInfoInputBox from './userInfoForm/UserInfoInputBox';
-import { Template, UserInfoForm, ChangeButton } from './ UserInfo.style';
-import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Template, UserInputButton } from './ UserInfo.style';
 import { useQuery, useMutation } from 'react-query';
-
-// import ChangeButton from './userInfoForm/ChangeButton';
-import { useEffect, useState } from 'react';
-// import NameModal from './userInfoForm/NameModal';
-// import EmailModal from './userInfoForm/EmailModal';
-// import PhoneModal from './userInfoForm/PhoneModal';
-// import HomeModal from './userInfoForm/HomeModal';
+import { useState } from 'react';
 import ProfileImg from './userInfoForm/ProfileImg';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
 import { getUserInfo, editUserInfo } from '../../modules/member/userInfo';
+import UserInfoInput from './userInfoForm/UserInfoInput';
 
 const UserInfo = () => {
-  // const [name, setName] = useState(false);
-  // const [mail, setMail] = useState(false);
-  // const [phone, setPhone] = useState(false);
   const [user, setUser] = useState({
     email: '',
     username: '',
     profileImg: '',
     phone: '',
   });
-  // const [home, setHome] = useState(false);
-  // const nameHandler = () => {
-  //   setName(true);
-  // };
-  // const mailHandler = () => {
-  //   setMail(true);
-  // };
-  // const phoneHandler = () => {
-  //   setPhone(true);
-  // };
-  // const homeHandler = () => {
-  //   setHome(true);
-  // };
 
   const { isLoading, data, isError } = useQuery(['userInfo'], async () => {
     const data = await getUserInfo();
     return data;
   });
   console.log(data);
-
   const mutation = useMutation(
     () =>
       editUserInfo({
@@ -70,82 +41,52 @@ const UserInfo = () => {
     <>
       <Template key={user.id}>
         <div className="userInfoHead">
-          <FontAwesomeIcon className="userInfoIcon" icon={faInfoCircle} size="2x" />
-          <h1>개인정보</h1>
+          <h1>회원정보</h1>
         </div>
-        <ProfileImg />
-        <UserInfoForm>
-          <div className="inputHead">
-            <UserInfoInputBox
-              labelName="실명"
-              inputId="id"
-              inputType="text"
-              name="id"
-              // onChangeInput={onChangeInput}
-              text={user.username}
-              value={user.username}
-            />
-            {/* <div className="changeButtonStyle">
-              <ChangeButton onClick={nameHandler}>수정</ChangeButton>
-              {name && <NameModal setName={setName} />}
-            </div> */}
-          </div>
-        </UserInfoForm>
-        <UserInfoForm>
-          <div className="inputHead">
-            <UserInfoInputBox
-              labelName="이메일 주소"
-              inputId="이메일"
-              inputType="email"
-              name="email"
-              // onChangeInput={onChangeInput}
-              text={user.email}
-              value={user.email}
-            />
-            {/* <div className="changeButtonStyle">
-              <ChangeButton onClick={mailHandler}>수정</ChangeButton>
-              {mail && <EmailModal setMail={setMail} />}
-            </div> */}
-          </div>
-        </UserInfoForm>
-        <UserInfoForm>
-          <div className="inputHead">
-            <UserInfoInputBox
-              labelName="전화번호"
-              inputId="전화번호"
-              inputType="tel"
-              name="tel"
-              // onChangeInput={onChangeInput}
-              text={user.phone}
-              value={user.phone}
-            />
-            {/* <div className="changeButtonStyle">
-              <ChangeButton onClick={phoneHandler}>수정</ChangeButton>
-              {phone && <PhoneModal setPhone={setPhone} />}
-            </div> */}
-          </div>
-        </UserInfoForm>
-        {/* <UserInfoForm>
-          <div className="inputHead">
-            <UserInfoInputBox
-              labelName="주소"
-              inputId="주소"
-              inputType="url"
-              name="url"
-              // onChangeInput={onChangeInput}
-              text="경상북도 구미시 상사서로 17 우방아파트 상모동 202동 1205호"
-            />
-            <div className="changeButtonStyle">
-              <ChangeButton onClick={homeHandler}>수정</ChangeButton>
-              {home && <HomeModal setHome={setHome} />}
-            </div>
-          </div>
-        </UserInfoForm> */}
-        <Link to={'/user/edit'}>
-          <ChangeButton>수정하기</ChangeButton>
-        </Link>
+        <ProfileImg data={data} />
+        <UserInfoInput
+          labelName="Email"
+          inputId="email"
+          inputType="email"
+          name="email"
+          value={data ? data.data.email : ''}
+          placeholder="정보를 추가해주세요"
+          disabled={true}
+        />
+        <UserInfoInput
+          labelName="nickname"
+          inputId="nickname"
+          inputType="text"
+          name="nickname"
+          value={data ? data.data.nickname : ''}
+          placeholder="정보를 추가해주세요"
+          disabled={true}
+        />
+        <UserInfoInput
+          labelName="이름"
+          inputId="username"
+          inputType="text"
+          name="username"
+          value={data ? data.data.username : ''}
+          placeholder="정보를 추가해주세요"
+          p="실명으로 기입하지 않는 경우 배송 및 현장수령 시 문제가 발생할 수 있습니다."
+          disabled={true}
+        />
+        <UserInfoInput
+          labelName="휴대폰번호"
+          inputId="phone"
+          inputType="text"
+          name="phone"
+          value={data ? data.data.phone : ''}
+          placeholder="정보를 추가해주세요"
+          p="정확한 번호가 아닐 경우 배송 및 현장수령 시 문제가 발생할 수 있습니다."
+          disabled={true}
+        />
 
-        <ChangeButton onClick={() => mutation.mutate()}>수정하기</ChangeButton>
+        <UserInputButton className="red" onClick={() => mutation.mutate()}>
+          정보 수정
+        </UserInputButton>
+        <UserInputButton onClick={() => mutation.mutate()}>회원 탈퇴</UserInputButton>
       </Template>
     </>
   );

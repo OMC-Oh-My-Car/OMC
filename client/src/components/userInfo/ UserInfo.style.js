@@ -1,42 +1,48 @@
 import styled from 'styled-components';
 
 export const Template = styled.div`
-  border-radius: 12px;
-  border: solid 1px black;
-  padding: 15px;
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 35%;
+  width: 100%;
+  max-width: 500px;
+  margin-top: 50px;
+  padding: 0px 30px;
+  margin-bottom: 50px;
   h1 {
-    font-size: 27px;
+    font-size: 30px;
     margin-bottom: 40px;
-  }
-  .userInfoHead {
-    display: flex;
-    justify-content: center;
-    .userInfoIcon {
-      cursor: pointer;
-      margin-right: 10px;
-    }
+    font-weight: 700;
+    color: #5c4b29;
   }
 `;
-export const UserInfoForm = styled.div`
-  .inputHead {
-    display: flex;
-  }
-`;
-export const ChangeButton = styled.button`
-  margin-top: 25px;
-  width: 370px;
-  height: 40px;
-  border-radius: 12px;
-  background-color: #0095f6;
-  cursor: pointer;
-  font-size: 20px;
+
+export const UserInputButton = styled.button`
+  width: 100%;
+  border-radius: 25px;
+  padding: 13px 20px;
+  font-size: 18px;
+  font-weight: 600;
+  outline: none;
+  transition: all 0.2s;
+  font-family: sans-serif;
+  background-color: ${(props) => props.theme.yellow};
+  border: 1px solid ${(props) => props.theme.yellow};
   color: white;
+  cursor: pointer;
+  margin-bottom: 10px;
   :hover {
-    background-color: orange;
+    border: 1px solid ${(props) => props.theme.yellow};
+    color: ${(props) => props.theme.yellow};
+    background-color: white;
+  }
+  &.red {
+    background-color: ${(props) => props.theme.red};
+    border: 1px solid ${(props) => props.theme.red};
+    :hover {
+      border: 1px solid ${(props) => props.theme.red};
+      color: ${(props) => props.theme.red};
+    }
   }
 `;
