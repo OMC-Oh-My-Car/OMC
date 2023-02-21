@@ -51,7 +51,7 @@ const SignIn = () => {
         sessionStorage.setItem('Authorization', accessToken);
         sessionStorage.setItem('userData', JSON.stringify(res.data));
         dispatch(setUserInfo(res.data));
-        navigate('/signin');
+        navigate('/');
       })
       .catch((err) => {
         console.log(`${err.response.status} 에러`);
