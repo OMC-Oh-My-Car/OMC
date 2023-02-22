@@ -126,9 +126,10 @@ public class ProductService {
 			saveLocation(findProduct, req);
 		}
 
-		if (multipartFiles != null) {
-			findProduct.getProductImgList().stream().map(ProductImg::getImgName).forEach(s3Service::deleteFile);
+
+		if (multipartFiles.size() != 0) {
 			productImgRepository.deleteByProductId(productId);
+			findProduct.getProductImgList().stream().map(ProductImg::getImgName).forEach(s3Service::deleteFile);
 			List<ProductImg> productImgs = uploadImgAndImgDtoToEntity(multipartFiles);
 			findProduct.setProductImgList(productImgs);
 		}
@@ -199,6 +200,8 @@ public class ProductService {
 										   Sort.by(sortBy).descending());
 
 		String searchQuery = search.getQuery() == null ? "null" : search.getQuery();
+
+		log.info("searchQuery={}", searchQuery);
 
 		if (search.getFacilities() != null && !searchQuery.equals("null")) { // 편의시설, 검색어
 			List<String> keywords = new ArrayList<>();
