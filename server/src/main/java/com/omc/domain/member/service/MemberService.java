@@ -210,11 +210,11 @@ public class MemberService {
     }
 
     public Member modify(String email, MemberModifyDto memberModifyDto) {
-        if (memberRepository.existsByEmail(memberModifyDto.getEmail())) {
-            throw new BusinessException(ErrorCode.DUPLICATE_EMAIL);
+        Member member = memberRepository.findByEmail(email).orElse(null);
+        if (member == null) {
+            throw new BusinessException(ErrorCode.TOKEN_EXPIRED);
         }
-
-        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new MemberNotFoundException());
+        log.debug("member Email : " + member.getEmail());
         member.patch(memberModifyDto);
 //        log.debug("new MemberEmail : " + newMember.getEmail());
         return memberRepository.save(member);

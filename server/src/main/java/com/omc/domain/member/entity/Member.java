@@ -70,10 +70,13 @@ public class Member extends BaseEntity {
     }
 
     public void patch(MemberModifyDto memberModifyDto) {
-        this.username = memberModifyDto.getUsername();
-        this.email = memberModifyDto.getEmail();
+        Optional.ofNullable(memberModifyDto.getUsername())
+                .ifPresent(username -> this.username = username);
+        Optional.ofNullable(memberModifyDto.getEmail())
+                .ifPresent(email -> this.email = email);
         Optional.ofNullable(memberModifyDto.getProfileImg())
                 .ifPresent(image -> this.profileImg = image);
-        this.phone = memberModifyDto.getPhone();
+        Optional.ofNullable(memberModifyDto.getPhone())
+                .ifPresent(phone -> this.phone = phone);
     }
 }

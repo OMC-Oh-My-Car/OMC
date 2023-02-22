@@ -113,7 +113,7 @@ public class MemberController {
      * @return Modify Member Info
      */
     @PatchMapping("/modify")
-    public ResponseEntity<?> modify(@CurrentMember AuthMember authMember, @RequestBody @Valid MemberModifyDto memberModifyDto) {
+    public ResponseEntity<?> modify(@CurrentMember AuthMember authMember, @RequestBody MemberModifyDto memberModifyDto) {
         Member modifyMember = memberService.modify(authMember.getEmail(), memberModifyDto);
 
         return ResponseEntity.ok(modifyMember);
