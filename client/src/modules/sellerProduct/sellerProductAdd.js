@@ -1,7 +1,7 @@
 import axiosInstance from '..';
 
 // axiosInstance.defaults.headers.common['Authorization'] = window.sessionStorage.getItem('Authorization');
-// axiosInstance.defaults.headers.common['Content-Type'] = 'multipart/form-data';
+axiosInstance.defaults.headers.common['Content-Type'] = 'multipart/form-data';
 
 export const createNewProduct = (content) => {
   let frm = new FormData();
