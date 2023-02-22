@@ -125,7 +125,7 @@ const SellerProductAddPage = () => {
   const addProduct = (item) => {
     console.log(item);
     mutation.mutate(item);
-    // navigate(`/seller/12/product`);
+    navigate(`/seller/12/product`);
   };
 
   return (

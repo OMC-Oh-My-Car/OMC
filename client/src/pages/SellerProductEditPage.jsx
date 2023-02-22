@@ -33,6 +33,7 @@ const SellerProductEditPage = () => {
     },
     onSuccess(data) {
       console.log(data);
+      navigate(`/seller/12/product`);
     },
     onError(err) {
       console.log(err);
