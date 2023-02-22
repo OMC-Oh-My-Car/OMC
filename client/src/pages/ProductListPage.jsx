@@ -21,6 +21,7 @@ const ProductListPage = () => {
     const data = await getProductList(filter, page, search);
     return data;
   });
+  console.log(data);
   return (
     <>
       <Container>
