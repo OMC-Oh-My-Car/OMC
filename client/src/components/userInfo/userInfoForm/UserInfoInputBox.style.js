@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 
 export const InputContainer = styled.div`
+  width: 100%;
   .inputLabel {
+    width: 100%;
     height: 20px;
     display: flex;
     margin-left: 3px;
@@ -10,7 +12,7 @@ export const InputContainer = styled.div`
     color: ${(props) => props.theme.gray};
   }
   .inputBox {
-    width: 25vw;
+    width: 100%;
     border: none;
     border-bottom: 3px solid darkgray;
     padding-left: 3px;

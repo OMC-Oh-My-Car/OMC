@@ -11,39 +11,12 @@ import { useDaumPostcodePopup } from 'react-daum-postcode';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from 'react-query';
 import { editProduct, getProductInfo } from '../modules/sellerProduct/sellerProductEdit';
+import SellerProductEditImage from '../components/sellerProductEdit/SellerProductEditImage';
 
 const SellerProductEditPage = () => {
   const params = useParams();
   const navigate = useNavigate();
   let productId = params.productId;
-  console.log(productId);
-
-  const mutation = useMutation(() => editProduct(content, productId), {
-    onMutate() {},
-    onSuccess(data) {
-      console.log(data);
-    },
-    onError(err) {
-      console.log(err);
-    },
-  });
-  const onSuccess = (data) => {
-    // 데이터 useState에 담기
-    console.log(data);
-  };
-  if (productId) {
-    const { data } = useQuery(
-      ['sellerProductInfo', productId],
-      async () => {
-        const data = await getProductInfo(productId);
-        return data;
-      },
-      {
-        onSuccess,
-      },
-    );
-  }
-
   const [showImages, setShowImages] = useState([]);
   const [image, setImage] = useState([]);
   const [title, setTitle] = useState('');
@@ -53,6 +26,40 @@ const SellerProductEditPage = () => {
   const [price, setPrice] = useState('');
   const [tags, setTags] = useState([]);
   const [tagContent, setTagContent] = useState('');
+
+  const mutation = useMutation((editData) => editProduct(editData, productId), {
+    onMutate() {
+      console.log('실행');
+    },
+    onSuccess(data) {
+      console.log(data);
+      navigate(`/seller/12/product`);
+    },
+    onError(err) {
+      console.log(err);
+    },
+  });
+  const onSuccess = (data) => {
+    // 데이터 useState에 담기
+    console.log(data.data.data);
+    setTitle(data.data.data.subject);
+    setContent(data.data.data.description);
+    setAddress(data.data.data.address);
+    setZipCode(data.data.data.zipcode);
+    setPrice(data.data.data.price);
+    setTags(data.data.data.facilities);
+  };
+
+  const { data } = useQuery(
+    ['sellerProductInfo', productId],
+    async () => {
+      const data = await getProductInfo(productId);
+      return data;
+    },
+    {
+      onSuccess,
+    },
+  );
 
   // 이미지 추가
   const handleAddImages = (event) => {
@@ -146,22 +153,18 @@ const SellerProductEditPage = () => {
     navigate(`/seller/12/product`);
   };
   // 상품 수정
-  const editProduct = (item) => {
-    console.log(item);
-    mutation.mutate(item);
-    // navigate(`/seller/12/product`);
-  };
 
   return (
     <>
       <Container>
         <Header type="short" />
         <MainContainer>
-          <h1>상품 등록</h1>
-          <SellerProductAddImage
+          <h1>상품 수정</h1>
+          <SellerProductEditImage
             showImages={showImages}
             handleAddImages={handleAddImages}
             handleDeleteImage={handleDeleteImage}
+            data={data}
           />
           <SellerProductAddTitle title={title} handleTitle={handleTitle} />
           <SellerProductAddContent content={content} handleContent={handleContent} />
@@ -180,12 +183,13 @@ const SellerProductEditPage = () => {
             </button>
             <button
               onClick={() =>
-                editProduct({
+                mutation.mutate({
+                  image: image,
                   subject: title,
                   description: content,
                   address: address,
                   zipcode: zipCode,
-                  facilities: tags,
+                  facilities: `#${tags.join('#')}`,
                   telephone: '02-123-1234',
                   price: price,
                   checkIn: '13:00',

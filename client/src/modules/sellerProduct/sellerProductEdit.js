@@ -1,13 +1,31 @@
+import axios from 'axios';
 import axiosInstance from '..';
 
-export const editProduct = (item, productId) => {
-  let params = {
-    item,
-    productId,
-  };
-  console.log(params);
+axios.defaults.headers.common['Authorization'] = window.sessionStorage.getItem('Authorization');
+axios.defaults.headers.common['Content-Type'] = 'multipart/form-data';
+
+export const editProduct = (data, productId) => {
+  let frm = new FormData();
+  const product = JSON.stringify({
+    subject: data.subject,
+    description: data.description,
+    address: data.address,
+    zipcode: data.zipcode,
+    facilities: data.facilities,
+    telephone: data.telephone,
+    price: data.price,
+    checkIn: data.checkIn,
+    checkOut: data.checkOut,
+  });
+  const productBlob = new Blob([product], { type: 'application/json' });
+  frm.append('product', productBlob);
+
+  for (let i = 0; i < data.image.length; i++) {
+    frm.append('imgUrl', data.image[i]);
+  }
+
   console.log('판매자 상품 수정');
-  return axiosInstance.patch(`/product/${productId}`);
+  return axios.patch(`${process.env.REACT_APP_API_URL}/product/${productId}`, frm);
 };
 
 export const getProductInfo = (productId) => {

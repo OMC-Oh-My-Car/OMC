@@ -6,9 +6,3 @@ export const Container = styled.div`
   align-items: center;
   width: 100%;
 `;
-export const Main = styled.main`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-`;

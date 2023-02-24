@@ -4,13 +4,13 @@ export const getProductList = (filter, page, search) => {
   let params;
   if (search) {
     params = {
-      filter,
+      sort: filter,
       page,
-      q: search,
+      query: search,
     };
   } else {
     params = {
-      filter,
+      sort: filter,
       page,
     };
   }

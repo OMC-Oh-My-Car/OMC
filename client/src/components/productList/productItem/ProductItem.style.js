@@ -70,6 +70,7 @@ export const ProductItemArea = styled.div`
       color: ${(props) => props.theme.gray};
     }
     .productPrice {
+      margin-top: 15px;
       .colorGray {
         font-weight: 700;
         color: ${(props) => props.theme.gray};

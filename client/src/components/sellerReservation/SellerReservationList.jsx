@@ -2,6 +2,7 @@
 import { SellerReservationListArea } from './SellerReservationList.style';
 import SellerReservationItem from './SellerReservationItem';
 import SellerReservationItemSkeleton from './SellerReservationItemSkeleton';
+import SellerReservationListEmpty from './SellerReservationListEmpty';
 
 const SellerReservationList = ({ data, isLoading, isError, filter, setFilter, modalController }) => {
   const skeletonMapArr = Array.from({ length: 8 }, (v, i) => i);
@@ -29,6 +30,9 @@ const SellerReservationList = ({ data, isLoading, isError, filter, setFilter, mo
         </SellerReservationListArea>
       </>
     );
+  }
+  if (data && data.data.data.length === 0) {
+    return <SellerReservationListEmpty />;
   }
 
   if (isError) {

@@ -15,6 +15,7 @@ import { openModal } from '../redux/slice/ModalSlice';
 import UserInfoPage from '../pages/UserInfoPage';
 import PaymentSuccessPage from '../pages/PaymentSuccessPage';
 import PaymentFailedPage from '../pages/PaymentFailedPage';
+import UserInfoEditPage from '../pages/UserInfoEditPage';
 
 const Router = () => {
   const dispatch = useDispatch();
@@ -44,7 +45,8 @@ const Router = () => {
             path="/seller/:id/product/:productId/reservation"
             element={<SellerReservationPage openModalController={openModalController} />}
           />
-          <Route path="/user/:id/userInfo" element={<UserInfoPage openModalController={openModalController} />} />
+          <Route path="/user/:id/userInfo" element={<UserInfoPage />} />
+          <Route path="/user/:id/userInfo/edit" element={<UserInfoEditPage />} />
           <Route path="/payment/success" element={<PaymentSuccessPage />} />
           <Route path="/payment/failed" element={<PaymentFailedPage />} />
         </Routes>

@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 const HeaderUser = () => {
   const userInfo = useSelector((state) => state.user);
-  console.log(userInfo.email);
+  console.log(userInfo);
   return (
     <>
       <HeaderUserArea>

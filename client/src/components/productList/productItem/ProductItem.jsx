@@ -8,7 +8,6 @@ import { ReactComponent as HeartSolid } from '../../../assets/images/heart-solid
 const ProductItem = ({ handleClick, item }) => {
   const [currentImage, setCurrentImage] = useState(0);
   const [hover, setHover] = useState(false);
-  console.log(item);
   return (
     <>
       <ProductItemArea

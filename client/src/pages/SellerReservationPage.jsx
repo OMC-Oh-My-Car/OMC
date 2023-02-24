@@ -36,23 +36,15 @@ const SellerReservationPage = ({ openModalController }) => {
       <Container>
         <Header type="short" />
         <MainContainer>
-          {data && data.data.data !== [] ? (
-            <>
-              <SellerReservationList
-                data={data}
-                isLoading={isLoading}
-                isError={isError}
-                filter={filter}
-                setFilter={setFilter}
-                modalController={modalController}
-              />
-              <Pagination data={data} itemChange={itemChange} />
-            </>
-          ) : (
-            <>
-              <SellerReservationListEmpty />
-            </>
-          )}
+          <SellerReservationList
+            data={data}
+            isLoading={isLoading}
+            isError={isError}
+            filter={filter}
+            setFilter={setFilter}
+            modalController={modalController}
+          />
+          <Pagination data={data} itemChange={itemChange} />
         </MainContainer>
       </Container>
     </>
