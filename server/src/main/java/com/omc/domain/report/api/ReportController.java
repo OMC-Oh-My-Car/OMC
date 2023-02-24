@@ -76,4 +76,26 @@ public class ReportController {
 
 		return new ResponseEntity<>(new MultiResponse<>(res, resPage), HttpStatus.OK);
 	}
+
+	@GetMapping("/report/my")
+	public ResponseEntity<?> getMyReportList(@ModelAttribute ReportDto.Page request,
+											 @CurrentMember AuthMember member) {
+
+		Member findMember = memberService.findByEmail(member.getEmail())
+										 .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_EXISTS));
+
+		Page<Report> resPage = reportService.getMyReportList(request, findMember);
+		List<ReportDto.Response> res = reportService.convertToResponse(resPage.getContent());
+
+		return new ResponseEntity<>(new MultiResponse<>(res, resPage), HttpStatus.OK);
+	}
+
+	@PostMapping("/report/{reportId}/answer")
+	public ResponseEntity<?> answer(@PathVariable Long reportId,
+									@ModelAttribute ReportDto.Answer request) {
+
+		reportService.answer(reportId, request);
+
+		return ResponseEntity.status(HttpStatus.OK).build();
+	}
 }

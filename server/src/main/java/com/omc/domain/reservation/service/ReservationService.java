@@ -22,6 +22,7 @@ import com.omc.domain.cashlog.service.CashLogService;
 import com.omc.domain.img.entity.ProductImg;
 import com.omc.domain.img.repository.ProductImgRepository;
 import com.omc.domain.member.entity.Member;
+import com.omc.domain.member.entity.UserRole;
 import com.omc.domain.member.repository.MemberRepository;
 import com.omc.domain.member.service.MemberService;
 import com.omc.domain.product.entity.Product;
@@ -156,6 +157,8 @@ public class ReservationService {
 		Product product = productRepository.findById(reservation.getProduct().getId())
 										   .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
 		Optional<Review> review = reviewRepository.findByReservationId(reservation.getId());
+		Member member = memberRepository.findById(reservation.getMember().getId())
+										.orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_EXISTS));
 
 		log.info("review : {}", review);
 
@@ -170,9 +173,10 @@ public class ReservationService {
 																	 .checkOut(ut.convertLocalDateTimeFormat1(
 																		 reservation.getCheckOut()))
 																	 .isCancel(reservation.getIsCancel())
-																	 .hasReview(
-																		 review.isPresent())
-																	 .status(reservation.getReservationStatus().toString())
+																	 .hasReview(review.isPresent())
+																	 .status(
+																		 reservation.getReservationStatus().toString())
+																	 .email(member.getEmail())
 																	 .build();
 
 		return responseDto;
@@ -202,7 +206,8 @@ public class ReservationService {
 			throw new BusinessException(ErrorCode.RESERVATION_NOT_FOUND);
 		}
 
-		if (reservation.getMember().getId() != member.getId()) {
+		if (member.getUserRole() != UserRole.ROLE_ADMIN && member.getUserRole() != UserRole.ROLE_SELLER
+			&& reservation.getMember().getId() != member.getId()) {
 			throw new BusinessException(ErrorCode.NO_PERMISSION);
 		}
 

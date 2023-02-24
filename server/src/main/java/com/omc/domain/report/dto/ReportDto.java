@@ -81,4 +81,15 @@ public class ReportDto {
 		}
 	}
 
+	@Getter
+	@Builder
+	@NoArgsConstructor(access = AccessLevel.PROTECTED)
+	@AllArgsConstructor(access = AccessLevel.PRIVATE)
+	public static class Answer {
+
+		@NotBlank(message = "신고 답변 내용을 입력해주세요.")
+		@Size(min = 1, max = 100, message = "신고 내용은 1자 이상 100자 이하로 입력해주세요.")
+		private String content;
+	}
+
 }

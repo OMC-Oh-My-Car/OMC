@@ -126,9 +126,10 @@ public class ProductService {
 			saveLocation(findProduct, req);
 		}
 
-		if (multipartFiles != null) {
-			findProduct.getProductImgList().stream().map(ProductImg::getImgName).forEach(s3Service::deleteFile);
+
+		if (multipartFiles.size() != 0) {
 			productImgRepository.deleteByProductId(productId);
+			findProduct.getProductImgList().stream().map(ProductImg::getImgName).forEach(s3Service::deleteFile);
 			List<ProductImg> productImgs = uploadImgAndImgDtoToEntity(multipartFiles);
 			findProduct.setProductImgList(productImgs);
 		}
@@ -182,7 +183,7 @@ public class ProductService {
 	 * @param search : 검색어
 	 * @return 상품 목록
 	 */
-	@Transactional
+
 	public Page<Product> getProductList(ProductDto.Search search) {
 		// todo 리팩터링
 
@@ -199,6 +200,8 @@ public class ProductService {
 										   Sort.by(sortBy).descending());
 
 		String searchQuery = search.getQuery() == null ? "null" : search.getQuery();
+
+		log.info("searchQuery={}", searchQuery);
 
 		if (search.getFacilities() != null && !searchQuery.equals("null")) { // 편의시설, 검색어
 			List<String> keywords = new ArrayList<>();
@@ -250,7 +253,7 @@ public class ProductService {
 	 * @param search : Pageable
 	 * @return : 상품 목록
 	 */
-	@Transactional
+
 	public Page<Product> getMyProductList(Member member, ProductDto.Search search) {
 
 		if (member.getUserRole() == UserRole.ROLE_USER) {
