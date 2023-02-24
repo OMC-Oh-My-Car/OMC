@@ -5,12 +5,12 @@ const SignUpInputBox = ({ labelName, inputId, inputType, name, onChangeInput, va
   return (
     <>
       <InputContainer>
-        <label className="inputLabel" htmlFor={inputId}>
+        <label className="formLabel" htmlFor={inputId}>
           {labelName}
         </label>
         <input
           name={name}
-          className="inputBox"
+          className="formInput"
           id={inputId}
           type={inputType}
           value={value}
