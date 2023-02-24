@@ -69,7 +69,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                                 .email(email)
                                 .username(username)
                                 .password("")
-                                .profileImg(profile_image)
+//                                .profileImg(profile_image)
                                 .nickname(nickname)
                                 .isSocial(Social.KAKAO)
                                 .phone("")

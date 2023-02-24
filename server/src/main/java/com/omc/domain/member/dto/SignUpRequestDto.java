@@ -3,6 +3,7 @@ package com.omc.domain.member.dto;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
+import com.omc.domain.img.entity.MemberImg;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.omc.domain.member.entity.Member;
@@ -13,6 +14,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -38,42 +42,40 @@ public class SignUpRequestDto {
     @NotBlank(message = "휴대폰 번호를 입력해주세요.")
     private String phone;
 
-    private String profileImg;
-
-    public Member signUp() {
+    public Member signUp(List<MemberImg> memberImgs) {
         return Member.builder()
                 .username(username)
                 .password(password)
                 .email(email)
                 .nickname(nickname)
                 .phone(phone)
-                .profileImg("https://picsum.photos/200/300")
+                .memberImgList(memberImgs)
                 .isSocial(Social.ORIGIN)
                 .userRole(UserRole.ROLE_ADMIN)
                 .build();
     }
 
-    public Member encodePasswordSignUp(PasswordEncoder passwordEncoder) {
+    public Member encodePasswordSignUp(PasswordEncoder passwordEncoder, List<MemberImg> memberImgs) {
         return Member.builder()
                 .username(username)
                 .password(passwordEncoder.encode(password))
                 .email(email)
                 .nickname(nickname)
                 .phone(phone)
-                .profileImg("https://picsum.photos/200/300")
+                .memberImgList(memberImgs)
                 .isSocial(Social.ORIGIN)
                 .userRole(UserRole.ROLE_USER)
                 .build();
     }
 
-    public Member encodePasswordSellerSignUp(PasswordEncoder passwordEncoder) {
+    public Member encodePasswordSellerSignUp(PasswordEncoder passwordEncoder, List<MemberImg> memberImgs) {
         return Member.builder()
                 .username(username)
                 .password(passwordEncoder.encode(password))
                 .email(email)
                 .nickname(nickname)
                 .phone(phone)
-                .profileImg("https://picsum.photos/200/300")
+                .memberImgList(memberImgs)
                 .isSocial(Social.ORIGIN)
                 .userRole(UserRole.ROLE_SELLER)
                 .build();

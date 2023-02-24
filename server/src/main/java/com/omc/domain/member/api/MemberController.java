@@ -10,6 +10,7 @@ import com.omc.global.common.annotation.CurrentMember;
 import com.omc.global.error.ErrorCode;
 import com.omc.global.error.exception.BusinessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,9 +20,13 @@ import com.omc.global.common.dto.SingleResponseDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/member")
@@ -38,22 +43,26 @@ public class MemberController {
      * @param signUpRequestDto
      * @return memberResponseDto
      */
-    @PostMapping()
-    public ResponseEntity<?> signUp(@Valid @RequestBody SignUpRequestDto signUpRequestDto) { // @Valid 어노테이션 사용하여 진행
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> signUp(@RequestPart(value = "member") @Valid @RequestBody SignUpRequestDto signUpRequestDto, HttpServletRequest request) throws IOException { // @Valid 어노테이션 사용하여 진행
         // 비밀번호 확인
         if (!signUpRequestDto.getPassword().equals(signUpRequestDto.getPasswordConfirm())) {
             throw new BusinessException(ErrorCode.NOT_MATCH_PASSWORD);
         }
 
+        MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest)request;
+        List<MultipartFile> imgFiles;
+
+        if (multipartHttpServletRequest.getFiles("member").isEmpty()) {
+            throw new BusinessException(ErrorCode.IMAGE_NOT_FOUND);
+        } else {
+            imgFiles = multipartHttpServletRequest.getFiles("member");
+        }
+
         // RequestBody 를 객체화하여 MemberPostDto로 변경 후 회원가입 로직 진행
-        MemberResponseDto memberResponseDto = memberService.signUp(signUpRequestDto);
+        memberService.signUp(signUpRequestDto, imgFiles);
 
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/member/login")
-                .build()
-                .toUri();
-
-        return ResponseEntity.created(uri).body(memberResponseDto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
 //    @PostMapping("/login")
@@ -113,10 +122,13 @@ public class MemberController {
      * @return Modify Member Info
      */
     @PatchMapping("/modify")
-    public ResponseEntity<?> modify(@CurrentMember AuthMember authMember, @RequestBody MemberModifyDto memberModifyDto) {
-        Member modifyMember = memberService.modify(authMember.getEmail(), memberModifyDto);
+    public void modify(@CurrentMember AuthMember authMember, @RequestPart("member") MemberModifyDto memberModifyDto, HttpServletRequest request) {
+        MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest)request;
+        List<MultipartFile> multipartFiles = multipartHttpServletRequest.getFiles("imgUrl");
 
-        return ResponseEntity.ok(modifyMember);
+        memberService.modify(authMember.getEmail(), memberModifyDto, multipartFiles);
+
+        ResponseEntity.status(HttpStatus.OK).build();
     }
 
     /**

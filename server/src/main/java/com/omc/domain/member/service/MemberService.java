@@ -1,9 +1,14 @@
 package com.omc.domain.member.service;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.omc.domain.img.dto.ImgDto;
+import com.omc.domain.img.entity.MemberImg;
+import com.omc.domain.img.repository.MemberImgRepository;
 import com.omc.domain.member.dto.*;
 import com.omc.domain.member.entity.AuthMember;
 import com.omc.domain.member.entity.RefreshToken;
@@ -12,6 +17,8 @@ import com.omc.domain.member.repository.RefreshTokenRepository;
 import com.omc.global.error.ErrorCode;
 import com.omc.global.error.exception.BusinessException;
 import com.omc.global.jwt.TokenProvider;
+import com.omc.global.util.S3Service;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -24,6 +31,7 @@ import com.omc.domain.member.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,11 +40,15 @@ import javax.servlet.http.HttpServletResponse;
 @RequiredArgsConstructor
 @Slf4j
 public class MemberService {
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final JavaMailSender emailSender;
     private final RefreshTokenRepository refreshTokenRepository;
     private final TokenProvider tokenProvider;
+    private final MemberImgRepository memberImgRepository;
+    private final S3Service s3Service;
 
     String confirmText = "";
 
@@ -48,7 +60,7 @@ public class MemberService {
         return memberRepository.findById(id);
     }
 
-    public MemberResponseDto signUp(SignUpRequestDto signUpRequestDto) {
+    public void signUp(SignUpRequestDto signUpRequestDto, List<MultipartFile> imgFiles) throws IOException {
         if (memberRepository.existsByEmail(signUpRequestDto.getEmail())) {
             throw new BusinessException(ErrorCode.DUPLICATE_EMAIL);
         }
@@ -57,18 +69,18 @@ public class MemberService {
             throw new BusinessException(ErrorCode.DUPLICATE_NICKNAME);
         }
 
-        // encoding된 password를 사용한 build
-        Member member = signUpRequestDto.encodePasswordSignUp(passwordEncoder);
+        List<MemberImg> memberImgList = uploadImgAndImgDtoToEntity(imgFiles);
 
+        Member member = signUpRequestDto.encodePasswordSignUp(passwordEncoder, memberImgList);
         // 관리자 전용 테스트 아이디 생성
         if (signUpRequestDto.getEmail().equals("admin@omc.com")) {
             member.setUserRole(UserRole.ROLE_ADMIN);
         }
-        // 객체형태의 Response Body 생성
-        return memberRepository.save(member).toResponseDto();
+
+        memberRepository.save(member);
     }
 
-    public MemberResponseDto sellerJoin(SignUpRequestDto signUpRequestDto) {
+    public void sellerJoin(SignUpRequestDto signUpRequestDto, List<MultipartFile> imgFiles) throws IOException {
         if (memberRepository.existsByEmail(signUpRequestDto.getEmail())) {
             throw new BusinessException(ErrorCode.DUPLICATE_EMAIL);
         }
@@ -77,11 +89,11 @@ public class MemberService {
             throw new BusinessException(ErrorCode.DUPLICATE_NICKNAME);
         }
 
-        // encoding된 password를 사용한 build
-        Member member = signUpRequestDto.encodePasswordSellerSignUp(passwordEncoder);
+        List<MemberImg> memberImgList = uploadImgAndImgDtoToEntity(imgFiles);
 
-        // 객체형태의 Response Body 생성
-        return memberRepository.save(member).toResponseDto();
+        Member member = signUpRequestDto.encodePasswordSellerSignUp(passwordEncoder, memberImgList);
+
+        memberRepository.save(member);
     }
 
 //    public TokenDto login(LoginDto loginDto, HttpServletResponse response) throws IOException {
@@ -209,13 +221,20 @@ public class MemberService {
         refreshTokenRepository.deleteByKey(email);
     }
 
-    public Member modify(String email, MemberModifyDto memberModifyDto) {
+    public Member modify(String email, MemberModifyDto memberModifyDto, List<MultipartFile> imgFiles) {
         Member member = memberRepository.findByEmail(email).orElse(null);
         if (member == null) {
             throw new BusinessException(ErrorCode.TOKEN_EXPIRED);
         }
-        log.debug("member Email : " + member.getEmail());
+
         member.patch(memberModifyDto);
+
+        if (imgFiles.size() != 0) {
+            memberImgRepository.deleteByMemberId(member.getId());
+            member.getMemberImgList().stream().map(MemberImg::getImgName).forEach(s3Service::deleteFile);
+            List<MemberImg> memberImgs = uploadImgAndImgDtoToEntity(imgFiles);
+            member.setProductImgList(memberImgs);
+        }
 //        log.debug("new MemberEmail : " + newMember.getEmail());
         return memberRepository.save(member);
     }
@@ -274,5 +293,29 @@ public class MemberService {
 
         member.setPassword(encryptedPassword);
         memberRepository.save(member);
+    }
+
+    private List<MemberImg> uploadImgAndImgDtoToEntity(List<MultipartFile> imgFiles) {
+        List<MemberImg> memberImgList = new ArrayList<>();
+        List<ImgDto.Request> imgDtoList = new ArrayList<>();
+
+        for (MultipartFile img : imgFiles) {
+            ImgDto.Request imgDto = s3Service.uploadImage(img, "member");
+            imgDtoList.add(imgDto);
+        }
+
+        imgDtoToImg(memberImgList, imgDtoList);
+
+        return memberImgList;
+    }
+
+    private static void imgDtoToImg(List<MemberImg> memberImgList, List<ImgDto.Request> imgDtoList) {
+        for (ImgDto.Request imgDto : imgDtoList) {
+            MemberImg memberImg = MemberImg.builder()
+                    .imgName(imgDto.getImgName())
+                    .imgUrl(imgDto.getImgUrl())
+                    .build();
+            memberImgList.add(memberImg);
+        }
     }
 }
