@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.omc.domain.product.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -67,6 +68,8 @@ public class ReviewService {
 
         reservation.setReview(review);
 
+        setProductAvgStar(reservation.getProduct());
+
 //        reviewRepository.save(review);
     }
 
@@ -92,6 +95,8 @@ public class ReviewService {
                 request.getStarLocation(), request.getStarCostEffective());
 
         reviewRepository.save(review);
+
+        setProductAvgStar(review.getReservation().getProduct());
     }
 
     private Review findById(long reviewId) {
@@ -129,6 +134,10 @@ public class ReviewService {
 //        Page<Review> reviewPage = reviewRepository.findAllByProductId(productId, pageable);
         Page<Review> reviewPage = reviewRepository.findAllByReservationProductId(productId, pageable);
 
+        if (reviewPage.isEmpty()) {
+            return Page.empty();
+        }
+
         return reviewPage;
     }
 
@@ -149,6 +158,10 @@ public class ReviewService {
     }
 
     public List<ReviewDto.Response> pageToResponseList(List<Review> content) {
+        if (content.isEmpty()) {
+            return null;
+        }
+
         return content.stream().map(this::toResponseDto).collect(Collectors.toList());
     }
 
@@ -167,5 +180,17 @@ public class ReviewService {
                 .starCostEffective(review.getStarCostEffective())
                 .createTime(util.convertLocalDateTimeFormat1(review.getCreatedAt()))
                 .build();
+    }
+
+    public void setProductAvgStar(Product product){
+        Object[] avgList = reviewRepository.findReviewsAvgByProductId(product.getId());
+        if (avgList == null || avgList.length == 0) {
+            return;
+        }
+        Object[] valueArr = (Object[]) avgList[0];
+
+        Double totalStarAvg = Double.valueOf(decimalFormat.format(valueArr[0]));
+
+        product.setStar(totalStarAvg);
     }
 }

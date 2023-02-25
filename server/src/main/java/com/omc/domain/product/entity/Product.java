@@ -171,4 +171,8 @@ public class Product extends BaseEntity {
 	public void addViews() {
 		this.views += 1;
 	}
+
+	public void setStar(Double star){
+		this.star = star;
+	}
 }
