@@ -47,11 +47,11 @@ public class ReservationController {
 
     // @PreAuthorize("isAuthenticated()")
     @PostMapping(value = "", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> createReservation(@RequestBody ReservationDto.Request request,
+    public ResponseEntity<?> createReservation(@RequestBody ReservationDto.Request reservationRequest,
                                                @CurrentMember AuthMember member) {
         Member findMember = memberService.findByEmail(member.getEmail())
                                          .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_EXISTS));
-        reservationService.createReservation(request, findMember);
+        reservationService.createReservation(reservationRequest, findMember);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

@@ -6,6 +6,15 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import com.omc.domain.member.entity.AuthMember;
+import com.omc.domain.member.entity.Member;
+import com.omc.domain.member.service.MemberService;
+import com.omc.domain.reservation.dto.ReservationDto;
+import com.omc.domain.reservation.service.ReservationService;
+import com.omc.global.common.annotation.CurrentMember;
+import com.omc.global.error.ErrorCode;
+import com.omc.global.error.exception.BusinessException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -26,7 +35,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 @RequestMapping("/payment")
+@RequiredArgsConstructor
 public class PaymentController {
+    private final ReservationService reservationService;
+    private final MemberService memberService;
     private final RestTemplate restTemplate = new RestTemplate();
 
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -47,9 +59,11 @@ public class PaymentController {
 
     private final String SECRET_KEY = "test_sk_D4yKeq5bgrpxPylPpbxrGX0lzW6Y";
 
-    @RequestMapping("/success")
-    public String confirmPayment(
+    @RequestMapping(value = "/success", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<?> confirmPayment(
             @RequestParam String paymentKey, @RequestParam String orderId, @RequestParam Long amount,
+            @RequestBody ReservationDto.Request reservationRequest,
+            @CurrentMember AuthMember member,
             Model model) throws Exception {
 
         HttpHeaders headers = new HttpHeaders();
@@ -70,12 +84,15 @@ public class PaymentController {
             JsonNode successNode = responseEntity.getBody();
             model.addAttribute("orderId", successNode.get("orderId").asText());
             String secret = successNode.get("secret").asText(); // 가상계좌의 경우 입금 callback 검증을 위해서 secret을 저장하기를 권장함
-            return "success";
+            Member findMember = memberService.findByEmail(member.getEmail())
+                    .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_EXISTS));
+            reservationService.createReservation(reservationRequest, findMember);
+            return ResponseEntity.status(HttpStatus.CREATED).build();
         } else {
             JsonNode failNode = responseEntity.getBody();
             model.addAttribute("message", failNode.get("message").asText());
             model.addAttribute("code", failNode.get("code").asText());
-            return "fail";
+            return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
         }
     }
 
@@ -95,7 +112,8 @@ public class PaymentController {
     }
 
     private static class CallbackPayload {
-        public CallbackPayload() {}
+        public CallbackPayload() {
+        }
 
         private String secret;
         private String status;
