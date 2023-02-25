@@ -76,3 +76,6 @@ jwt:
   secretKey: secretKey-test-authorization-jwt-manage-tokenLongLongLongLongLongLongLongLongLongLongLongLongLongLong
   access-token-expiration-time: 30
   refresh-token-expiration-time: 30
+webhook:
+  discord:
+    url: ${DISCORD_WEBHOOK_URL}
