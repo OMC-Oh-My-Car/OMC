@@ -80,15 +80,18 @@ public class ReviewController {
                                         @ModelAttribute ReviewDto.Search search) {
         ReviewDto.productTotalStar productTotalStar = reviewService.getProductAvg(productId);
 
-        Page<Review> reviewPage = null;
-        List<ReviewDto.Response> responseList = null;
+        Page<Review> reviewPage = reviewService.getProductReviews(productId, search);
+        List<ReviewDto.Response> responseList = reviewService.pageToResponseList(reviewPage.getContent());
 
-        if (productTotalStar != null) {
-            reviewPage = reviewService.getProductReviews(productId, search);
-            responseList = reviewService.pageToResponseList(reviewPage.getContent());
-        } else {
-            reviewPage = Page.empty();
-        }
+//        Page<Review> reviewPage = null;
+//        List<ReviewDto.Response> responseList = null;
+//
+//        if (productTotalStar != null) {
+//            reviewPage = reviewService.getProductReviews(productId, search);
+//            responseList = reviewService.pageToResponseList(reviewPage.getContent());
+//        } else {
+//            reviewPage = Page.empty();
+//        }
 
         return new ResponseEntity<>(new ReviewsMultiResponse<>(productTotalStar, responseList, reviewPage), HttpStatus.OK);
     }

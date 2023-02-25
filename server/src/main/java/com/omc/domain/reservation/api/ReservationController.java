@@ -47,11 +47,11 @@ public class ReservationController {
 
     // @PreAuthorize("isAuthenticated()")
     @PostMapping(value = "", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> createReservation(@RequestBody ReservationDto.Request request,
+    public ResponseEntity<?> createReservation(@RequestBody ReservationDto.Request reservationRequest,
                                                @CurrentMember AuthMember member) {
         Member findMember = memberService.findByEmail(member.getEmail())
                                          .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_EXISTS));
-        reservationService.createReservation(request, findMember);
+        reservationService.createReservation(reservationRequest, findMember);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -68,6 +68,18 @@ public class ReservationController {
     @GetMapping(value = "")
     public ResponseEntity<?> getReservationList(@ModelAttribute ReservationDto.Search search) {
         Page<Reservation> reservationPage = reservationService.getReservationPages(search);
+        List<ReservationDto.Response> responseList = reservationService.pageToResponseList(reservationPage.getContent());
+
+        return new ResponseEntity<>(new MultiResponse<>(responseList, reservationPage), HttpStatus.OK);
+    }
+
+    // @PreAuthorize("isAuthenticated()")
+    @GetMapping(value = "/my")
+    public ResponseEntity<?> getMyReservationList(@ModelAttribute ReservationDto.Search search, @CurrentMember AuthMember member) {
+        Member findMember = memberService.findByEmail(member.getEmail())
+                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_EXISTS));
+
+        Page<Reservation> reservationPage = reservationService.getMyReservationPages(search, findMember);
         List<ReservationDto.Response> responseList = reservationService.pageToResponseList(reservationPage.getContent());
 
         return new ResponseEntity<>(new MultiResponse<>(responseList, reservationPage), HttpStatus.OK);
