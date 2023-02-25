@@ -62,7 +62,7 @@ public class ProductController {
 		MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest)request;
 		List<MultipartFile> multipartFiles;
 
-		if (multipartHttpServletRequest.getFiles("product").isEmpty()) {
+		if (multipartHttpServletRequest.getFiles("imgUrl").isEmpty()) {
 			log.error("multipartFiles is null");
 			throw new BusinessException(ErrorCode.IMAGE_NOT_FOUND);
 		} else {
