@@ -7,7 +7,7 @@ public class PaymentDto {
 
     @Getter
     @Builder
-    public class Request{
+    public static class Request{
         String paymentKey;
         String orderId;
         long amount;
