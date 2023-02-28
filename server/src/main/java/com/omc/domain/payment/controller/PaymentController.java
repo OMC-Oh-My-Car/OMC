@@ -1,4 +1,4 @@
-package com.omc.domain.payment;
+package com.omc.domain.payment.controller;
 
 import java.util.Base64;
 import java.util.HashMap;
@@ -9,6 +9,7 @@ import javax.annotation.PostConstruct;
 import com.omc.domain.member.entity.AuthMember;
 import com.omc.domain.member.entity.Member;
 import com.omc.domain.member.service.MemberService;
+import com.omc.domain.payment.dto.PaymentDto;
 import com.omc.domain.reservation.dto.ReservationDto;
 import com.omc.domain.reservation.service.ReservationService;
 import com.omc.global.common.annotation.CurrentMember;
@@ -63,6 +64,7 @@ public class PaymentController {
     public ResponseEntity<?> confirmPayment(
             @RequestParam String paymentKey, @RequestParam String orderId, @RequestParam Long amount,
             @RequestBody ReservationDto.Request reservationRequest,
+            @RequestBody PaymentDto.Request payRequest,
             @CurrentMember AuthMember member,
             Model model) throws Exception {
 

@@ -56,6 +56,15 @@ public class ReservationController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @GetMapping(value = "/check", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<?> canReservation(@RequestBody ReservationDto.Request reservationRequest
+    ) {
+
+        ReservationDto.CanReservationRes canReservationRes = reservationService.canReservation(reservationRequest);
+
+        return new ResponseEntity<>(new SingleResponseDto<>(canReservationRes), HttpStatus.OK);
+    }
+
     // @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/{reservationId}")
     public ResponseEntity<?> getReservation(@PathVariable long reservationId) {

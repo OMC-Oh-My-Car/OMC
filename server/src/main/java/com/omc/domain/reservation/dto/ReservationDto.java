@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 public class ReservationDto {
 
     @Getter
@@ -40,6 +42,14 @@ public class ReservationDto {
         private Boolean hasReview;
         private String status;
         private String email;
+    }
+
+    @Getter
+    @Builder
+    public static class CanReservationRes {
+        private long resCount;
+
+        private List<ReservationSimpleDto> reservationList;
     }
 
     @Getter
