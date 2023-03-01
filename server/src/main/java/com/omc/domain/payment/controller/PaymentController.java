@@ -59,9 +59,7 @@ public class PaymentController {
 
     @RequestMapping(value = "/success", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> confirmPayment(
-            @RequestParam String paymentKey, @RequestParam String orderId, @RequestParam Long amount,
-            @ModelAttribute("reservation") ReservationDto.Request reservationRequest,
-            @ModelAttribute("paymentData") PaymentDto.Request payRequest,
+            @RequestBody PaymentDto.Request payRequest,
             @CurrentMember AuthMember member,
             Model model) throws Exception {
 
@@ -71,13 +69,13 @@ public class PaymentController {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         Map<String, String> payloadMap = new HashMap<>();
-        payloadMap.put("orderId", orderId);
-        payloadMap.put("amount", String.valueOf(amount));
+        payloadMap.put("orderId", payRequest.getOrderId());
+        payloadMap.put("amount", String.valueOf(payRequest.getAmount()));
 
         HttpEntity<String> request = new HttpEntity<>(objectMapper.writeValueAsString(payloadMap), headers);
 
         ResponseEntity<JsonNode> responseEntity = restTemplate.postForEntity(
-                "https://api.tosspayments.com/v1/payments/" + paymentKey, request, JsonNode.class);
+                "https://api.tosspayments.com/v1/payments/" + payRequest.getPaymentKey(), request, JsonNode.class);
 
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
             JsonNode successNode = responseEntity.getBody();
@@ -85,6 +83,14 @@ public class PaymentController {
             String secret = successNode.get("secret").asText(); // 가상계좌의 경우 입금 callback 검증을 위해서 secret을 저장하기를 권장함
             Member findMember = memberService.findByEmail(member.getEmail())
                     .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_EXISTS));
+
+            ReservationDto.Request reservationRequest = ReservationDto.Request.builder()
+                    .productId(payRequest.getProductId())
+                    .phoneNumber(payRequest.getPhoneNumber())
+                    .startDate(payRequest.getStartDate())
+                    .endDate(payRequest.getEndDate())
+                    .build();
+
             reservationService.createReservation(reservationRequest, findMember);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } else {
