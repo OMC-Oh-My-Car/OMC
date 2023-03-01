@@ -5,7 +5,7 @@ import axios from 'axios';
 
 const axiosInstance = axios.create({
   headers: {
-    'Access-Control-Allow-Origin': 'https://5c97-220-123-236-194.jp.ngrok.io',
+    'Access-Control-Allow-Origin': '*',
     'ngrok-skip-browser-warning': '69420',
     'Access-Control-Allow-Headers': '*',
   },

@@ -50,10 +50,10 @@ const ProductReservation = ({ data, reviewData, productId }) => {
     sessionStorage.setItem(
       'reservation',
       JSON.stringify({
-        productId,
-        phone: '010-7533-2401',
-        startDate: startDate.toString(),
-        endDate: endDate.toString(),
+        productId: Number(productId),
+        phoneNumber: '010-7533-2401',
+        startDate: startDate.toISOString().split('T')[0],
+        endDate: endDate.toISOString().split('T')[0],
       }),
     );
 

@@ -36,6 +36,7 @@ const SignIn = () => {
     console.log(`${idEmail}, ${password}`);
     login(data)
       .then((res) => {
+        console.log(res);
         let accessToken = res.headers.get('Authorization');
         sessionStorage.setItem('Authorization', accessToken);
         sessionStorage.setItem('userData', JSON.stringify(res.data));
@@ -45,20 +46,6 @@ const SignIn = () => {
       .catch((err) => {
         console.log(`${err.response.status} 에러`);
         console.log(err);
-      });
-  };
-
-  const handleLogout = async () => {
-    logout()
-      .then((res) => {
-        console.log('로그아웃되었습니다.');
-        window.sessionStorage.removeItem('Authorization');
-        dispatch(clearUserInfo());
-        navigate('/');
-      })
-      .catch((err) => {
-        console.log(`${err.response.status} 에러`);
-        console.log('로그아웃 실패!');
       });
   };
 
