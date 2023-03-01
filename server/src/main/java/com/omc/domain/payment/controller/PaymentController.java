@@ -1,4 +1,4 @@
-package com.omc.domain.payment;
+package com.omc.domain.payment.controller;
 
 import java.util.Base64;
 import java.util.HashMap;
@@ -9,6 +9,7 @@ import javax.annotation.PostConstruct;
 import com.omc.domain.member.entity.AuthMember;
 import com.omc.domain.member.entity.Member;
 import com.omc.domain.member.service.MemberService;
+import com.omc.domain.payment.dto.PaymentDto;
 import com.omc.domain.reservation.dto.ReservationDto;
 import com.omc.domain.reservation.service.ReservationService;
 import com.omc.global.common.annotation.CurrentMember;
@@ -23,10 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
@@ -62,7 +60,8 @@ public class PaymentController {
     @RequestMapping(value = "/success", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> confirmPayment(
             @RequestParam String paymentKey, @RequestParam String orderId, @RequestParam Long amount,
-            @RequestBody ReservationDto.Request reservationRequest,
+            @ModelAttribute("reservation") ReservationDto.Request reservationRequest,
+            @ModelAttribute("paymentData") PaymentDto.Request payRequest,
             @CurrentMember AuthMember member,
             Model model) throws Exception {
 

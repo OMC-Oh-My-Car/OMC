@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.omc.domain.member.entity.AuthMember;
+import com.omc.domain.reservation.dto.ReservationSimpleDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -77,13 +78,10 @@ public class ReservationService {
 		//            throw new BusinessException(ErrorCode.NOT_YET_CHECKIN);
 		//        }
 
-		long countRes = reservationRepository.countByCheckInBetween(request.getProductId(), resCheckIn);
+		long countRes = reservationRepository.countByCheckInBetween(request.getProductId(), resCheckIn, resCheckOut);
 		if (countRes > 0) {
 			throw new BusinessException(ErrorCode.CANT_RESERVATION);
 		}
-
-		// 결제 후 예약 추가
-
 
 		Reservation reservation = Reservation.builder()
 											 .member(member)
@@ -231,4 +229,57 @@ public class ReservationService {
 	public List<ReservationDto.Response> pageToResponseList(List<Reservation> reservationList) {
 		return reservationList.stream().map(reservation -> toResponseDto(reservation)).collect(Collectors.toList());
 	}
+
+	@Transactional(readOnly = true)
+	public ReservationDto.CanReservationRes canReservation(ReservationDto.Request request) {
+		Product product = productRepository.findById(request.getProductId()).orElse(null);
+
+		if (product == null) {
+			// 상품 존재하지 않아서 예외처리
+			throw new BusinessException(ErrorCode.PRODUCT_NOT_FOUND);
+		}
+
+		LocalDateTime resCheckIn = LocalDateTime.of(LocalDate.parse(request.getStartDate()),
+				LocalTime.parse(product.getCheckIn()));
+		LocalDateTime resCheckOut = LocalDateTime.of(LocalDate.parse(request.getEndDate()),
+				LocalTime.parse(product.getCheckOut()));
+
+		// 현재보다 과거는 불가능
+		//        if (LocalDateTime.now().isBefore(resCheckIn)) {
+		//            throw new BusinessException(ErrorCode.NOT_YET_CHECKIN);
+		//        }
+
+		List<Reservation> reservationList = reservationRepository.findByCheckInBetween(request.getProductId(), resCheckIn, resCheckOut);
+		ReservationDto.CanReservationRes canReservationRes;
+		if (reservationList.size() > 0) {
+			List<ReservationSimpleDto> reservationSimpleDtoList = resToSimpleDto(reservationList);
+			canReservationRes = ReservationDto.CanReservationRes.builder()
+					.resCount(reservationSimpleDtoList.size())
+					.reservationList(reservationSimpleDtoList)
+					.build();
+		} else {
+			canReservationRes = ReservationDto.CanReservationRes.builder()
+					.resCount(0)
+					.reservationList(null)
+					.build();
+		}
+
+		return canReservationRes;
+	}
+
+	public List<ReservationSimpleDto> resToSimpleDto(List<Reservation> reservationList) {
+		return reservationList.stream().map(reservation -> toSimpleDto(reservation)).collect(Collectors.toList());
+	}
+
+	private ReservationSimpleDto toSimpleDto(Reservation reservation) {
+
+		return ReservationSimpleDto.builder()
+				.checkIn(ut.convertLocalDateTimeFormat2(
+						reservation.getCheckIn()))
+				.checkOut(ut.convertLocalDateTimeFormat2(
+						reservation.getCheckOut()))
+				.build();
+	}
+
+
 }
