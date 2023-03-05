@@ -10,8 +10,13 @@ export const Template = styled.div`
     color: red;
   }
   h1 {
-    font-size: 27px;
-    margin-bottom: 40px;
+    color: ${(props) => props.theme.yellow};
+    font-weight: 700;
+    width: 100%;
+    font-size: 30px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 50px;
   }
   .signUpHead {
     display: flex;
@@ -36,6 +41,7 @@ export const SignInComment = styled(SignUpButton)``;
 export const EmailButton = styled.div`
   display: flex;
   margin-top: 30px;
+  margin-left: 10px;
 `;
 export const GoLogin = styled.a`
   padding-left: 20px;

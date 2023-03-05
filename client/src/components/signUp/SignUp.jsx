@@ -3,11 +3,10 @@ import OrangeButton from './signUpForm/OrangeButton';
 import SignUpInputBox from './signUpForm/SignUpInputBox';
 import SignUpInputLongBox from './signUpForm/SignUpInputLongBox';
 import { Template, SignUpForm, SignUpButton, SignInComment, EmailButton, GoLogin } from './SignUp.style';
-import { faFile } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useCallback, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+// import axios from 'axios';
+import axiosInstance from '../../modules';
 import SignUpSuccessModal from '../alert/SignUpSuccessModal';
 import ConfirmNumberModal from './signUpForm/ConfirmNumberModal';
 const SignUp = () => {
@@ -121,7 +120,7 @@ const SignUp = () => {
     }
   }, []);
   const submitHandle = async () => {
-    await axios
+    await axiosInstance
       .post('/member', {
         email: idEmail,
         password: password,
@@ -164,13 +163,13 @@ const SignUp = () => {
       });
   };
   const sendNumberHandler = async () => {
-    await axios
+    await axiosInstance
       .post('/member/confirm/mail', {
-        email: idEmail,
+        param: idEmail,
       })
       .then((res) => {
-        if (res.status === 201) {
-          console.log('메일함에서 인증번호를 확인해주세요!');
+        if (res.status === 200) {
+          alert('메일함에서 인증번호를 확인해주세요!');
         }
       })
       .catch((err) => {
@@ -187,17 +186,14 @@ const SignUp = () => {
     setAlert({
       title: '!회원가입!',
       message: 'OMC에 오신것을 환영합니다!',
-      body: '회원가입 후 서비스를 모두 이용하실 수 있습니다 !!!!!!!!!!!!!!!!!!',
     });
   }, []);
   return (
     <>
       <Template>
         <div className="signUpHead">
-          <FontAwesomeIcon className="signUpIcon" icon={faFile} size="2x" />
           <h1>회원가입</h1>
         </div>
-        <h1>회원 정보 입력</h1>
         <SignUpForm>
           <SignUpInputBox
             labelName="아이디"
